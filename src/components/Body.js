@@ -1,10 +1,12 @@
-import React from 'react'
+import { Outlet } from "react-router-dom"
+import Header from "./Header"
 
 const Body = () => {
     return (
-        <div className='text-4xl'>
-            Welcome To Hostel Eats
-        </div>
+        <>
+            <Header/>
+            <Outlet/>
+        </>
     )
 }
 
