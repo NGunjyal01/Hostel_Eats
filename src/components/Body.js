@@ -2,7 +2,7 @@ import React from 'react'
 
 const Body = () => {
     return (
-        <div>
+        <div className='text-4xl'>
             Welcome To Hostel Eats
         </div>
     )
