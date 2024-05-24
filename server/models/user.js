@@ -1,24 +1,15 @@
 const mongoose = require("mongoose");
 
-// Define the schema for merchants
 const userschema = new mongoose.Schema({
-  regno: {
+  accountType: {
     type: String,
-    required: true,
-    unique: true,
-  },
-  firstname: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  lastname: {
-    type: String,
+    enum: ["Owner", "Customer"],
     required: true,
   },
   phone: {
-    type: Number,
+    type:String,
     required: true,
+    maxlength: 10, 
     unique: true,
   },
   email: {
@@ -26,6 +17,15 @@ const userschema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  firstname: {
+    type: String,
+    required: true,
+  },
+  lastname: {
+    type: String,
+    required: true,
+  },
+
   password: {
     type: String,
     required: true,

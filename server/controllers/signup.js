@@ -4,23 +4,37 @@ const bcrypt = require("bcrypt");
 
 exports.userSignup = async (req, res) => {
   try {
-    const { regno, firstname, lastname, phone, email, password } = req.body;
+    const { accountType, phone, email, firstname, lastname, password } =
+      req.body;
 
-    if (!regno || !firstname || !lastname || !phone || !email || !password) {
-      console.log("not all fields...");
+    if (
+      !accountType ||
+      !phone ||
+      !firstname ||
+      !lastname ||
+      !email ||
+      !password
+    ) {
       return res.status(400).json({
         status: 400,
         message: "Please fill all fields",
       });
     }
 
-    const existingUser = await User.findOne({ regno });
-    if (existingUser) {
+    const existingPhone = await User.findOne({ phone});
+    if (existingPhone) {
       return res.status(400).json({
         success: false,
-        message: "User Already Exist",
+        message: "Phone Number Already Exist",
       });
     }
+      const existingEmail = await User.findOne({ email });
+      if (existingEmail) {
+        return res.status(400).json({
+          success: false,
+          message: "Email Already Exist",
+        });
+      }
 
     //Hashing Of pAssword
     let hashedPassword;
@@ -33,20 +47,20 @@ exports.userSignup = async (req, res) => {
       });
     }
 
-    console.log("s");
+
     const user = await User.create({
-      regno,
-      firstname,
-      lastname,
+      accountType,
       phone,
       email,
+      firstname,
+      lastname,
       password: hashedPassword,
     });
 
     return res.status(200).json({
       data: user,
-      success: true,
-      message: "User Created Successfully",
+      success:true,
+      message:"User Created Successfully",
     });
   } catch (error) {
     console.log(error);
