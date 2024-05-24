@@ -4,14 +4,14 @@ const bcrypt = require("bcrypt");
 
 exports.userSignup = async (req, res) => {
   try {
-    const { accountType, phone, email, firstname, lastname, password } =
+    const { accountType, phone, email, firstName, lastName, password } =
       req.body;
 
     if (
       !accountType ||
       !phone ||
-      !firstname ||
-      !lastname ||
+      !firstName ||
+      !lastName ||
       !email ||
       !password
     ) {
@@ -52,8 +52,8 @@ exports.userSignup = async (req, res) => {
       accountType,
       phone,
       email,
-      firstname,
-      lastname,
+      firstName,
+      lastName,
       password: hashedPassword,
     });
 
