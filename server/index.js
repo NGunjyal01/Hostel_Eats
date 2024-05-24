@@ -3,7 +3,7 @@ const app=express();
 
 require("dotenv").config();
 
-const PORT=process.env.PORT||4000;
+const PORT=process.env.PORT||3000;
 
 app.use(express.json());
 
@@ -13,7 +13,7 @@ db.connect();
 //API Routes
 
 const register=require("./routes/register");
-app.use("/api/v1",register);
+app.use("/",register);
 
 app.listen(PORT,()=>{
 console.log(`App is running at ${PORT}`);
