@@ -8,6 +8,7 @@ import AboutUs from './components/AboutUs';
 import AddCanteen from './components/AddCanteen';
 import LogIn from './components/LogIn';
 import SignUp from './components/SignUp';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
   return(
     <Provider store={appStore}>
       <RouterProvider router={appRouter}/>
+      <Toaster/>
     </Provider>
   );
 }
