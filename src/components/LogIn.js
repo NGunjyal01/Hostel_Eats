@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { IoEye,IoEyeOff } from "react-icons/io5";
+import { login } from "../services/authAPI";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const LogIn = () => {
 
     const[email,setEmail] = useState('');
     const [password,setPassword] = useState('');
     const [showPassword,setShowPassword] = useState(false);
-
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const handleEmailChange = (input) =>{
         setEmail(input);
     };
@@ -16,6 +20,13 @@ const LogIn = () => {
 
     const handleEyeBtnClick = ()=>{
         setShowPassword(!showPassword);
+    }
+
+    const handleLoginBtn = ()=>{
+        login(email,password,navigate,dispatch);
+        //reset
+        setEmail('');
+        setPassword('');
     }
 
     return (
@@ -28,7 +39,7 @@ const LogIn = () => {
                 <input type={!showPassword?"password":"text"} placeholder="Enter Password" value={password} className="bg-[#31363F] w-[40%] px-3 py-4 rounded-lg" onChange={(e)=>{handlePasswordChange(e.target.value)}}/>
                 <button className="relative -top-[3.2rem] ml-[37%]" onClick={handleEyeBtnClick}>{!showPassword?<IoEye/>:<IoEyeOff/>}</button>
                 <button className="relative -top-10 ml-[29%] w-fit text-sm">Forget Password</button>
-                <button className="bg-[#76ABAE] w-[40%] py-3 rounded-lg">LogIn</button>
+                <button className="bg-[#76ABAE] w-[40%] py-3 rounded-lg" onClick={handleLoginBtn}>LogIn</button>
             </div>
         </div>
     )   
