@@ -1,7 +1,7 @@
 import axios from "axios";
 import toast from "react-hot-toast"
 import { endpoints } from "./apis";
-import { addUser } from "../slices/userSlice";
+import { addUser, removeUser } from "../slices/userSlice";
 
 const { SIGNUP_API,LOGIN_API } = endpoints;
 
@@ -28,6 +28,7 @@ export async function login(email,password,navigate,dispatch){
         console.log("LOGIN API RESPONSE..............",response);
         toast.success("Login Successful");
         dispatch(addUser(response.data.existingUser));
+        localStorage.setItem("user",JSON.stringify(response.data.existingUser));
         navigate('/');
     }
     catch(error){
@@ -36,4 +37,11 @@ export async function login(email,password,navigate,dispatch){
         navigate('/login');
     }
     toast.dismiss(toastId);
+}
+
+export function logout(navigate,dispatch){
+    dispatch(removeUser());
+    localStorage.removeItem("user");
+    toast.success("Logged Out");
+    navigate('/');
 }
