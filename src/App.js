@@ -3,14 +3,14 @@ import './App.css';
 import Body from './components/Body';
 import appStore from './utils/appStore';
 import { Provider } from 'react-redux';
-import Home from './components/Home';
-import AboutUs from './components/AboutUs';
-import AddCanteen from './components/AddCanteen';
-import LogIn from './components/LogIn';
-import SignUp from './components/SignUp';
+import Home from './pages/Home';
+import AboutUs from './pages/AboutUs';
+import AddCanteen from './pages/AddCanteen';
+import LogIn from './pages/LogIn';
+import SignUp from './pages/SignUp';
 import { Toaster } from 'react-hot-toast';
 import MyProfile from './components/MyProfile';
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./pages/Dashboard";
 import Settings from './components/Settings';
 
 function App() {
@@ -23,9 +23,9 @@ function App() {
         <Route path='add-canteen' element={<AddCanteen/>}/>
         <Route path='login' element={<LogIn/>}/>
         <Route path='signup' element={<SignUp/>}/>
-        <Route path='dashboard' element={<Dashboard/>}>
-          <Route path='my-profile' element={<MyProfile/>}/>
-          <Route path='settings' element={<Settings/>}/>
+        <Route element={<Dashboard/>}>
+          <Route path='dashboard/my-profile' element={<MyProfile/>}/>
+          <Route path='dashboard/settings' element={<Settings/>}/>
         </Route>
       </Route>
     )

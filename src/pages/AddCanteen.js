@@ -11,7 +11,7 @@ const AddCanteen = () => {
             <button className='w-64 p-2 m-2 bg-[#30353e] rounded-md'>Register your canteen</button>
             <button className='w-64 p-2 m-2 bg-[#76ABAE] rounded-md text-black'>View your existing restaurants</button>
         </div>
-        <div className='text-left mt-8 bg-[#30353e] p-5 rounded-md w-full max-w-2xl text-center'>
+        <div className='mt-8 bg-[#30353e] p-5 rounded-md w-full max-w-2xl text-center'>
             <h2 className='text-2xl'>Get started with online ordering</h2>
             <h5 className='text-l text-gray-300 mb-4'>Please keep the documents ready for a smooth signup</h5>
             <div className='flex justify-between'>

@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 import { useState } from "react";
-import { logout } from "../services/authAPI";
+import { logout } from "../../services/authAPI";
 
 const Header = () => {
 
