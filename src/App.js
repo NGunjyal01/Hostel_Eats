@@ -9,6 +9,9 @@ import AddCanteen from './components/AddCanteen';
 import LogIn from './components/LogIn';
 import SignUp from './components/SignUp';
 import { Toaster } from 'react-hot-toast';
+import MyProfile from './components/MyProfile';
+import Dashboard from "./components/Dashboard";
+import Settings from './components/Settings';
 
 function App() {
 
@@ -20,6 +23,10 @@ function App() {
         <Route path='add-canteen' element={<AddCanteen/>}/>
         <Route path='login' element={<LogIn/>}/>
         <Route path='signup' element={<SignUp/>}/>
+        <Route path='dashboard' element={<Dashboard/>}>
+          <Route path='my-profile' element={<MyProfile/>}/>
+          <Route path='settings' element={<Settings/>}/>
+        </Route>
       </Route>
     )
   )

@@ -4,7 +4,7 @@ const Home = () => {
     return (
         <div className="bg-gradient-to-r from-black to-[#222831] text-white px-20 py-14">
            {/* Section 1 */}
-            <div className="mt-[14%] ml-10">
+            <div className="mt-[12%] ml-10">
                 <div className="relative font-serif">
                     <h1 className='text-4xl '>Welcome To Hostel Eats</h1>
                     <p className="mt-10">Made for MNNIT Students to order food</p>

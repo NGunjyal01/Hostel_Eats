@@ -12,14 +12,14 @@ const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const handleUserIconClick = ()=>{
-        setShowDropDownMenu(!showDropDownMenu);
+        navigate('/dashboard/my-profile');
     }
     const handleLogOut = ()=>{
         logout(navigate,dispatch);
     }
 
     return (
-        <div className="absolute w-full z-50 flex bg-gradient-to-r from-black to-[#222831] text-white pt-10">
+        <div className="fixed w-full z-10 flex bg-gradient-to-r from-black to-[#222831] text-white pt-10 pb-4">
             <h1 className="ml-[10%]">Hostel Eats</h1>
             <div className="ml-[25%] space-x-7">
                 <NavLink to='/' className={({isActive}) => `hover:text-[#76ABAE] ${isActive?"text-[#76ABAE]":""}`}>Home</NavLink>
@@ -35,10 +35,11 @@ const Header = () => {
             onMouseEnter={()=>{setShowDropDownMenu(true)}} onMouseLeave={()=>{setShowDropDownMenu(false)}}>
                 <FaUserCircle  size={40}/>    
                 {showDropDownMenu && <>
-                <div className="absolute top-10 bg-transparent h-6 w-[10rem] z-50"></div>
-                <div className="bg-[#EEEEEE] w-4 h-4 rotate-45 absolute top-14 -z-10"></div>
-                <div className="absolute top-16 bg-[#EEEEEE]  text-black w-[10rem] flex flex-col items-center space-y-2 px-2 rounded-md">
-                    <h1 className="pt-2">Profile</h1>
+                <div className="absolute top-10 bg-transparent h-7 w-[10rem] z-10"></div>
+                <div className="bg-[#EEEEEE] w-4 h-4 rotate-45 absolute top-14"></div>
+                <div className="absolute z-10 top-16 bg-[#EEEEEE]  text-black w-[10rem] flex flex-col items-center space-y-2 px-2 rounded-md" onClick={(e)=>{e.stopPropagation()}}>
+                    <NavLink to='/dashboard/my-profile'>Profile</NavLink>
+                    <NavLink to='/dashboard/settings'>Settings</NavLink>
                     <button onClick={handleLogOut} className="pb-2">log out</button>
                 </div></>}
             </div>
