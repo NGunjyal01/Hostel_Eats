@@ -40,18 +40,19 @@ const Header = () => {
             </div>}  
             {user && <><div className=" group absolute right-24 top-7 flex justify-center items-center space-x-1 cursor-pointer transition-transform ease-out" onClick={handleUserIconClick}
             onMouseEnter={()=>{setShowDropDownMenu(true)}} onMouseLeave={()=>{setShowDropDownMenu(false)}}>
-                <FaUserCircle  size={40}/>    
-                {showDropDownMenu && <>
-                <div className="absolute top-10 bg-transparent h-7 w-[10rem] z-10"></div>
+                <FaUserCircle  size={40}/>   
                 <AnimatePresence>
-                    <motion.div initial={{opacity:0,y:15}} animate={{opacity:1,y:0}} exit={{opacity:0,y:15}}
-                    className="absolute z-10 top-16 bg-[#EEEEEE]  text-black w-[10rem] flex flex-col items-center space-y-2 px-2 rounded-md" onClick={(e)=>{e.stopPropagation()}}>
-                        <div className="bg-[#EEEEEE] w-4 h-4 rotate-45 absolute -top-2"></div>
-                        <NavLink to='/dashboard/my-profile'>Profile</NavLink>
-                        <NavLink to='/dashboard/settings'>Settings</NavLink>
-                        <button onClick={handleLogOut} className="pb-2">log out</button>
-                    </motion.div>
-                </AnimatePresence></>}
+                    {showDropDownMenu && <>
+                    <div className="absolute top-10 bg-transparent h-7 w-[10rem] z-10"></div>
+                        <motion.div initial={{opacity:0,y:15}} animate={{opacity:1,y:0}} exit={{opacity:0,y:15}}
+                        className="absolute z-10 top-16 bg-[#EEEEEE]  text-black w-[10rem] flex flex-col items-center space-y-2 px-2 rounded-md" onClick={(e)=>{e.stopPropagation()}}>
+                            <div className="bg-[#EEEEEE] w-4 h-4 rotate-45 absolute -top-2"></div>
+                            <NavLink to='/dashboard/my-profile'>Profile</NavLink>
+                            <NavLink to='/dashboard/settings'>Settings</NavLink>
+                            <button onClick={handleLogOut} className="pb-2">log out</button>
+                        </motion.div>
+                    </>}
+                </AnimatePresence> 
                 <div className="absolute -right-6"><IoMdArrowDropdown size={20} className="group-hover:rotate-180 transition-transform ease-out duration-300"/></div>
             </div>
             
