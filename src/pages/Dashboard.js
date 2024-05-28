@@ -8,11 +8,11 @@ const Dashboard = () => {
             <div className="fixed pt-40 pl-10 w-[15%] min-h-screen flex flex-col space-y-5">
                 {/* Content for the left section */}
                 <NavLink to='/dashboard/my-profile' className={({isActive})=>`flex items-center
-                ${isActive?'bg-[#76ABAE] text-black py-3 rounded-lg shadow-md shadow-[#76ABAE]':'py-3'}`}>
+                ${isActive?'bg-[#76ABAE] text-black py-3 rounded-lg shadow-sm shadow-[#76ABAE]':'py-3'}`}>
                     <FaUserCircle size={25} className="mx-4"/><span>Profile</span>
                 </NavLink>
                 <NavLink to='/dashboard/settings' className={({isActive})=>`flex items-center
-                ${isActive?'bg-[#76ABAE] py-3 rounded-lg text-black shadow-md shadow-[#76ABAE]':'py-3'}`}>
+                ${isActive?'bg-[#76ABAE] py-3 rounded-lg text-black shadow-sm shadow-[#76ABAE]':'py-3'}`}>
                    <IoSettingsSharp size={25} className="mx-4"/> <span>Settings</span>
                 </NavLink>
             </div>

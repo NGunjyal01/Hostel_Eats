@@ -30,6 +30,7 @@ export async function login(email,password,navigate,dispatch){
         dispatch(addUser(response.data.existingUser));
         localStorage.setItem("user",JSON.stringify(response.data.existingUser));
         navigate('/');
+        console.log("navigating to root route")
     }
     catch(error){
         console.log("Error During Login: ",error);

@@ -9,21 +9,23 @@ import AddCanteen from './pages/AddCanteen';
 import LogIn from './pages/LogIn';
 import SignUp from './pages/SignUp';
 import { Toaster } from 'react-hot-toast';
-import MyProfile from './components/MyProfile';
+import MyProfile from './components/Dashboard/MyProfile';
 import Dashboard from "./pages/Dashboard";
-import Settings from './components/Settings';
+import Settings from './components/Dashboard/Settings';
+import OpenRoute from './components/Auth/OpenRoute';
+import PrivateRoute from './components/Auth/PrivateRoute';
 
 function App() {
 
   const appRouter = createBrowserRouter(
     createRoutesFromElements(
       <Route path='/' element={<Body/>}>
-        <Route path='' element={<Home/>}/>
+        <Route index element={<Home/>}/>
         <Route path='about-us' element={<AboutUs/>}/>
         <Route path='add-canteen' element={<AddCanteen/>}/>
-        <Route path='login' element={<LogIn/>}/>
-        <Route path='signup' element={<SignUp/>}/>
-        <Route element={<Dashboard/>}>
+        <Route path='login' element={<OpenRoute><LogIn/></OpenRoute>}/>
+        <Route path='signup' element={<OpenRoute><SignUp/></OpenRoute>}/>
+        <Route element={<PrivateRoute><Dashboard/></PrivateRoute>}>
           <Route path='dashboard/my-profile' element={<MyProfile/>}/>
           <Route path='dashboard/settings' element={<Settings/>}/>
         </Route>
