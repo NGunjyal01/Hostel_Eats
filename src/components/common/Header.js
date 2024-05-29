@@ -23,13 +23,13 @@ const Header = () => {
         logout(navigate,dispatch);
     }
     const sideTabs = [{name:'Profile',to:'/dashboard/my-profile'}];
-    if(user.accountType==="Customer"){
+    if(user?.accountType==="Customer"){
         sideTabs.push({name:"Orders",to:'/dashboard/orders'});
         sideTabs.push({name:"Cart",to:'/dashboard/cart'});
         sideTabs.push({name:"Favourites",to:'/dashboard/favourites'});
         sideTabs.push({name:"Settings",to:'/dashboard/settings'});
     }
-    else if(user.accountType==="Owner"){
+    else if(user?.accountType==="Owner"){
 
     }
     const handleSideTabClick = (index)=>{
@@ -45,9 +45,9 @@ const Header = () => {
             <div className="ml-[25%] space-x-7 flex">
                 {tabs.map(tab => <Tab><NavLink to={tab.to} className={({isActive}) => ` ${isActive?"text-[#76ABAE]":""}`}>{tab.name}</NavLink></Tab>)}
             </div>
-            {!user && <div className="ml-[25%] space-x-7">
-                <NavLink to='/login' className={({isActive}) => `hover:text-[#76ABAE] ${isActive?"text-[#76ABAE]":""}`}>LogIn</NavLink>
-                <NavLink to='/signup' className={({isActive}) => `hover:text-[#76ABAE] ${isActive?"text-[#76ABAE]":""}`}>SignUp</NavLink>
+            {!user && <div className="ml-[25%] space-x-4">
+                <NavLink to='/login' className={({isActive}) => `bg-[#31363F] rounded-lg px-4 py-2 hover:text-[#76ABAE] ${isActive?"text-[#76ABAE]":""}`}>LogIn</NavLink>
+                <NavLink to='/signup' className={({isActive}) => `bg-[#31363F] rounded-lg px-4 py-2 hover:text-[#76ABAE] ${isActive?"text-[#76ABAE]":""}`}>SignUp</NavLink>
             </div>}  
             {user && <><div className="group absolute right-24 top-7 flex justify-center items-center space-x-1 cursor-pointer transition-transform ease-out" onClick={handleUserIconClick}
             onMouseEnter={()=>{setShowDropDownMenu(true)}} onMouseLeave={()=>{setShowDropDownMenu(false)}}>
