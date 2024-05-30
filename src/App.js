@@ -15,6 +15,9 @@ import PrivateRoute from './components/Auth/PrivateRoute';
 import Orders from './components/Dashboard/Orders';
 import Cart from './components/Dashboard/Cart';
 import Favourite from './components/Dashboard/Favourite';
+import Add_CanteenO from './components/Dashboard/Add_CanteenO';
+import View_Canteen from './components/Dashboard/View_Canteen';
+import Edit_Canteen from './components/Dashboard/Edit_Canteen';
 
 function App() {
 
@@ -34,6 +37,10 @@ function App() {
           {user?.accountType==="Customer" && <><Route path='dashboard/orders' element={<Orders/>}/>
             <Route path='dashboard/cart' element={<Cart/>}/>
             <Route path='dashboard/favourites' element={<Favourite/>}/>
+          </>}
+          {user?.accountType==="Owner" && <><Route path='dashboard/add_canteeno' element={<Add_CanteenO/>}/>
+            <Route path='dashboard/view_canteen' element={<View_Canteen/>}/>
+            <Route path='dashboard/edit_canteen' element={<Edit_Canteen/>}/>
           </>}
         </Route>
       </Route>

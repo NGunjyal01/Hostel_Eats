@@ -9,6 +9,9 @@ import { IoIosLogOut } from "react-icons/io";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { setCurrTab,setPrevTab } from "../slices/tabSlice";
+import { IoRestaurantSharp } from "react-icons/io5";
+import { FaEye } from "react-icons/fa";
+import { FiEdit } from "react-icons/fi";
 
 const Dashboard = () => {
 
@@ -29,10 +32,11 @@ const Dashboard = () => {
         sideTabs.push({name:"Settings",icon:<IoSettingsSharp size={25} className="mx-4 relative z-10"/>,to:'/dashboard/settings'});
     }
     else if(user.accountType==="Owner"){
-
+        sideTabs.push({name:"Add Canteen",icon:<IoRestaurantSharp size={25} className="mx-4 relative z-10"/>,to:'/dashboard/Add_CanteenO'});
+        sideTabs.push({name:"View Canteen",icon:<FaEye size={25} className="mx-4 relative z-10"/>,to:'/dashboard/View_Canteen'});
+        sideTabs.push({name:"Edit Canteen",icon:<FiEdit size={25} className="mx-4 relative z-10"/>,to:'/dashboard/Edit_Canteen'});
     }
-
-    const handleSideTabClick = (index)=>{
+        const handleSideTabClick = (index)=>{
         localStorage.setItem("prevTab",JSON.stringify(currTab));
         dispatch(setPrevTab(currTab));
         localStorage.setItem("currTab",JSON.stringify(index));
