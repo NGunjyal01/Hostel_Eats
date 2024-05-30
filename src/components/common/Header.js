@@ -30,7 +30,9 @@ const Header = () => {
         sideTabs.push({name:"Settings",to:'/dashboard/settings'});
     }
     else if(user?.accountType==="Owner"){
-
+        sideTabs.push({name:"Add Canteen",to:'/dashboard/add_canteeno'});
+        sideTabs.push({name:"View Canteen",to:'/dashboard/view_canteen'});
+        sideTabs.push({name:"Edit Canteen",to:'/dashboard/edit_canteen'});
     }
     const handleSideTabClick = (index)=>{
         localStorage.setItem("prevTab",JSON.stringify(currTab));

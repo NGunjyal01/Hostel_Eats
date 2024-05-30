@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom"
+import Footer from "./common/Footer"
 import Header from "./common/Header"
 
 const Body = () => {
@@ -6,6 +7,7 @@ const Body = () => {
         <>
             <Header/>
             <Outlet/>
+            <Footer/>
         </>
     )
 }
