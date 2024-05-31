@@ -7,17 +7,11 @@ exports.userSignup = async (req, res) => {
     const { accountType, phone, email, firstName, lastName, password } =
       req.body;
 
-    if (
-      !accountType ||
-      !phone ||
-      !firstName ||
-      !lastName ||
-      !email ||
-      !password
-    ) {
+    if (! accountType || ! phone ||  ! firstName || ! lastName || ! email || ! password ) {
+      console.log(req.body);
       return res.status(400).json({
         status: 400,
-        message: "Please fill all fields",
+        message: "Please filll all fields",
       });
     }
 
@@ -55,6 +49,7 @@ exports.userSignup = async (req, res) => {
       firstName,
       lastName,
       password: hashedPassword,
+      imageUrl: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
     });
 
     return res.status(200).json({

@@ -7,9 +7,9 @@ const userschema = new mongoose.Schema({
     required: true,
   },
   phone: {
-    type:String,
+    type: String,
     required: true,
-    maxlength: 10, 
+    maxlength: 10,
     unique: true,
   },
   email: {
@@ -29,6 +29,20 @@ const userschema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+  },
+  gender: {
+    type: String,
+    enum: ["Male", "Female", "Others",''],
+    default:'',
+  },
+  dob: {
+    type: Date,
+    default: "",
+  },
+  imageUrl: {
+    type: String,
+    required:true,
+
   },
 });
 
