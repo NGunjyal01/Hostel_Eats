@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const Merchant = require("../models/merchant");
 const Item = require("../models/item");
-const cloudinary = require("cloudinary").v2;
-
+// const cloudinary = require("cloudinary").v2;
+const {isFileTypeSupported,uploadFileToCloudinary}=require("../utils/imageUpload")
 //Canteen Add
 exports.addCanteen = async (req, res) => {
   try {
@@ -44,16 +44,6 @@ exports.addCanteen = async (req, res) => {
 };
 
 
-//Menu Item
-
-function isFileTypeSupported(type,supportedTypes){
-  return supportedTypes.includes(type);
-}
-
-async function uploadFileToCloudinary(file,folder){
-  const options= {folder};
-  return await cloudinary.uploader.upload(file.tempFilePath,options);
-}
 exports.addItem= async(req,res) =>{
 
  try {
@@ -80,7 +70,13 @@ exports.addItem= async(req,res) =>{
        message: "Please fill all fields",
      });
    }
-
+//for checking if it is valid id (satisfying the constraints of mongoose so that no castError would occur)
+if (!mongoose.Types.ObjectId.isValid(shopid)) {
+  return res.status(400).json({
+    success: false,
+    message: "Invalid shop ID",
+  });
+}
    //validate baki hai shop ke through hoga shop id must be  present in DB
   //  console.log(shopid);
    const exisitingShop = await Merchant.findOne({
@@ -108,6 +104,9 @@ exports.addItem= async(req,res) =>{
        message: "Something Went Wrong",
      });
    }
+
+
+
     if (!isFileTypeSupported(fileType, supportedTypes)) {
       return res.status(400).json({
         success: false,
@@ -115,7 +114,6 @@ exports.addItem= async(req,res) =>{
       });
     }
     const response = await uploadFileToCloudinary(file, "Hosteleats");
-     
    const item = new Item({
      shopid,
      name,
