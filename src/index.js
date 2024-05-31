@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import appStore from './utils/appStore';
 import { Toaster } from 'react-hot-toast';
 import { BrowserRouter } from 'react-router-dom';
+import ScrollRestoration from './components/common/ScrollRestoration';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,6 +16,7 @@ root.render(
       <BrowserRouter>
         <App/>
         <Toaster/>
+        <ScrollRestoration/>
       </BrowserRouter>
     </Provider>
   </React.StrictMode>

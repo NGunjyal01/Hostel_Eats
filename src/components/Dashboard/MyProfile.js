@@ -1,21 +1,23 @@
 import { useSelector } from "react-redux";
 import userIcon from "../../user-icon.jpg";
+import { useNavigate } from "react-router-dom";
 
 const MyProfile = () => {
 
     const user = useSelector(store => store.user);
+    const navigate = useNavigate();
     const {firstName,lastName,email,phone} = user;
 
     return (
-        <div className="flex flex-col items-center">
-            <h1 className="-translate-x-[24rem] text-3xl font-semibold origin-left">Profile</h1>
+        <div className="flex flex-col items-center mb-28">
+            <h1 className="-translate-x-[25rem] text-3xl font-semibold origin-left">Profile</h1>
             <div className="bg-[#31363F] w-[70%] h-fit p-10 mt-10 rounded-xl flex items-center space-x-20 relative">
-                <img src={userIcon} className="size-20 rounded-full"/>
+                <img src={user.imageUrl} className="size-20 rounded-full"/>
                 <div className="space-y-2">
                     <h1 className="text-xl">{firstName + " " + lastName}</h1>
                     <h1 className="">{email}</h1>
                 </div>
-                <button className="absolute right-10">
+                <button className="absolute right-10" onClick={()=>{navigate("/dashboard/cart")}}>
                     edit
                 </button>
             </div>

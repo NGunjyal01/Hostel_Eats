@@ -7,10 +7,12 @@ import { logout } from "../../services/authAPI";
 import { AnimatePresence, motion } from "framer-motion";
 import Tab from "./Tab";
 import { setCurrTab, setPrevTab } from "../../slices/tabSlice";
+import ConfirmationalModal from "./ConfirmationalModal";
 
 const Header = () => {
 
     const user = useSelector(store => store.user);
+    const [confirmationalModal,setConfirmationalModal] = useState(null);
     const {currTab} = useSelector(store => store.tabInfo);
     const [showDropDownMenu,setShowDropDownMenu] = useState(false);
     const navigate = useNavigate();
@@ -19,21 +21,24 @@ const Header = () => {
     const handleUserIconClick = ()=>{
         navigate('/dashboard/my-profile');
     }
-    const handleLogOut = ()=>{
-        logout(navigate,dispatch);
-    }
+    const handleLogOut = () =>{
+        setConfirmationalModal({text1:"Are You Sure ?",text2:"You will be logged out.",btn1Text:"Logout",btn2Text:"Cancel",
+            btn1Handler: () => {logout(navigate,dispatch); setConfirmationalModal(null)},
+            btn2Handler: () => setConfirmationalModal(null)
+        })
+    };
     const sideTabs = [{name:'Profile',to:'/dashboard/my-profile'}];
     if(user?.accountType==="Customer"){
         sideTabs.push({name:"Orders",to:'/dashboard/orders'});
         sideTabs.push({name:"Cart",to:'/dashboard/cart'});
         sideTabs.push({name:"Favourites",to:'/dashboard/favourites'});
-        sideTabs.push({name:"Settings",to:'/dashboard/settings'});
     }
     else if(user?.accountType==="Owner"){
         sideTabs.push({name:"Add Canteen",to:'/dashboard/add_canteeno'});
         sideTabs.push({name:"View Canteen",to:'/dashboard/view_canteen'});
         sideTabs.push({name:"Edit Canteen",to:'/dashboard/edit_canteen'});
     }
+    sideTabs.push({name:"Settings",to:'/dashboard/settings'});
     const handleSideTabClick = (index)=>{
         localStorage.setItem("prevTab",JSON.stringify(currTab));
         dispatch(setPrevTab(currTab));
@@ -42,7 +47,7 @@ const Header = () => {
     }
 
     return (
-        <div className="fixed w-full z-10 flex bg-gradient-to-r from-black to-[#222831] text-white pt-10 pb-4">
+        <div className="fixed w-full z-40 flex bg-gradient-to-r from-black to-[#222831] text-white pt-10 pb-4">
             <h1 className="ml-[10%]">Hostel Eats</h1>
             <div className="ml-[25%] space-x-7 flex">
                 {tabs.map(tab => <Tab><NavLink to={tab.to} className={({isActive}) => ` ${isActive?"text-[#76ABAE]":""}`}>{tab.name}</NavLink></Tab>)}
@@ -53,7 +58,7 @@ const Header = () => {
             </div>}  
             {user && <><div className="group absolute right-24 top-7 flex justify-center items-center space-x-1 cursor-pointer transition-transform ease-out" onClick={handleUserIconClick}
             onMouseEnter={()=>{setShowDropDownMenu(true)}} onMouseLeave={()=>{setShowDropDownMenu(false)}}>
-                <FaUserCircle  size={40}/>   
+                <img src={user.imageUrl} className="size-10 rounded-md"/>  
                 <AnimatePresence>
                     {showDropDownMenu && <>
                     <div className="absolute top-10 bg-transparent h-7 w-[10rem] z-10"></div>
@@ -65,8 +70,9 @@ const Header = () => {
                         </motion.div>
                     </>}
                 </AnimatePresence> 
-                <div className="absolute -right-6"><IoMdArrowDropdown size={20} className="group-hover:rotate-180 transition-transform ease-out duration-300"/></div>
+                <div className="absolute -right-6"><IoMdArrowDropdown size={20} className="group-hover:rotate-180 transition-transform ease-out duration-200"/></div>
             </div></>}
+            {confirmationalModal && <ConfirmationalModal modalData={confirmationalModal}/>}
         </div>
     )
 }
