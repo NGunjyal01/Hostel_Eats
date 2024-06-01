@@ -10,8 +10,8 @@ const MyProfile = () => {
 
     return (
         <div className="flex flex-col items-center mb-28">
-            <h1 className="-translate-x-[25rem] text-3xl font-semibold origin-left">Profile</h1>
-            <div className="bg-[#31363F] w-[70%] h-fit p-10 mt-10 rounded-xl flex items-center space-x-20 relative">
+            <h1 className="-translate-x-[25rem] text-3xl font-semibold">Profile</h1>
+            <div className="bg-[#222831] w-[70%] h-fit p-10 mt-10 rounded-xl flex items-center space-x-20 relative">
                 <img src={user.imageUrl} className="size-20 rounded-full"/>
                 <div className="space-y-2">
                     <h1 className="text-xl">{firstName + " " + lastName}</h1>
@@ -21,7 +21,7 @@ const MyProfile = () => {
                     edit
                 </button>
             </div>
-            <div className="bg-[#31363F] w-[70%] h-fit p-10 mt-14 rounded-xl relative">
+            <div className="bg-[#222831] w-[70%] h-fit p-10 mt-14 rounded-xl relative">
                 <h1 className="text-2xl">Personal Details</h1>
                 <div className="flex space-x-80 mt-7">
                     <div className="space-y-1">

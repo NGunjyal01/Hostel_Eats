@@ -18,6 +18,7 @@ import Favourite from './components/Dashboard/Favourite';
 import Add_CanteenO from './components/Dashboard/Add_CanteenO';
 import View_Canteen from './components/Dashboard/View_Canteen';
 import Edit_Canteen from './components/Dashboard/Edit_Canteen';
+import Explore from './pages/Explore';
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
         <Route index element={<Home/>}/>
         <Route path='about-us' element={<AboutUs/>}/>
         <Route path='add-canteen' element={<AddCanteen/>}/>
+        <Route path='explore' element={<Explore/>}/>
         <Route path='login' element={<OpenRoute><LogIn/></OpenRoute>}/>
         <Route path='signup' element={<OpenRoute><SignUp/></OpenRoute>}/>
         <Route element={<PrivateRoute><Dashboard/></PrivateRoute>}>

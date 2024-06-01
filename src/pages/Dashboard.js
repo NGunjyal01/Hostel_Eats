@@ -54,7 +54,7 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="relative flex w-full min-h-screen bg-gradient-to-r from-black to-[#222831] text-white">
+        <div className="relative flex w-full min-h-screen bg-gradient-to-r from-black to-[#222831] text-white pb-20">
             <div className="pt-40 pl-10 w-[18%] min-h-screen flex flex-col space-y-5">
                 {/* Content for the left section */}
                 {sideTabs.map((tab,index)=> <motion.div className="relative" key={tab.name} initial="hidden" animate="visible" exit="exit" variants={linkVariants} onClick={()=>{handleSideTabClick(index)}}>

@@ -17,7 +17,7 @@ const Header = () => {
     const [showDropDownMenu,setShowDropDownMenu] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const tabs = [{name:'Home',to:'/'},{name:'About Us',to:'/about-us'},{name:'Add Canteen',to:'/add-canteen'}]
+    const tabs = [{name:'Home',to:'/'},{name:'About Us',to:'/about-us'},{name:'Explore',to:'/explore'},{name:'Add Canteen',to:'/add-canteen'}]
     const handleUserIconClick = ()=>{
         navigate('/dashboard/my-profile');
     }
