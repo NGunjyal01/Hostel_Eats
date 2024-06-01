@@ -33,6 +33,7 @@ function App() {
         <Route path='explore' element={<Explore/>}/>
         <Route path='login' element={<OpenRoute><LogIn/></OpenRoute>}/>
         <Route path='signup' element={<OpenRoute><SignUp/></OpenRoute>}/>
+        {/* <Route path="/register-canteen" element={<RegisterCanteen />} /> */}
         <Route element={<PrivateRoute><Dashboard/></PrivateRoute>}>
           <Route path='dashboard/my-profile' element={<MyProfile/>}/>
           <Route path='dashboard/settings' element={<Settings/>}/>
