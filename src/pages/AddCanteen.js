@@ -14,11 +14,11 @@ const AddCanteen = () => {
                 <div className='flex mb-3'>
                     <button
                         className='w-64 p-2 m-2 bg-[#30353e] rounded-md'
-                        onClick={() => {if(!user)navigate('/signup'); navigate('/dashboard/add_canteeno')}} // Use navigate to redirect
+                        onClick={() => {if(!user)navigate('/signup'); else navigate('/dashboard/add_canteeno')}} // Use navigate to redirect
                     >
                         Register your canteen
                     </button>
-                    <button className='w-64 p-2 m-2 bg-[#76ABAE] rounded-md text-black' onClick={() => {if(!user)navigate('/login'); navigate('/dashboard/view_canteen')}}>View your existing canteens</button>
+                    <button className='w-64 p-2 m-2 bg-[#76ABAE] rounded-md text-black' onClick={() => {if(!user)navigate('/login'); else navigate('/dashboard/view_canteen')}}>View your existing canteens</button>
                 </div>
                 <div className='mt-8 bg-[#30353e] p-5 rounded-md w-full max-w-2xl text-center'>
                     <h2 className='text-2xl'>Get started with online ordering</h2>

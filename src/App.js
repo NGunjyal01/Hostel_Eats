@@ -9,7 +9,7 @@ import LogIn from './pages/LogIn';
 import SignUp from './pages/SignUp';
 import MyProfile from './components/Dashboard/MyProfile';
 import Dashboard from "./pages/Dashboard";
-import Settings from './components/Dashboard/Settings';
+import Settings from './components/Dashboard/Settings/Settings';
 import OpenRoute from './components/Auth/OpenRoute';
 import PrivateRoute from './components/Auth/PrivateRoute';
 import Orders from './components/Dashboard/Orders';
