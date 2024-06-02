@@ -2,19 +2,37 @@ const mongoose = require("mongoose");
 
 // Define the schema for merchants
 const merchantSchema = new mongoose.Schema({
-  shopNo: {
-    type: Number,
-    required: true,
-    unique: true,
-  },
-  shopName: {
+  canteenName: {
     type: String,
     required: true,
     unique: true,
+  },
+  canteenContact: {
+    type: String,
+    maxlength: 10,
+    minlength: 10,
+    required: true,
+    unique: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  ownerContact: {
+    type: String,
+    required: true,
+
+    maxlength: 10,
+    minlength: 10,
   },
   ownerName: {
     type: String,
     required: true,
+  },
+  ownerEmail: {
+    type: String,
+    required: true,
+
   },
   licenseNumber: {
     type: String,

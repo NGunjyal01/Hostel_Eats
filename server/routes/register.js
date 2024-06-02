@@ -3,7 +3,7 @@ const router = express.Router();
 const { userSignup } = require("../controllers/signup"); //For both customer and owner
 const {userLogin}=require("../controllers/login");
 const {auth,isCustomer,isOwner}=require("../middlewares/auth");
-const {addCanteen,addItem}=require("../controllers/addCanteen");
+const {addCanteen,addItem}=require("../controllers/canteen");
 const {profileDetails}=require("../controllers/profileDetails");
 
 //Signup Part
@@ -11,7 +11,7 @@ router.post("/signup", userSignup);
 //login Part
 router.post("/login",userLogin);
 //addCanteen
-router.post("/addCanteen",addCanteen);
+router.post("/owner/addCanteen",addCanteen);
 
 router.post("/addCanteen/menuItem",addItem);
 router.post("/dashboard/settings",profileDetails)
