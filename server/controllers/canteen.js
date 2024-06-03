@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Merchant = require("../models/merchant");
+const User=require("../models/user");
 const Item = require("../models/item");
 const jwt=require("jsonwebtoken");
 require("dotenv").config();
@@ -9,8 +10,8 @@ const {isFileTypeSupported,uploadFileToCloudinary}=require("../utils/imageUpload
 //Canteen Add
 exports.addCanteen = async (req, res) => {
   try {
-    const { canteenName, canteenContact, address,ownerContact,ownerName,ownerEmail, licenseNumber } = req.body;
-    if (!canteenName || !canteenContact || !address || !ownerContact || !ownerName || !ownerEmail || !licenseNumber) {
+    const { canteenName, canteenContact, address,ownerContact,ownerName,ownerEmail, licenseNumber,openingTime,closingTime } = req.body;
+    if (!canteenName || !canteenContact || !address || !ownerContact || !ownerName || !ownerEmail || !licenseNumber ||!openingTime || !closingTime) {
       
       return res.status(400).json({
         status: 400,
@@ -49,6 +50,8 @@ exports.addCanteen = async (req, res) => {
       ownerName,
       ownerEmail,
       licenseNumber,
+      openingTime,
+      closingTime,
     });
 
     return res.status(200).json({
@@ -173,7 +176,7 @@ if (!mongoose.Types.ObjectId.isValid(shopid)) {
 //to get all canteen using JWT Token
 exports.getAllCanteen= async(req,res) => {
   try{
-   console.log(req);
+   //console.log(req);
      const {token}=req.cookies;
       if (!token) {
         return res.status(400).json({
@@ -185,21 +188,31 @@ exports.getAllCanteen= async(req,res) => {
    //console.log(payload);
    const canteens = await Merchant.find({ ownerEmail:payload.email});
 if(canteens.length==0){
-  return res.status(400).json({
+  return res.status(200).json({
     success:false,
     message:"Canteen is not created Yet Please create your canteen first",
   })
 }
+
+const owner= await User.findOne({email:payload.email});
+//console.log(owner);
 const responseData = canteens.map((canteen) => ({
   id: canteen._id,
   canteenName: canteen.canteenName,
   canteenContact: canteen.canteenContact,
   address: canteen.address,
   licenseNumber: canteen.licenseNumber,
+  openingTime:canteen.openingTime,
+  closingTime:canteen.closingTime,
+  monthlyRevenue:canteen.monthlyRevenue,
+  totalRevenue:canteen.totalRevenue,
 }));
 
 
      res.status(200).json({
+      OwnerName: owner.firstName + " "+owner.lastName,
+      Email:owner.email,
+      Phone:owner.phone,
       data:responseData,
       success:true,
       message:"You Can view Your Canteen",
