@@ -1,5 +1,7 @@
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { createCanteen } from "../../services/ownerAPI";
+import { useNavigate } from "react-router-dom";
 
 
 const Add_CanteenO = () => {
@@ -7,11 +9,21 @@ const Add_CanteenO = () => {
   const user = useSelector(store => store.user);
   const {firstName,lastName,email,phone,token} = user;
   const ownerName = firstName + " " + lastName;
-
   const {register,handleSubmit,formState:{errors}} = useForm();
   const inputStyle = "bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2";
   
-  const handleOnSubmit = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleOnSubmit = (data) => {
+    const formData = {...data,ownerName:ownerName,ownerEmail:email,ownerContact:phone};
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',  // Set the Content-Type to multipart/form-data
+        'Authorization': `Bearer ${token}`   // Set the Authorization header with the token
+      }
+    };
+    createCanteen(formData,navigate,dispatch);
 
   };
 
@@ -28,18 +40,18 @@ const Add_CanteenO = () => {
             {errors.canteenName && <p className="mt-1 text-xs text-red-500">{errors.canteenName.message}</p>}
           </div>
           <div className="col-span-6 mt-8 relative">
-            <label htmlFor="canteenContactNumber">Canteen Contact Number</label>
-            <input type="text" name="canteenContactNumber" id="canteenContactNumber" placeholder="Enter Contact Number" className={`${inputStyle} pl-11`}
-            {...register("canteenContactNumber",{required:{value:true,message:"Please Enter your Contact Number"},
+            <label htmlFor="canteenContact">Canteen Contact Number</label>
+            <input type="text" name="canteenContact" id="canteenContact" placeholder="Enter Contact Number" className={`${inputStyle} pl-11`}
+            {...register("canteenContact",{required:{value:true,message:"Please Enter your Contact Number"},
             minLength:{value:10,message:"Invalid Contact Number"},maxLength:{value:10,message:"Invalid Contact Number"}})}/>
             <span className="absolute pt-4 left-2">+91</span>
-            {errors.canteenContactNumber && <p className="mt-1 text-xs text-red-500">{errors.canteenContactNumber.message}</p>}
+            {errors.canteenContact && <p className="mt-1 text-xs text-red-500">{errors.canteenContact.message}</p>}
           </div>
           <div className="col-span-6 mt-8 flex flex-col">
-            <label htmlFor="canteenAddress">Canteen Address</label>
-            <input type="text" name="canteenAddress" id="canteenAddress" placeholder="Enter Canteen Address" className={`${inputStyle}`}
-            {...register("canteenAddress",{required:{value:true,message:"Please Enter your Canteen Address"}})}/>
-            {errors.canteenAddress && <p className="mt-1 text-xs text-red-500">{errors.canteenAddress.message}</p>}
+            <label htmlFor="address">Canteen Address</label>
+            <input type="text" name="address" id="address" placeholder="Enter Canteen Address" className={`${inputStyle}`}
+            {...register("address",{required:{value:true,message:"Please Enter your Canteen Address"}})}/>
+            {errors.address && <p className="mt-1 text-xs text-red-500">{errors.address.message}</p>}
           </div>
           <div className="col-span-6 mt-8">
             <h1>Owner Name</h1>

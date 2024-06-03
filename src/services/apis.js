@@ -8,14 +8,14 @@ export const endpoints = {
 
 // Owner Endpoints 
 export const ownerEndpoints = {
-    CREATE_CANTEEN_API: BASE_URL + "/addCanteen",
-    GET_ALL_CANTEEN_API: BASE_URL + "/getAllCanteen",
-    GET_CANTEEN_DETAILS_API: BASE_URL + "/getCanteenDetails",
-    EDIT_CANTEEN_API: BASE_URL + "/editCanteen",
-    CREATE_ITEM_API: BASE_URL + "/addItem",
-    EDIT_ITEM_API: BASE_URL + "/editItem",
-    DELETE_ITEM_API: BASE_URL + "/deleleIem",
-    DELETE_CANTEEN_API: BASE_URL + "/deleteCanteen" 
+    CREATE_CANTEEN_API: BASE_URL + "/owner/addCanteen",
+    GET_ALL_CANTEEN_API: BASE_URL + "/owner/getAllCanteen",
+    GET_CANTEEN_DETAILS_API: BASE_URL + "/owner/getCanteenDetails",
+    EDIT_CANTEEN_API: BASE_URL + "/owner/editCanteen",
+    CREATE_ITEM_API: BASE_URL + "/owner/addItem",
+    EDIT_ITEM_API: BASE_URL + "/owner/editItem",
+    DELETE_ITEM_API: BASE_URL + "/owner/deleleIem",
+    DELETE_CANTEEN_API: BASE_URL + "/owner/deleteCanteen" 
 }
 
 // SETTINGS PAGE API
