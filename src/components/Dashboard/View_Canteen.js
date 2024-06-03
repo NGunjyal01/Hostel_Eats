@@ -1,9 +1,16 @@
-import React from 'react'
+import { useEffect } from "react"
+import { getAllCanteenAPI } from "../../services/ownerAPI";
+
 
 const View_Canteen = () => {
+
+  useEffect(()=>{
+    getAllCanteenAPI();
+  },[]);
+
   return (
-    <div>View_Canteen</div>
+  <div>View_Canteen</div>
   )
 }
 
-export default View_Canteen
+export default View_Canteen;

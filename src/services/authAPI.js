@@ -24,7 +24,7 @@ export async function signup (signUpData,navigate,dispatch){
 export async function login(email,password,navigate,dispatch){
     const toastId = toast.loading("Loading...");
     try{
-        const response = await axios.post(LOGIN_API,{email,password});
+        const response = await axios.post(LOGIN_API,{email,password},{headers:{'Content-Type':'application/json'},withCredentials:true});
         console.log("LOGIN API RESPONSE..............",response);
         toast.success("Login Successful");
         dispatch(addUser(response.data.existingUser));
