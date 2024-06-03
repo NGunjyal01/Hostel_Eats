@@ -6,8 +6,15 @@ require("dotenv").config();
 const PORT=process.env.PORT||3000;
 
 app.use(express.json()); 
+
 var cors = require("cors");
-app.use(cors());
+//app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000", //clien URL
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 //fileUpload
 const fileupload = require("express-fileupload"); //server tak file upload kar paye

@@ -173,7 +173,7 @@ if (!mongoose.Types.ObjectId.isValid(shopid)) {
 //to get all canteen using JWT Token
 exports.getAllCanteen= async(req,res) => {
   try{
-    console.log(req);
+   console.log(req);
      const {token}=req.cookies;
       if (!token) {
         return res.status(400).json({
@@ -222,10 +222,12 @@ exports.getCanteenDetails = async(req,res) => {
   try{
       //taking token from request
       const {token}=req.cookies;
-      if(!token){
+     // console.log(req);
+      const {id}=req.body;
+      if(!token || !id){
          return res.status(400).json({
            sucess:false,
-           message: "Please provide token",
+           message: "Please provide Details",
          });
       }
       const payload=jwt.verify(token,process.env.JWT_SECRET);
@@ -239,8 +241,22 @@ exports.getCanteenDetails = async(req,res) => {
             "Canteen is not created yet Please create Your canteen first ",
         });
       }
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid ID",
+        });
+      }
+      const specificCanteen= await Merchant.findOne({_id:id})
+      //console.log(specificCanteen);
+      if(!specificCanteen){
+        return res.status(200).json({
+          success:false,
+          message:"Canteen is not present",
+        })
+      }
       res.status(200).json({
-        data: canteens,
+        data: specificCanteen,
         success: true,
         message: "You Can view Your Canteen Full details",
       });

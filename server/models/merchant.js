@@ -39,6 +39,22 @@ const merchantSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  // openingTime:{
+  //   type: String,
+  //   required:true,
+  // },
+  // closingTime:{
+  //   type:String,
+  //   required:true,
+  // },
+  // monthlyRevenue:{
+  //   type:Number,
+  //   default:0,
+  // },
+  // totalRevenue:{
+  //   type:Number,
+  //   default:0,
+  // },
   menuitems: [
     {
       type: mongoose.Schema.Types.ObjectId,
