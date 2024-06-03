@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const Merchant = require("../models/merchant");
 const Item = require("../models/item");
+const jwt=require("jsonwebtoken");
+require("dotenv").config();
+
 // const cloudinary = require("cloudinary").v2;
 const {isFileTypeSupported,uploadFileToCloudinary}=require("../utils/imageUpload")
 //Canteen Add
@@ -62,7 +65,7 @@ exports.addCanteen = async (req, res) => {
   }
 };
 
-
+//Item Add
 exports.addItem= async(req,res) =>{
 
  try {
@@ -165,3 +168,95 @@ if (!mongoose.Types.ObjectId.isValid(shopid)) {
 
 
 }
+
+
+//to get all canteen using JWT Token
+exports.getAllCanteen= async(req,res) => {
+  try{
+    console.log(req);
+     const {token}=req.cookies;
+      if (!token) {
+        return res.status(400).json({
+          sucess: false,
+          message: "Please provide token",
+        });
+      }
+     const payload=jwt.verify(token,process.env.JWT_SECRET);
+   //console.log(payload);
+   const canteens = await Merchant.find({ ownerEmail:payload.email});
+if(canteens.length==0){
+  return res.status(400).json({
+    success:false,
+    message:"Canteen is not created Yet Please create your canteen first",
+  })
+}
+const responseData = canteens.map((canteen) => ({
+  id: canteen._id,
+  canteenName: canteen.canteenName,
+  canteenContact: canteen.canteenContact,
+  address: canteen.address,
+  licenseNumber: canteen.licenseNumber,
+}));
+
+
+     res.status(200).json({
+      data:responseData,
+      success:true,
+      message:"You Can view Your Canteen",
+     })
+
+
+  }
+  catch(error){
+    console.log(error);
+    res.status(400).json({
+      success:false,
+      message:"Something Went Wrong",
+
+    })
+  }
+}
+
+//to get all canteen details using JWT Token
+exports.getCanteenDetails = async(req,res) => {
+  try{
+      //taking token from request
+      const {token}=req.cookies;
+      if(!token){
+         return res.status(400).json({
+           sucess:false,
+           message: "Please provide token",
+         });
+      }
+      const payload=jwt.verify(token,process.env.JWT_SECRET);
+      const canteens = await Merchant.find({
+        ownerEmail:payload.email
+      })
+      if (canteens.length == 0) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Canteen is not created yet Please create Your canteen first ",
+        });
+      }
+      res.status(200).json({
+        data: canteens,
+        success: true,
+        message: "You Can view Your Canteen Full details",
+      });
+
+
+
+  }
+  catch(error){
+    console.log(error);
+    res.status(400).json (
+      {
+        success:false,
+        message:"Something Went Wroong",
+      }
+    )
+  }
+}
+
+

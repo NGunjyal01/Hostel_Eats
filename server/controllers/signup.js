@@ -5,8 +5,7 @@ const bcrypt = require("bcrypt");
 exports.userSignup = async (req, res) => {
   try {
     const { accountType, phone, email, firstName, lastName, password } =
-      req.body;
-
+      req.body;1
     if (! accountType || ! phone ||  ! firstName || ! lastName || ! email || ! password ) {
       console.log(req.body);
       return res.status(400).json({
