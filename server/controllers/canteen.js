@@ -72,7 +72,8 @@ exports.addCanteen = async (req, res) => {
 exports.addItem= async(req,res) =>{
 
  try {
-   const { shopid, name, description, category, price } = req.body;
+
+   const {shopid,name, description, category, price } = req.body;
  
    const file=req.files.imageFile;
    
@@ -81,7 +82,7 @@ exports.addItem= async(req,res) =>{
    const fileLength=file.name.split('.');
    const fileType=file.name.split('.')[fileLength.length-1].toLowerCase();
   //Image size must be less than 100kb
- if(file.size>100000){
+ if(file.size>300000){
   return res.status(400).json({
     success:false,
     message:"Image File size is more than 100KB",
@@ -240,7 +241,7 @@ exports.getCanteenDetails = async(req,res) => {
       if(!token || !id){
          return res.status(400).json({
            sucess:false,
-           message: "Please provide Details",
+           message: "Token is Expired please Login first",
          });
       }
       const payload=jwt.verify(token,process.env.JWT_SECRET);
@@ -260,7 +261,9 @@ exports.getCanteenDetails = async(req,res) => {
           message: "Invalid ID",
         });
       }
-      const specificCanteen= await Merchant.findOne({_id:id})
+      const specificCanteen = await Merchant.findOne({ _id: id }).populate(
+        "menuitems"
+      );
       //console.log(specificCanteen);
       if(!specificCanteen){
         return res.status(200).json({
