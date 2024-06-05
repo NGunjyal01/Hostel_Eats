@@ -24,7 +24,6 @@ const Add_CanteenO = () => {
       }
     };
     createCanteen(formData,navigate,dispatch);
-
   };
 
   return (
@@ -64,6 +63,18 @@ const Add_CanteenO = () => {
           <div className="col-span-6 mt-8 flex flex-col">
             <h1>Owner Email</h1>
             <h1 className={`${inputStyle}`}>{email}</h1>
+          </div>
+          <div className="col-span-6 mt-8">
+            <label htmlFor="openingTime">Opening Time</label>
+            <input type="time" name="openingTime" id="openingTime" placeholder="Enter Opening Time" className={`${inputStyle}`}
+            {...register("openingTime",{required:{value:true,message:"Please Enter Opening Time"}})}/>
+            {errors.openingTime && <p className="mt-1 text-xs text-red-500">{errors.openingTime.message}</p>}
+          </div>
+          <div className="col-span-6 mt-8">
+            <label htmlFor="closingTime">Closing Time</label>
+            <input type="time" name="closingTime" id="closingTime" placeholder="Enter Closing Time" className={`${inputStyle}`}
+            {...register("closingTime",{required:{value:true,message:"Please Enter Closing Time"}})}/>
+            {errors.closingTime && <p className="mt-1 text-xs text-red-500">{errors.closingTime.message}</p>}
           </div>
           <div className="col-span-6 mt-8">
             <label htmlFor="licenseNumber">License Number</label>

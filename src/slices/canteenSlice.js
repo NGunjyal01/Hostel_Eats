@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const canteen = localStorage.getItem('canteen');
+
 const canteenSlice = createSlice({
     name: "canteen",
     initialState: {
-        allCanteen: localStorage.getItem('canteen') ? (localStorage.getItem('canteen').allCanteen ? JSON.parse(localStorage.getItem('canteen').allCanteen) : null) : null 
+        allCanteen: canteen ? (JSON.parse(canteen)).allCanteen ? (JSON.parse(canteen)).allCanteen :null: null, 
     },
     reducers: {
         getAllCanteen: (state,action) =>{

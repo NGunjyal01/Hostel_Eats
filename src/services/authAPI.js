@@ -43,6 +43,9 @@ export async function login(email,password,navigate,dispatch){
 export function logout(navigate,dispatch){
     dispatch(removeUser());
     localStorage.removeItem("user");
+    localStorage.removeItem("canteen");
+    localStorage.removeItem("currTab");
+    localStorage.removeItem("prevTab");
     toast.success("Logged Out");
     navigate('/');
 }
