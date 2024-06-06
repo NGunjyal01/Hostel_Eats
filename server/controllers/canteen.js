@@ -68,7 +68,7 @@ exports.addCanteen = async (req, res) => {
   }
 };
 
-//Item Add
+//Only Single Item
 exports.addItem= async(req,res) =>{
 
  try {
@@ -82,7 +82,7 @@ exports.addItem= async(req,res) =>{
    const fileLength=file.name.split('.');
    const fileType=file.name.split('.')[fileLength.length-1].toLowerCase();
   //Image size must be less than 100kb
- if(file.size>300000){
+ if(file.size>300 *1024){
   return res.status(400).json({
     success:false,
     message:"Image File size is more than 100KB",
@@ -292,3 +292,111 @@ exports.getCanteenDetails = async(req,res) => {
 }
 
 
+//multiple Items Register 
+exports.addItems = async (req, res) => {
+    try {
+      const { shopid, name, description, price, category } = req.body;
+      console.log(req.body);
+      console.log(req.files.imageFile);
+      const files = req.files ? req.files.imageFile : null;
+
+      // Checking if SHOP ID is Valid or not
+      if (!mongoose.Types.ObjectId.isValid(shopid)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid shop ID means does not satisfy Mongoose criteria",
+        });
+      }
+
+      // Checking if Shop Exist or not based on shopid
+      const existingShop = await Merchant.findById(shopid);
+      if (!existingShop) {
+        return res.status(400).json({
+          success: false,
+          message: "Merchant does not exist please register your canteen first",
+        });
+      }
+
+      const items = [];
+      for (let i = 0; i < name.length; i++) {
+        //Validation of empty fields
+        if (!name[i] || !description[i] || !price[i] || !category[i]) {
+          return res.status(400).json({
+            success: false,
+            message: `Please fill all fields for item at index ${i}`,
+          });
+        }
+
+        // Checking if item already exists We have to make sure Item name must be unique 
+        const existingItem = await Item.findOne({ shopid, name: name[i] });
+        if (existingItem) {
+          return res.status(400).json({
+            success: false,
+            message: `Item '${name[i]}' already exists`,
+          });
+        }
+
+        // Validate image file if present
+        let imageUrl = null;
+        if (files && files[i]) {
+          const file =  files[i];
+          const supportedTypes = ["jpg", "jpeg", "png"];
+          const fileType = file.name.split(".").pop().toLowerCase();
+
+          if (file.size > 300 * 1024) {
+            // 300 KB limit
+            return res.status(400).json({
+              success: false,
+              message: `Image file size for item '${name[i]}' is more than 300KB`,
+            });
+          }
+
+          if (!isFileTypeSupported(fileType, supportedTypes)) {
+            return res.status(400).json({
+              success: false,
+              message: `Image file type for item '${name[i]}' is not supported`,
+            });
+          }
+
+          const response = await uploadFileToCloudinary(file, "Hosteleats");
+          imageUrl = response.secure_url;
+        }
+
+        // Create new item
+        const item = new Item({
+          shopid,
+          name: name[i],
+          description: description[i],
+          category: category[i],
+          price: price[i],
+          imageUrl,
+        });
+
+        items.push(item); //pushing in the items array required for populating
+      }
+
+      // Save all items
+      const savedItems = await Item.insertMany(items);
+     //console.log(savedItems);
+      // Update merchant with new items
+      const itemIds = savedItems.map((item) => item._id); //getting ids so we can use in merchant menuItems
+    //  console.log(itemIds);
+      const updatedMerchant = await Merchant.findByIdAndUpdate(
+        shopid,
+        { $push: { menuitems: { $each: itemIds } } },
+        { new: true }
+      ).populate("menuitems");
+
+      res.status(200).json({
+        data: updatedMerchant,
+        success: true,
+        message: "Items added successfully",
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({
+        success: false,
+        message: "Something went wrong",
+      });
+    }
+};
