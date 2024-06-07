@@ -16,7 +16,14 @@ exports.editCanteen= async(req,res) =>{
         });
       }
       const payload = await jwt.verify(token, process.env.JWT_SECRET);
-      const { shopid, canteenName, canteenContact, Address, openingTime, closingTime } =req.body;
+      const {
+        shopid,
+        canteenName,
+        canteenContact,
+        Address,
+        openingTime,
+        closingTime,
+      } = req.body;
       if (!mongoose.Types.ObjectId.isValid(shopid)) {
         return res.status(400).json({
           success: false,
@@ -29,16 +36,16 @@ exports.editCanteen= async(req,res) =>{
           message: "Please Give Canteen ID",
         });
       }
-      //Commented  because in front end we have protected route for owner and customer so if this api route is called then cookie must have authenticated token consiting of role:owner 
+      //Commented  because in front end we have protected route for owner and customer so if this api route is called then cookie must have authenticated token consiting of role:owner
 
-    //   const existingMerchant = await User.find({ email: payload.email });
-    //   console.log(payload.role);
-    //   if (!existingMerchant || payload.role != "Owner") {
-    //     return res.status(404).json({
-    //       success: false,
-    //       message: "Merchant is Not Created",
-    //     });
-    //   }
+      //   const existingMerchant = await User.find({ email: payload.email });
+      //   console.log(payload.role);
+      //   if (!existingMerchant || payload.role != "Owner") {
+      //     return res.status(404).json({
+      //       success: false,
+      //       message: "Merchant is Not Created",
+      //     });
+      //   }
 
       const existingCanteen = await Merchant.findOne({ _id: shopid });
       if (!existingCanteen) {
@@ -48,22 +55,37 @@ exports.editCanteen= async(req,res) =>{
         });
       }
       //checking if same canteen Name already present in the database
-    const existingCanteenName= await Merchant.findOne({canteenName});
-    if(existingCanteenName){
+      const existingCanteenName = await Merchant.findOne({
+        canteenName,
+        _id: { $ne: shopid },
+      });
+      if (existingCanteenName) {
         return res.status(200).json({
-            success:false,
-            message:"Canteen Name already exist"
-        })
-    }
-    //checking if the same canteen Contact Number is already present in the database
+          success: false,
+          message: "Canteen Name already exist",
+        });
+      }
+      //checking if the same canteen Contact Number is already present in the database
 
-        const existingCanteenContact = await Merchant.findOne({ canteenContact });
-        if (existingCanteenContact) {
-          return res.status(200).json({
+      const existingCanteenContact = await Merchant.findOne({
+        canteenContact,
+        _id: { $ne: shopid },
+      });
+      if (existingCanteenContact) {
+        return res.status(200).json({
+          success: false,
+          message: `Canteen Contact Number already exist`,
+        });
+      }
+
+      if (canteenContact.length != 10) {
+        return res
+          .status(200)
+          .json({
             success: false,
-            message: "Canteen Contact Number already exist",
+            message: "Phone Number length is not valid",
           });
-        }
+      }
       // Update the canteen details
       const updatedCanteen = await Merchant.findByIdAndUpdate(
         shopid,
