@@ -40,7 +40,6 @@ const Dashboard = () => {
     else if(user.accountType==="Owner"){
         sideTabs.push({name:"Add Canteen",icon:<IoRestaurantSharp size={25} className="mx-4 relative z-10"/>,to:'/dashboard/Add_CanteenO'});
         sideTabs.push({name:"View Canteen",icon:<FaEye size={25} className="mx-4 relative z-10"/>,to:'/dashboard/View_Canteen'});
-        sideTabs.push({name:"Edit Canteen",icon:<FiEdit size={25} className="mx-4 relative z-10"/>,to:'/dashboard/Edit_Canteen'});
     }
     sideTabs.push({name:"Settings",icon:<IoSettingsSharp size={25} className="mx-4 relative z-10"/>,to:'/dashboard/settings'});
     const handleSideTabClick = (index)=>{

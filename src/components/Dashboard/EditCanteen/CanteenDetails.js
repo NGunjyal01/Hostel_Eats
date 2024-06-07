@@ -48,7 +48,7 @@ const CanteenDetails = ({editState,setEditState}) => {
                         required:{value:true,message:info.message},
                         ...(info.name==="canteenContact"?{minLength:info.condition}:{}),
                         ...(info.name==="canteenContact"?{maxLength:info.condition}:{})
-                    })} defaultValue={canteenDetails[info.name]}
+                    })} defaultValue={canteenDetails?.[info?.name]}
                     disabled={checkInfo.includes(info.name)?true:!editState.canteenDetails}/>
                     {errors[info.name] && <p className="mt-1 text-xs text-red-500">{errors[info.name].message}</p>}
                 </div>)}

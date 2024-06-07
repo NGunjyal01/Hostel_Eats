@@ -36,7 +36,6 @@ const Header = () => {
     else if(user?.accountType==="Owner"){
         sideTabs.push({name:"Add Canteen",to:'/dashboard/add_canteeno'});
         sideTabs.push({name:"View Canteen",to:'/dashboard/view_canteen'});
-        sideTabs.push({name:"Edit Canteen",to:'/dashboard/edit_canteen'});
     }
     sideTabs.push({name:"Settings",to:'/dashboard/settings'});
     const handleSideTabClick = (index)=>{

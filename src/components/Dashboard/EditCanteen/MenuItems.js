@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import { addItem } from "../../../services/ownerAPI";
 
 
 const MenuItems = ({editState,setEditState}) => {
 
     const {canteenDetails} = useSelector(store => store.canteen);
-    const {menuitems} = canteenDetails;
-    const totalItems = menuitems.length;
+    const menuItems = canteenDetails?.menuitems;
+    const totalItems = menuItems?.length;
     const [showForm,setShowForm] = useState(false);
     const [image,setImage] = useState(null);
     const {register,handleSubmit,formState:{errors}} = useForm();
@@ -28,12 +29,13 @@ const MenuItems = ({editState,setEditState}) => {
         setImage(e.target.files[0]);
     }
     const handleOnSubmit = (data)=>{ 
-        const formData = {...data,image:image};
+        const formData = {...data,imageFile:image};
         console.log(formData);
+        addItem(formData);
     }
 
     return (
-        <div className="bg-[#222831] w-[70%] h-fit p-10 pb-20 mt-10 rounded-xl relative">
+        <div className="bg-[#222831] w-[70%] h-fit p-10 pb-20 ml-[15%] mt-10 rounded-xl relative">
             <h1 className="text-2xl font-semibold">Menu</h1>
             <div>
                 {!editState.canteenDetails && <div className="absolute right-10 top-10 space-x-5">
@@ -76,12 +78,12 @@ const MenuItems = ({editState,setEditState}) => {
                         {errors.description && <p className="mt-1 text-xs text-red-500">{errors.description.message}</p>}
                     </div>
                     <div className="col-span-12 flex flex-col items-center mt-8 -ml-10">
-                        <label htmlFor="image" className="">Image</label>
+                        <label htmlFor="imageFile" className="">Image</label>
                         {image && <img src={URL.createObjectURL(image)} className="size-40 object-contain"/>}
-                        <input type="file" name="image" id="image" className="bg-[#31363F] w-[50%] px-2 py-2 rounded-md mt-2"
-                        {...register('image',{required:{value:true,message:"Please Enter Item Image"}})} onChange={handleImageChange}
+                        <input type="file" name="imageFile" id="imageFile" className="bg-[#31363F] w-[50%] px-2 py-2 rounded-md mt-2"
+                        {...register('imageFile',{required:{value:true,message:"Please Enter Item Image"}})} onChange={handleImageChange}
                         accept="image/png, image/gif, image/jpeg"/>
-                        {errors.image && <p className="mt-1 text-xs text-red-500">{errors.image.message}</p>}
+                        {errors.imageFile && <p className="mt-1 text-xs text-red-500">{errors.imageFile.message}</p>}
                     </div>
                 </form>}
             </div>
