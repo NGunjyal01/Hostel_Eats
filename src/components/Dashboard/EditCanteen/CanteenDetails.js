@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { editCanteenDetails } from "../../../services/ownerAPI";
+import toast from "react-hot-toast";
 
 
 const CanteenDetails = ({editState,setEditState}) => {
 
     const {canteenDetails} = useSelector(store => store.canteen);
     const {register,handleSubmit,formState:{errors},reset} = useForm();
+    const dispatch = useDispatch();
     
     useEffect(() => {
         reset(canteenDetails);
@@ -24,10 +27,19 @@ const CanteenDetails = ({editState,setEditState}) => {
     ];
     const checkInfo = ['ownerName','ownerContact','ownerEmail','licenseNumber'];
 
-    const handleOnSubmit = (data)=>{
+    const handleOnSubmit = async (data)=>{
         const newData = Object.keys(data).map(key => data[key]);
         const oldData = Object.keys(canteenDetails).map(key => canteenDetails[key]);
-        console.log(JSON.stringify(newData)===JSON.stringify(oldData))
+        const check = JSON.stringify(newData)===JSON.stringify(oldData);
+        const formData = {shopid:data._id,canteenName:data.canteenName,canteenContact:data.canteenContact,Address:data.address,openingTime:data.openingTime,closingTime:data.closingTime};
+        if(!check){
+            const result = await editCanteenDetails(formData,dispatch);
+            if(result)
+            setEditState({...editState,canteenDetails:false});
+        }
+        else{
+            return toast.error("No Changes Made");
+        }
     }
     const handleEdit = ()=>{
         setEditState({...editState,canteenDetails:true});

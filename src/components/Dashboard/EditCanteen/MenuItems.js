@@ -29,7 +29,7 @@ const MenuItems = ({editState,setEditState}) => {
         setImage(e.target.files[0]);
     }
     const handleOnSubmit = (data)=>{ 
-        const formData = {...data,imageFile:image};
+        const formData = {...data,imageFile:image,shopid:canteenDetails._id};
         console.log(formData);
         addItem(formData);
     }
