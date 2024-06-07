@@ -74,10 +74,10 @@ exports.addItem= async(req,res) =>{
  try {
 
    const {shopid,name, description, category, price } = req.body;
- 
-   const file=req.files.imageFile;
-   
-   console.log(file);
+  console.log(req.body);
+  const file=req.files.imageFile;
+  
+ console.log(file);
    const supportedTypes=["jpg","jpeg","png"];
    const fileLength=file.name.split('.');
    const fileType=file.name.split('.')[fileLength.length-1].toLowerCase();

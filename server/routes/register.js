@@ -18,7 +18,7 @@ router.get("/owner/getAllCanteen",getAllCanteen);
 router.get("/owner/getCanteenDetails",getCanteenDetails)
 //Add item
 router.post("/owner/addItem",addItem);
-router.post("/owner/addItems",addItems) //Multiple items
+router.post("/owner/addItems",addItems)
 //Routes for Edit Canteen
 router.post("/owner/editCanteen",editCanteen);
 
