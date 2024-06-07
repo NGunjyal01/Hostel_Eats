@@ -14,7 +14,7 @@ import { FaEye } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import ConfirmationalModal from "../components/common/ConfirmationalModal";
 import { logout } from "../services/authAPI";
-import { getAllCanteenAPI } from "../services/ownerAPI";
+import { getAllCanteen } from "../services/ownerAPI";
 
 const Dashboard = () => {
 
@@ -29,7 +29,7 @@ const Dashboard = () => {
         exit: { opacity: 0, y: (currTab-prevTab>=0)?20:-20 },
     }; 
     useEffect(()=>{
-        getAllCanteenAPI();
+        getAllCanteen(dispatch);
     },[]);
     const sideTabs =[{name:"Profile",icon:<FaUserCircle size={25} className="mx-4 relative z-10"/>,to:'/dashboard/my-profile'}];
     if(user.accountType==="Customer"){

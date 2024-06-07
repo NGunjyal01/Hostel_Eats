@@ -6,13 +6,17 @@ const canteenSlice = createSlice({
     name: "canteen",
     initialState: {
         allCanteen: canteen ? (JSON.parse(canteen)).allCanteen ? (JSON.parse(canteen)).allCanteen :null: null, 
+        canteenDetails: canteen ? (JSON.parse(canteen).canteenDetails ? (JSON.parse(canteen).canteenDetails) : null) : null,
     },
     reducers: {
-        getAllCanteen: (state,action) =>{
+        setAllCanteen: (state,action) =>{
             state.allCanteen = action.payload;
         },
+        setCanteenDetails: (state,action) =>{
+            state.canteenDetails = action.payload;
+        }
     }
 });
 
-export const { getAllCanteen } = canteenSlice.actions;
+export const { setAllCanteen,setCanteenDetails } = canteenSlice.actions;
 export default canteenSlice.reducer;

@@ -237,7 +237,7 @@ exports.getCanteenDetails = async(req,res) => {
       //taking token from request
       const {token}=req.cookies;
      // console.log(req);
-      const {id}=req.body;
+      const {id}=req.query;
       if(!token || !id){
          return res.status(400).json({
            sucess:false,

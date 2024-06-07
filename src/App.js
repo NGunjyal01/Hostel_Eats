@@ -17,7 +17,7 @@ import Cart from './components/Dashboard/Cart';
 import Favourite from './components/Dashboard/Favourite';
 import Add_CanteenO from './components/Dashboard/Add_CanteenO';
 import View_Canteen from './components/Dashboard/View_Canteen';
-import Edit_Canteen from './components/Dashboard/Edit_Canteen';
+import Edit_Canteen from './components/Dashboard/EditCanteen/Edit_Canteen';
 import Explore from './pages/Explore';
 
 function App() {
@@ -43,7 +43,7 @@ function App() {
           </>}
           {user?.accountType==="Owner" && <><Route path='dashboard/add_canteeno' element={<Add_CanteenO/>}/>
             <Route path='dashboard/view_canteen' element={<View_Canteen/>}/>
-            <Route path='dashboard/edit_canteen' element={<Edit_Canteen/>}/>
+            <Route path='dashboard/edit_canteen/:id' element={<Edit_Canteen/>}/>
           </>}
         </Route>
       </Route>
