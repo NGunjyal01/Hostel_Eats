@@ -11,7 +11,8 @@ const Edit_Canteen = () => {
   const location = useLocation();
   console.log(location)
   const dispatch = useDispatch();
-  const [editState,setEditState] = useState({canteenDetails:false,menuItem:false});
+  //This is it know which btn is working currently meaning if editItem is true then currently we are editing menu item and no other btn will work
+  const [btnState,setBtnState] = useState({editCanteen:false,editItem:false,addItem:false});
   useEffect(()=>{
     getCanteenDetails(id,dispatch);
   },[id]);
@@ -30,9 +31,9 @@ const Edit_Canteen = () => {
   return (
     <div className="flex flex-col justify-center items-center">
       <h1 className="text-3xl -translate-x-[23rem]">Edit Canteen</h1>
-      <CanteenDetails editState={editState} setEditState={setEditState}/>
+      <CanteenDetails btnState={btnState} setBtnState={setBtnState}/>
       <div id="menu-items-section" className="w-full">
-        <MenuItems editState={editState} setEditState={setEditState}/>
+        <MenuItems btnState={btnState} setBtnState={setBtnState}/>
       </div>
     </div>
   )

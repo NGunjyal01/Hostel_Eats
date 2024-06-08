@@ -1,55 +1,69 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../../../services/ownerAPI";
 
 
-const MenuItems = ({editState,setEditState}) => {
+const MenuItems = ({btnState,setBtnState}) => {
 
     const {canteenDetails} = useSelector(store => store.canteen);
     const menuItems = canteenDetails?.menuitems;
     const totalItems = menuItems?.length;
-    const [showForm,setShowForm] = useState(false);
+    // const [showForm,setShowForm] = useState(false);
+    const dispatch = useDispatch();
     const [image,setImage] = useState(null);
-    const {register,handleSubmit,formState:{errors}} = useForm();
+    const {register,handleSubmit,formState:{errors},reset} = useForm();
 
     const handleEdit = () =>{
-        setEditState({...editState,menuItem:true});
+        setBtnState({...btnState,editItem:true});
     }
     const handleEditCancel = () =>{
-        setEditState({...editState,menuItem:false});
+        setBtnState({...btnState,editItem:false});
     }
     const handleAdd = ()=>{
-        setShowForm(true);
+        setBtnState({...btnState,addItem:true})
+        // setShowForm(true);
     }
     const handleAddCancel= ()=>{
-        setShowForm(false);
+        setBtnState({...btnState,addItem:false});
+        // setShowForm(false);
+        reset();
+        setImage(null);
     }
     const handleImageChange = (e)=>{
         setImage(e.target.files[0]);
     }
-    const handleOnSubmit = (data)=>{ 
+    const handleOnSubmit = async (data)=>{ 
         const formData = {...data,imageFile:image,shopid:canteenDetails._id};
-        console.log(formData);
-        addItem(formData);
+        const result = await addItem(formData,dispatch);
+        if(result){
+            setBtnState({...btnState,addItem:false});
+            reset();
+            setImage(null);
+        }
     }
-
+    console.log(image);
     return (
         <div className="bg-[#222831] w-[70%] h-fit p-10 pb-20 ml-[15%] mt-10 rounded-xl relative">
             <h1 className="text-2xl font-semibold">Menu</h1>
             <div>
-                {!editState.canteenDetails && <div className="absolute right-10 top-10 space-x-5">
-                    {totalItems ? (!editState.menuItem && <button className="bg-white text-black w-32 rounded-lg py-2" onClick={handleEdit}>Edit</button>):<></>}
-                    {!editState.menuItem && !showForm && <button className="bg-[#76ABAE] w-32 rounded-lg py-2 " onClick={handleAdd}>Add Item</button>}
-                    {editState.menuItem && <>
+                {!btnState.editCanteen && <div className="absolute right-10 top-10 space-x-5">
+                    {totalItems!==0 && !btnState.editItem && !btnState.addItem && <button className="bg-white text-black w-32 rounded-lg py-2" onClick={handleEdit}>Edit</button>}
+                    {!btnState.editItem  && !btnState.addItem && <button className="bg-[#76ABAE] w-32 rounded-lg py-2 " onClick={handleAdd}>Add Item</button>}
+                    {btnState.editItem && !btnState.addItem && <>
                         <button className="bg-white text-black w-32 rounded-lg py-2" onClick={handleEditCancel}>Cancel</button>
                         <button className="bg-[#76ABAE] w-32 rounded-lg py-2" type="submit">Save</button>
                     </>}
                 </div>}
-                {!showForm ? (totalItems===0 && <h1 className="flex justify-center items-center mt-20 -ml-10 text-lg uppercase tracking-wider"> No Item Found</h1> )
+                {!btnState.addItem ? (totalItems===0 ? <h1 className="flex justify-center items-center mt-20 -ml-10 text-lg uppercase tracking-wider"> No Item Found</h1> 
+                : <div> 
+                    {menuItems.map(item => <div>
+                        <h1>{item.name}</h1>
+                    </div>)}
+                </div> )
                 : <form onSubmit={handleSubmit(handleOnSubmit)} className="grid grid-cols-12 mt-10">
                     {/* button section */}
-                    {!editState.canteenDetails && !editState.menuItem && showForm && <div className="absolute right-10 top-10 space-x-5">
+                    {!btnState.editCanteen && !btnState.editItem && btnState.addItem && <div className="absolute right-10 top-10 space-x-5">
                         <button className="bg-white text-black w-32 rounded-lg py-2" onClick={handleAddCancel}>Cancel</button>
                         <button className="bg-[#76ABAE] w-32 rounded-lg py-2" type="submit">Save</button>
                     </div>}

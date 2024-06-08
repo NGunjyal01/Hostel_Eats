@@ -5,7 +5,7 @@ import { editCanteenDetails } from "../../../services/ownerAPI";
 import toast from "react-hot-toast";
 
 
-const CanteenDetails = ({editState,setEditState}) => {
+const CanteenDetails = ({btnState,setBtnState}) => {
 
     const {canteenDetails} = useSelector(store => store.canteen);
     const {register,handleSubmit,formState:{errors},reset} = useForm();
@@ -35,17 +35,17 @@ const CanteenDetails = ({editState,setEditState}) => {
         if(!check){
             const result = await editCanteenDetails(formData,dispatch);
             if(result)
-            setEditState({...editState,canteenDetails:false});
+            setBtnState({...btnState,editCanteen:false});
         }
         else{
             return toast.error("No Changes Made");
         }
     }
     const handleEdit = ()=>{
-        setEditState({...editState,canteenDetails:true});
+        setBtnState({...btnState,editCanteen:true});
     }
     const handleCancel = ()=>{
-        setEditState({...editState,canteenDetails:false});
+        setBtnState({...btnState,editCanteen:false});
         reset(canteenDetails);
     }
 
@@ -61,15 +61,15 @@ const CanteenDetails = ({editState,setEditState}) => {
                         ...(info.name==="canteenContact"?{minLength:info.condition}:{}),
                         ...(info.name==="canteenContact"?{maxLength:info.condition}:{})
                     })} defaultValue={canteenDetails?.[info?.name]}
-                    disabled={checkInfo.includes(info.name)?true:!editState.canteenDetails}/>
+                    disabled={checkInfo.includes(info.name)?true:!btnState.editCanteen}/>
                     {errors[info.name] && <p className="mt-1 text-xs text-red-500">{errors[info.name].message}</p>}
                 </div>)}
-                {editState.canteenDetails ? <div className="absolute space-x-5 right-10 top-10">
+                {btnState.editCanteen ? <div className="absolute space-x-5 right-10 top-10">
                     <button className="bg-white text-black w-32 rounded-lg py-2" onClick={handleCancel}>Cancel</button>
                     <button className="bg-[#76ABAE] w-32 rounded-lg py-2" type="submit">Save</button>
                 </div> 
                 :<></> }
-                {!editState.menuItem && !editState.canteenDetails && <button className="bg-[#76ABAE] w-32 rounded-lg py-2 absolute right-10 top-10" onClick={handleEdit}>Edit</button>}
+                {!btnState.editItem && !btnState.addItem && !btnState.editCanteen && <button className="bg-[#76ABAE] w-32 rounded-lg py-2 absolute right-10 top-10" onClick={handleEdit}>Edit</button>}
             </form>        
         </div>
     )

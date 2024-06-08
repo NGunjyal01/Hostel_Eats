@@ -49,18 +49,37 @@ export async function getCanteenDetails(id,dispatch){
     }
 }
 
-export async function addItem(formData){
+export async function addItem(formData,dispatch){
     const toastId = toast.loading("Loading...");
     try{
         const response = await axios.post(CREATE_ITEM_API,formData,config);
         console.log("CREATE ITEM API RESPONSE..........",response);
-        toast.success("Successfully Add Item");
+        if(!response.data.success){
+            const error = new Error(response.data.message);
+            error.code = "CustomError"
+            throw error;
+        }
+        else{
+            dispatch(setCanteenDetails(response.data.data));
+            const canteen = localStorage.getItem('canteen') ? JSON.parse(localStorage.getItem('canteen')) : {};
+            localStorage.setItem('canteen',JSON.stringify({...canteen,canteenDetails:response.data.data}));
+            toast.success("Successfully Add Item");
+            return true;
+        }
     }
     catch(error){
-        console.log("ERROR DURING CREATE ITEM RESPONSE........",error);
-        toast.error("Error During Create Item"); 
+        if(error.code === "CustomError"){
+            toast.error(error.message);
+        }
+        else{
+            console.log("ERROR DURING CREATE ITEM RESPONSE........",error);
+            toast.error("Error During Create Item"); 
+        }
+        return false;
     }
-    toast.dismiss(toastId);
+    finally{
+        toast.dismiss(toastId);
+    }
 }
 
 export async function editCanteenDetails(formData,dispatch){
@@ -70,7 +89,7 @@ export async function editCanteenDetails(formData,dispatch){
         console.log("EDIT CANTEEN API RESPONSE.........",response);
         if(!response.data.success){
             const error = new Error(response.data.message);
-            error.code = "AlreadyExists";
+            error.code = "CustomError";
             throw error;
         }
         else{
@@ -82,7 +101,7 @@ export async function editCanteenDetails(formData,dispatch){
         }
     }
     catch(error){
-        if(error.code==="AlreadyExists"){
+        if(error.code==="CustomError"){
             toast.error(error.message);
         }
         else{
