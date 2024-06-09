@@ -213,6 +213,81 @@ if(file){
 }
 
 //Delte Item API
+exports.deleteItem= async(req,res)=>{
+  try{
+    const {token}=req.cookies;
+    const payload= await jwt.verify(token,process.env.JWT_SECRET);
+    if(!token)
+      {
+        return res.status(200).json({
+          success:false,
+          message:"Your token is expired kindly login first",
+        })
+      }
+        const {itemid,shopid}=req.body;
+        if(!mongoose.Types.ObjectId.isValid(itemid)){
+          return res.status(400).json({
+            success:false,
+            message:"Item id is not valid (does not satisfy mongoose criteria)",
+          })
+        }
+        if(!mongoose.Types.ObjectId.isValid(shopid)){
+          return res.status(400).json({
+            success:false,
+            message:"Shop id is not valid(does not satisfy mongoose criteria)",
+          })
+        }
+
+        if(!itemid || !shopid){
+          return res.status(200).json({
+            success:false,
+            message:"Please Provide itemid and shopid",
+          })
+        }
+const exisitingShop= await Merchant.findById(shopid)
+if(!exisitingShop){
+  return res.status(200).json({
+    success:false,
+    message:"Canteen is not registered",
+  })
+}
+if(exisitingShop.ownerEmail!=payload.email){
+  return res.status(200).json({
+    success:false,
+    message:"Owner Email is not matched with the token"
+  })
+}
+        const exisitingItem = await Item.findById(itemid);
+     if(!exisitingItem){
+       return res.status(200).json({
+         success: false,
+         message: "Item not found",
+       });
+     }
+   //  console.log("before",exisitingShop.menuitems);
+   const imageUrlToBeDeleted=exisitingItem.imageUrl;
+  await Item.findByIdAndDelete(itemid); //Deleting from Item collection 
+  deleteImageFromCloudinary(imageUrlToBeDeleted) //Deleting from cloudinary
+  // Removing the item ID from the menuitems array in the Merchant collection
+    const updatedMerchant = await Merchant.findByIdAndUpdate(
+      shopid,
+      { $pull: { menuitems: itemid } },
+      { new: true }
+    );
+        res.status(200).json({
+          data:updatedMerchant,
+          success:true,
+          message:`${exisitingItem.name} is successfully deleted`,
+        })
+  }
+  catch(error){
+    console.log(error);
+    return res.status(400).json({
+      success:false,
+      message:"Something Went Wrong",
+    })
+  }
+}
 
 //Delete Canteen API
-
+//delete canteen from Merchant section and delete all the items and images from the cloudinary
