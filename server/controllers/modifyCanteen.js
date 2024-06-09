@@ -10,13 +10,14 @@ const { uploadFileToCloudinary, deleteImageFromCloudinary ,isFileTypeSupported} 
 exports.editCanteen= async(req,res) =>{
     try{
       const { token } = req.cookies;
+      const payload = await jwt.verify(token, process.env.JWT_SECRET);
       if (!token) {
         return res.status(200).json({
           sucess: false,
           message: "Your Token is Expired Kindly login first",
         });
       }
-      const payload = await jwt.verify(token, process.env.JWT_SECRET);
+    
       const {
         shopid,
         canteenName,
@@ -118,6 +119,7 @@ exports.editCanteen= async(req,res) =>{
 exports.editItem= async(req,res)=>{
   try{
     const { token } = req.cookies;
+      const payload = await jwt.verify(token, process.env.JWT_SECRET);
     if (!token) {
       return res.status(200).json({
         sucess: false,
@@ -290,4 +292,65 @@ if(exisitingShop.ownerEmail!=payload.email){
 }
 
 //Delete Canteen API
-//delete canteen from Merchant section and delete all the items and images from the cloudinary
+//main task delete canteen from Merchant section and delete all the items and images from the cloudinary
+exports.deleteCanteen= async(req,res) => {
+  try{
+    const{token}=req.cookies;
+    const payload=await jwt.verify(token,process.env.JWT_SECRET);
+    if(!token){
+      return res.status(200).json({
+        success: false,
+        message: "Your Token is Expired Kindly login first",
+      });
+    }
+    const {shopid}=req.body;
+    if(!mongoose.Types.ObjectId.isValid(shopid)){
+      return res.status(200).json({
+        success: false,
+        message: "Invalid Shop ID(does not satisfy mongoose criteria)",
+      });
+    }
+    if(!shopid){
+      return res.status(200).json({
+        success:false,
+        message:"Please provide shop ID",
+      })
+    }
+   const existingShop=await Merchant.findById(shopid);
+   if(!existingShop){
+    return res.status(200).json({
+      success:false,
+      message:"Canteen is not present Please Register Your canteen first",
+    })
+   }
+   if(existingShop.ownerEmail!=payload.email){
+    return res.status(200).json({
+      success:false,
+      message:"Owner Email is not matched with the token",
+    })
+   }
+   if (existingShop.menuitems.length){
+   for (const itemid of existingShop.menuitems) {
+     const item = await Item.findById(itemid);
+     if (item) {
+      const imageUrlToBeDeleted=item.imageUrl;
+       await deleteImageFromCloudinary(imageUrlToBeDeleted);
+       await Item.findByIdAndDelete(itemid);
+     }
+   }
+   }
+
+   await Merchant.findByIdAndDelete(shopid);
+   res.status(200).json({
+    success:true,
+    message:`${existingShop.canteenName} is successfully Deleted`,
+   })
+  }
+  catch(error){
+    console.log(error);
+    return res.status(400).json({
+      success:false,
+      message:"SomeThing Went wrong"
+    })
+  }
+}
