@@ -5,6 +5,7 @@ const User=require("../models/user");
 const jwt=require("jsonwebtoken");
 require("dotenv").config();
 
+const { uploadFileToCloudinary, deleteImageFromCloudinary ,isFileTypeSupported} = require('../utils/cloudinary');
 //Edit Canteen API
 exports.editCanteen= async(req,res) =>{
     try{
@@ -62,7 +63,7 @@ exports.editCanteen= async(req,res) =>{
       if (existingCanteenName) {
         return res.status(200).json({
           success: false,
-          message: "Canteen Name already exist",
+          message: `Canteen: ${canteenName} is already exist`,
         });
       }
       //checking if the same canteen Contact Number is already present in the database
@@ -114,6 +115,102 @@ exports.editCanteen= async(req,res) =>{
 }
 
 //edit Item API
+exports.editItem= async(req,res)=>{
+  try{
+    const { token } = req.cookies;
+    if (!token) {
+      return res.status(200).json({
+        sucess: false,
+        message: "Your Token is Expired Kindly login first",
+      });
+    }
+
+    const { itemid, shopid, name, description, category, price } = req.body;
+    const file = req.files!=null? req.files.imageFile : null ;
+
+    if (!mongoose.Types.ObjectId.isValid(shopid)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Shop ID(does not satisfy mongoose criteria)",
+      });
+    }
+    if (!mongoose.Types.ObjectId.isValid(itemid)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Item ID(does not satisfy mongoose criteria)",
+      });
+    }
+    if(!itemid && !shopid){
+      return res.status(200).json({
+        success:false,
+        message:"Please provide Item ID and ShopId",
+      })
+    }
+    const exisitingItem = await Item.findById(itemid);
+
+
+//Checking if that name is already is exist in our canteen or nor
+const existingName = await Item.findOne({ name, _id: { $ne: itemid } ,shopid});
+if(existingName){
+  return res.status(200).json({success:false,
+    message:`${name} is already present in your canteen`
+  })
+}
+
+    //If image is given 
+    let newImageUrl=exisitingItem.imageUrl;
+if(file){
+  console.log(file);
+  const supportedTypes = ["jpg", "jpeg", "png"];
+  const fileLength = file.name.split(".");
+  const fileType = file.name.split(".")[fileLength.length - 1].toLowerCase();
+  //Image size must be less than 100kb
+  if (file.size > 1* 1024*1024) {
+    return res.status(400).json({
+      success: false,
+      message: "Image File size is more than 1mb",
+    });
+  }
+  if (!isFileTypeSupported(fileType, supportedTypes)) {
+    return res.status(400).json({
+      success: false,
+      message: "Image file Not supported",
+    });
+  }
+   const imageUrlToBeDeleted=exisitingItem.imageUrl;
+   
+  deleteImageFromCloudinary(imageUrlToBeDeleted); // previous image is deleted here
+  const response = await uploadFileToCloudinary(file, "Hosteleats"); //new image uploaded
+  newImageUrl=response.secure_url;
+}
+    // Update the canteen details
+    const updatedItem= await Item.findByIdAndUpdate(
+      itemid,
+      {
+        name,
+        description,
+        category,
+        price,
+        imageUrl:newImageUrl
+      },
+      { new: true } // Return the updated Item
+    );
+
+    res.status(200).json({
+      data:updatedItem,
+      success: true,
+      message: "Successfully Edited your Item",
+    });
+  }
+  catch(error){
+    console.log(error);
+    return res.status(400).json({
+      success:false,
+      message:"Something went Wrong",
+
+    })
+  }
+}
 
 //Delte Item API
 
