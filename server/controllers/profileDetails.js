@@ -1,6 +1,6 @@
 const mongoose=require("mongoose");
 const User=require("../models/user");
-const {isFileTypeSupported,uploadFileToCloudinary,} = require("../utils/imageUpload");
+const {isFileTypeSupported,uploadFileToCloudinary,} = require("../utils/cloudinary");
 
 
 exports.profileDetails = async(req,res) =>{

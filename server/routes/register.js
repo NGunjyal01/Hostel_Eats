@@ -5,7 +5,7 @@ const {userLogin}=require("../controllers/login");
 const {auth,isCustomer,isOwner}=require("../middlewares/auth");
 const {addCanteen,addItem,getAllCanteen, getCanteenDetails,addItems}=require("../controllers/canteen");
 const {profileDetails}=require("../controllers/profileDetails");
-const {editCanteen}=require("../controllers/modifyCanteen")
+const {editCanteen,editItem}=require("../controllers/modifyCanteen")
 //Signup Part
 router.post("/signup", userSignup);
 //login Part
@@ -21,7 +21,8 @@ router.post("/owner/addItem",addItem);
 router.post("/owner/addItems",addItems)
 //Routes for Edit Canteen
 router.post("/owner/editCanteen",editCanteen);
-
+//Routes for Edit Item
+router.post("/owner/editItem",editItem);
 router.post("/dashboard/settings",profileDetails)
 //Protected Route
 router.get("/customer",auth,isCustomer,(req,res)=>{

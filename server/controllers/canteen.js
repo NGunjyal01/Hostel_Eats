@@ -6,7 +6,7 @@ const jwt=require("jsonwebtoken");
 require("dotenv").config();
 
 // const cloudinary = require("cloudinary").v2;
-const {isFileTypeSupported,uploadFileToCloudinary}=require("../utils/imageUpload")
+const {isFileTypeSupported,uploadFileToCloudinary}=require("../utils/cloudinary")
 //Canteen Add
 exports.addCanteen = async (req, res) => {
   try {
@@ -82,11 +82,11 @@ exports.addItem= async(req,res) =>{
    const fileLength=file.name.split('.');
    const fileType=file.name.split('.')[fileLength.length-1].toLowerCase();
   //Image size must be less than 100kb
- if(file.size>300 *1024){
-  return res.status(400).json({
-    success:false,
-    message:"Image File size is more than 100KB",
-  })
+ if (file.size > 1 * 1024 * 1024) {
+   return res.status(400).json({
+     success: false,
+     message: "Image File size is more than 1mb",
+   });
  }
   
 
