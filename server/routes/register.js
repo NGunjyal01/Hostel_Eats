@@ -5,7 +5,7 @@ const {userLogin}=require("../controllers/login");
 const {auth,isCustomer,isOwner}=require("../middlewares/auth");
 const {addCanteen,addItem,getAllCanteen, getCanteenDetails,addItems}=require("../controllers/canteen");
 const {profileDetails}=require("../controllers/profileDetails");
-const {editCanteen,editItem,deleteItem}=require("../controllers/modifyCanteen")
+const {editCanteen,editItem,deleteItem,deleteCanteen}=require("../controllers/modifyCanteen")
 //Signup Part
 router.post("/signup", userSignup);
 //login Part
@@ -25,7 +25,8 @@ router.post("/owner/editCanteen",editCanteen);
 router.post("/owner/editItem",editItem);
 //Routes for Delete Item
 router.post("/owner/deleteItem",deleteItem);
-
+//Routes for Delete canteen
+router.post("/owner/deleteCanteen",deleteCanteen);
 
 
 
