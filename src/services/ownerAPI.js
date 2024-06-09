@@ -2,8 +2,9 @@ import toast from "react-hot-toast";
 import { ownerEndpoints } from "./apis";
 import axios from "axios";
 import { setAllCanteen, setCanteenDetails } from "../slices/canteenSlice";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
-const { CREATE_CANTEEN_API,GET_ALL_CANTEEN_API,GET_CANTEEN_DETAILS_API,CREATE_ITEM_API,EDIT_CANTEEN_API } = ownerEndpoints;
+const { CREATE_CANTEEN_API,GET_ALL_CANTEEN_API,GET_CANTEEN_DETAILS_API,CREATE_ITEM_API,EDIT_CANTEEN_API,EDIT_ITEM_API } = ownerEndpoints;
 const config = {headers:{'Content-Type':'multipart/form-data'},withCredentials:true};
 
 export async function createCanteen(formData,navigate,dispatch){
@@ -107,6 +108,43 @@ export async function editCanteenDetails(formData,dispatch){
         else{
             console.log("ERROR DURING EDIT CANTEEN DETAILS RESPONSE.........",error);
             toast.error("Error During Edit Canteen Details");
+        }
+        return false;
+    }
+    finally{
+        toast.dismiss(toastId);
+    }
+}
+
+export async function editItem(formData,dispatch){
+    const toastId = toast.loading("Loading...");
+    try{
+        const response = await axios.post(EDIT_ITEM_API,formData,config);
+        console.log("EDIT ITEM API RESPONSE................",response);
+        if(!response.data.success){
+            const error = new Error(response.data.message);
+            error.code = "CustomError";
+            throw error;
+        }
+        else{
+            const canteen = JSON.parse(localStorage.getItem('canteen'));
+            const canteenDetails = canteen.canteenDetails;
+            const menuItems = canteenDetails.menuitems;
+            const updatedMenuItems = menuItems.map(item => item._id===response.data.data._id ? {...item,...response.data.data} : item);
+            const updatedCanteenDetails = {...canteenDetails,menuitems:updatedMenuItems};
+            dispatch(setCanteenDetails(updatedCanteenDetails));
+            localStorage.setItem("canteen",JSON.stringify({...canteen,canteenDetails:updatedCanteenDetails}));
+            toast.success("Successfully Edit Item");
+            return true;
+        }
+    }
+    catch(error){
+        if(error.code = "CustomError"){
+            toast.error(error.message);
+        }
+        else{
+            console.log("ERROR DURING EDIT ITEM API RESPONSE...............",error);
+            toast.error("Error During Edit Item");
         }
         return false;
     }

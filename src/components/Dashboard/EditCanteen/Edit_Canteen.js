@@ -9,7 +9,6 @@ const Edit_Canteen = () => {
 
   const {id} = useParams();
   const location = useLocation();
-  console.log(location)
   const dispatch = useDispatch();
   //This is it know which btn is working currently meaning if editItem is true then currently we are editing menu item and no other btn will work
   const [btnState,setBtnState] = useState({editCanteen:false,editItem:false,addItem:false});
@@ -19,7 +18,6 @@ const Edit_Canteen = () => {
 
   useEffect(()=>{
     const params = new URLSearchParams(location.search);
-    console.log(params)
     if (params.get('scrollToMenu') === 'true') {
       const menuItemsElement = document.getElementById('menu-items-section');
       if (menuItemsElement) {
