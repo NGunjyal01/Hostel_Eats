@@ -1,11 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { AiOutlineSearch, AiOutlineClose } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
+import Slider from 'react-slick';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { FaRegArrowAltCircleLeft, FaRegArrowAltCircleRight } from 'react-icons/fa';
+
+const CustomPrevArrow = (props) => {
+    const { onClick } = props;
+    return (
+        <div
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 cursor-pointer"
+            style={{ fontSize: '2em', color: 'white' }}
+            onClick={onClick}
+        >
+            <FaRegArrowAltCircleLeft />
+
+        </div>
+    );
+};
+
+const CustomNextArrow = (props) => {
+    const { onClick } = props;
+    return (
+        <div
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 cursor-pointer"
+            style={{ fontSize: '2em', color: 'white' }}
+            onClick={onClick}
+        >
+            <FaRegArrowAltCircleRight />
+
+        </div>
+    );
+};
 
 const Explore = () => {
     const [searchInput, setSearchInput] = useState('');
     const [showSearchOptions, setShowSearchOptions] = useState(false);
     const [popularDishes, setPopularDishes] = useState([]);
+    const [allDishes, setAllDishes] = useState([]); // State for all dishes
     const [canteens, setCanteens] = useState([]);
     const [filteredDishes, setFilteredDishes] = useState([]);
     const [filteredCanteens, setFilteredCanteens] = useState([]);
@@ -22,14 +55,20 @@ const Explore = () => {
         const dishes = [
             { id: 1, name: 'Pizza', image: 'pizza.jpg', canteen: 'Raj Canteen' },
             { id: 2, name: 'Burger', image: 'burger.jpg', canteen: 'Chechi Canteen' },
+            { id: 3, name: 'Burger Pizza', image: 'burgerPizza.jpg', canteen: 'Chechi Canteen' },
+            { id: 4, name: 'Maggie', image: 'maggie.jpg', canteen: 'Tirath Canteen' },
+            { id: 5, name: 'Egg Maggie', image: 'eggMaggie.jpg', canteen: 'Tirath Canteen' },
+            { id: 6, name: 'Paneer Paratha', image: 'paneerParatha.jpg', canteen: 'Raj Canteen' },
         ];
-        setPopularDishes(dishes);
+        setPopularDishes(dishes.slice(0, 4)); 
+        setAllDishes(dishes); 
     };
 
     const fetchCanteens = async () => {
         const canteensData = [
             { id: 1, name: 'Raj Canteen', description: 'Best in pizza and burgers', featuredDish: 'Pizza', image: 'canteenA.jpg' },
             { id: 2, name: 'Chechi Canteen', description: 'Famous for fresh sandwiches', featuredDish: 'Burger', image: 'canteenB.jpg' },
+            { id: 3, name: 'Tirath Canteen', description: 'Famous for desi dishes', featuredDish: 'Maggie', image: 'canteenC.jpg' },
         ];
         setCanteens(canteensData);
     };
@@ -44,11 +83,18 @@ const Explore = () => {
     }, [searchType]);
 
     const filterResults = (input, type) => {
+        const lowerCaseInput = input.toLowerCase();
+    
         if (type === 'dishes') {
-            const filtered = popularDishes.filter(dish => dish.name.toLowerCase().includes(input.toLowerCase()));
+            const filtered = allDishes.filter(dish => dish.name.toLowerCase().includes(lowerCaseInput));
             setFilteredDishes(filtered);
         } else {
-            const filtered = canteens.filter(canteen => canteen.featuredDish.toLowerCase().includes(input.toLowerCase()));
+            const filtered = canteens.filter(canteen =>
+                canteen.name.toLowerCase().includes(lowerCaseInput) ||
+                allDishes.some(dish =>
+                    dish.canteen === canteen.name && dish.name.toLowerCase().includes(lowerCaseInput)
+                )
+            );
             setFilteredCanteens(filtered);
         }
     };
@@ -65,6 +111,32 @@ const Explore = () => {
         setShowSearchOptions(false);
         setFilteredDishes([]);
         setFilteredCanteens([]);
+    };
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        nextArrow: <CustomNextArrow />,
+        prevArrow: <CustomPrevArrow />,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                }
+            }
+        ]
     };
 
     return (
@@ -145,15 +217,17 @@ const Explore = () => {
             {!showSearchOptions && (
                 <div className="mb-10">
                     <h2 className="text-2xl font-bold mb-4">Popular Dishes</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <Slider {...settings}>
                         {popularDishes.map(dish => (
-                            <div key={dish.id} className="bg-[#31363F] p-4 rounded-lg shadow-lg">
-                                <img src={dish.image} alt={dish.name} className="w-full h-40 object-cover rounded-lg mb-4" />
-                                <h3 className="text-xl font-semibold mb-2">{dish.name}</h3>
-                                <p className="text-gray-400">Available at: {dish.canteen}</p>
+                            <div key={dish.id} className="px-2">
+                                <div className="bg-[#31363F] p-4 rounded-lg shadow-lg">
+                                    <img src={dish.image} alt={dish.name} className="w-full h-40 object-cover rounded-lg mb-4" />
+                                    <h3 className="text-xl font-semibold mb-2">{dish.name}</h3>
+                                    <p className="text-gray-400">Available at: {dish.canteen}</p>
+                                </div>
                             </div>
                         ))}
-                    </div>
+                    </Slider>
                 </div>
             )}
         </div>
