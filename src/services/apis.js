@@ -14,7 +14,7 @@ export const ownerEndpoints = {
     EDIT_CANTEEN_API: BASE_URL + "/owner/editCanteen",
     CREATE_ITEM_API: BASE_URL + "/owner/addItem",
     EDIT_ITEM_API: BASE_URL + "/owner/editItem",
-    DELETE_ITEM_API: BASE_URL + "/owner/deleleIem",
+    DELETE_ITEM_API: BASE_URL + "/owner/deleteItem",
     DELETE_CANTEEN_API: BASE_URL + "/owner/deleteCanteen" 
 }
 

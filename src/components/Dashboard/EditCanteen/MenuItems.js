@@ -11,7 +11,6 @@ const MenuItems = ({btnState,setBtnState}) => {
     const {canteenDetails} = useSelector(store => store.canteen);
     const menuItems = canteenDetails?.menuitems;
     const totalItems = menuItems?.length;
-    // const [showForm,setShowForm] = useState(false);
     const dispatch = useDispatch();
     const [image,setImage] = useState({edit:null,add:null});
     const[editImage,setEditImage] = useState(null);
@@ -27,7 +26,10 @@ const MenuItems = ({btnState,setBtnState}) => {
                 ...prevState,edit: editItemDetails.imageUrl
             }))
         }
-    },[editItemDetails])
+        if(totalItems===0){
+            setBtnState({...btnState,editItem:false});
+        }
+    },[editItemDetails,totalItems])
 
     const handleEdit = () =>{
         setBtnState({...btnState,editItem:true});
@@ -142,7 +144,9 @@ const MenuItems = ({btnState,setBtnState}) => {
                         onChange={handleEditImageChange}
                         accept="image/png, image/gif, image/jpeg"/>
                     </div>
-                </form> : <div className="grid grid-cols-12 mt-8"> 
+                </form> : <div className="grid grid-cols-12 mt-8">
+                    {console.log('canteen',canteenDetails)}
+                    {console.log('menuitems',menuItems)}
                     {menuItems?.map(item => <span key={item._id} className="col-span-6 mt-8">
                         <ItemCardOwner item={item} editBtnState={btnState.editItem} setShowEditForm={setShowEditForm} setEditItemDetails={setEditItemDetails}/>
                     </span>)}

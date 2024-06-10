@@ -2,9 +2,8 @@ import toast from "react-hot-toast";
 import { ownerEndpoints } from "./apis";
 import axios from "axios";
 import { setAllCanteen, setCanteenDetails } from "../slices/canteenSlice";
-import { faL } from "@fortawesome/free-solid-svg-icons";
 
-const { CREATE_CANTEEN_API,GET_ALL_CANTEEN_API,GET_CANTEEN_DETAILS_API,CREATE_ITEM_API,EDIT_CANTEEN_API,EDIT_ITEM_API } = ownerEndpoints;
+const { CREATE_CANTEEN_API,GET_ALL_CANTEEN_API,GET_CANTEEN_DETAILS_API,CREATE_ITEM_API,EDIT_CANTEEN_API,EDIT_ITEM_API,DELETE_CANTEEN_API,DELETE_ITEM_API } = ownerEndpoints;
 const config = {headers:{'Content-Type':'multipart/form-data'},withCredentials:true};
 
 export async function createCanteen(formData,navigate,dispatch){
@@ -150,5 +149,22 @@ export async function editItem(formData,dispatch){
     }
     finally{
         toast.dismiss(toastId);
+    }
+}
+
+export async function delteItem(formData,dispatch){
+    try{
+        const response = await axios.post(DELETE_ITEM_API,formData,config);
+        console.log("DELETE ITEM API RESPONSE................",response);
+        const canteen = JSON.parse(localStorage.getItem('canteen'));
+        const canteenDetails = canteen.canteenDetails;
+        const updatedCanteenDetails = {...canteenDetails,menuitems:response.data.data};
+        dispatch(setCanteenDetails(updatedCanteenDetails));
+        localStorage.setItem("canteen",JSON.stringify({...canteen,canteenDetails:updatedCanteenDetails}));
+        toast.success("Successfully Deleted Item");
+
+    }catch(error){
+        console.log("ERROR DURING DELETE ITEM API.................",error);
+        toast.error("Error During Deleting Item");
     }
 }
