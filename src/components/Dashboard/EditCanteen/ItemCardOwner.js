@@ -1,5 +1,5 @@
 import { MdDelete } from "react-icons/md";
-import { delteItem } from "../../../services/ownerAPI";
+import { deleteItem } from "../../../services/ownerAPI";
 import { useDispatch } from "react-redux";
 
 const ItemCard = ({item,editBtnState,setShowEditForm,setEditItemDetails}) => {
@@ -17,7 +17,7 @@ const ItemCard = ({item,editBtnState,setShowEditForm,setEditItemDetails}) => {
         const formData = new FormData;
         formData.append('itemid',_id);
         formData.append('shopid',shopid);
-        delteItem(formData,dispatch);
+        deleteItem(formData,dispatch);
     }
 
     return (

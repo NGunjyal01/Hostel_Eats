@@ -152,7 +152,8 @@ export async function editItem(formData,dispatch){
     }
 }
 
-export async function delteItem(formData,dispatch){
+export async function deleteItem(formData,dispatch){
+    const toastId = toast.loading("Loading...");
     try{
         const response = await axios.post(DELETE_ITEM_API,formData,config);
         console.log("DELETE ITEM API RESPONSE................",response);
@@ -167,4 +168,22 @@ export async function delteItem(formData,dispatch){
         console.log("ERROR DURING DELETE ITEM API.................",error);
         toast.error("Error During Deleting Item");
     }
+    toast.dismiss(toastId);
+}
+
+export async function deleteCanteen(formData,dispatch){
+    const toastId = toast.loading("Loading...");
+    try{
+        const response = await axios.post(DELETE_CANTEEN_API,formData,config);
+        console.log("DELETE CANTEEN API RESPONSE...................",response);
+        const canteen = JSON.parse(localStorage.getItem('canteen'));
+        localStorage.setItem('canteen',JSON.stringify({...canteen,allCanteen:response.data.data}));
+        dispatch(setAllCanteen(response.data.data));
+        toast.success("Successfully Deleted Canteen")
+    }
+    catch(error){
+        console.log("ERROR DURING DELETE CANTEEN API.................",error);
+        toast.error("Error During Deleting Canteen");
+    }
+    toast.dismiss(toastId);
 }
