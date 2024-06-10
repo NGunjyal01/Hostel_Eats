@@ -275,9 +275,9 @@ if(exisitingShop.ownerEmail!=payload.email){
       shopid,
       { $pull: { menuitems: itemid } },
       { new: true }
-    );
+    ).populate("menuitems");
         res.status(200).json({
-          data:updatedMerchant,
+          data:updatedMerchant.menuitems,
           success:true,
           message:`${exisitingItem.name} is successfully deleted`,
         })
