@@ -6,6 +6,8 @@ const {auth,isCustomer,isOwner}=require("../middlewares/auth");
 const {addCanteen,addItem,getAllCanteen, getCanteenDetails,addItems}=require("../controllers/canteen");
 const {profileDetails}=require("../controllers/profileDetails");
 const {editCanteen,editItem,deleteItem,deleteCanteen}=require("../controllers/modifyCanteen")
+
+const {searchItem}=require("../controllers/customer");
 //Signup Part
 router.post("/signup", userSignup);
 //login Part
@@ -28,7 +30,9 @@ router.post("/owner/deleteItem",deleteItem);
 //Routes for Delete canteen
 router.post("/owner/deleteCanteen",deleteCanteen);
 
-
+//Customer Routes
+//Routes for Search Item
+router.post("/customer/searchItem",searchItem);
 
 router.post("/dashboard/settings",profileDetails)
 //Protected Route
