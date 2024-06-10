@@ -341,10 +341,27 @@ exports.deleteCanteen= async(req,res) => {
    }
 
    await Merchant.findByIdAndDelete(shopid);
+   const canteens=await Merchant.find({ownerEmail:payload.email});
+   const owner = await User.findOne({ email: payload.email });
+   const responseData = canteens.map((canteen) => ({
+     id: canteen._id,
+     canteenName: canteen.canteenName,
+     canteenContact: canteen.canteenContact,
+     address: canteen.address,
+     licenseNumber: canteen.licenseNumber,
+     openingTime: canteen.openingTime,
+     closingTime: canteen.closingTime,
+     monthlyRevenue: canteen.monthlyRevenue,
+     totalRevenue: canteen.totalRevenue,
+   }));
    res.status(200).json({
-    success:true,
-    message:`${existingShop.canteenName} is successfully Deleted`,
-   })
+     OwnerName: owner.firstName + " " + owner.lastName,
+     Email: owner.email,
+     Phone: owner.phone,
+     data: responseData,
+     success: true,
+     message: `${existingShop.canteenName} is successfully Deleted`,
+   });
   }
   catch(error){
     console.log(error);
