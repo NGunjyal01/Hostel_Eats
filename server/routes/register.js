@@ -4,7 +4,7 @@ const { userSignup } = require("../controllers/signup"); //For both customer and
 const {userLogin}=require("../controllers/login");
 const {auth,isCustomer,isOwner}=require("../middlewares/auth");
 const {addCanteen,addItem,getAllCanteen, getCanteenDetails,addItems}=require("../controllers/canteen");
-const {profileDetails}=require("../controllers/profileDetails");
+const {updateDisplayPicture}=require("../controllers/profileSettings");
 const {editCanteen,editItem,deleteItem,deleteCanteen}=require("../controllers/modifyCanteen")
 
 const {searchItem}=require("../controllers/customer");
@@ -34,7 +34,7 @@ router.post("/owner/deleteCanteen",deleteCanteen);
 //Routes for Search Item
 router.post("/customer/searchItem",searchItem);
 
-router.post("/dashboard/settings",profileDetails)
+router.post("/profile/updateDisplayPicture",updateDisplayPicture);
 //Protected Route
 router.get("/customer",auth,isCustomer,(req,res)=>{
     res.json({

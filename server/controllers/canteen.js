@@ -81,7 +81,7 @@ exports.addItem= async(req,res) =>{
    const supportedTypes=["jpg","jpeg","png"];
    const fileLength=file.name.split('.');
    const fileType=file.name.split('.')[fileLength.length-1].toLowerCase();
-  //Image size must be less than 100kb
+  //Image size must be less than 1mb
  if (file.size > 1 * 1024 * 1024) {
    return res.status(400).json({
      success: false,
