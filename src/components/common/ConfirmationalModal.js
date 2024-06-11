@@ -1,8 +1,4 @@
 import { useEffect } from "react";
-import { logout } from "../../services/authAPI";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-
 
 const ConfirmationalModal = ({modalData}) => {
 
