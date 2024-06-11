@@ -149,7 +149,7 @@ exports.updateProfile = async(req,res) =>{
         });
       }
     }
-  
+  updatedUser.password=undefined;
 
     res.status(200).json({
       data:updatedUser,
