@@ -1,16 +1,17 @@
 import { useSelector } from "react-redux";
-import userIcon from "../../user-icon.jpg";
 import { useNavigate } from "react-router-dom";
 
 const MyProfile = () => {
 
     const user = useSelector(store => store.user);
     const navigate = useNavigate();
-    const {firstName,lastName,email,phone} = user;
+    const {firstName,lastName,email,phone,dob,gender} = user;
     const inputInfo = [{name:"firstName",value:firstName,label:"First Name"},
         {name:"lastName",value:lastName,label:"Last Name"},
         {name:"email",value:email,label:"Email Address"},
-        {name:"phone",value:phone,label:"Phone Number"}];
+        {name:"phone",value:phone,label:"Phone Number"},
+        {name:"dob",value:dob,label:"Date of Birth"},
+        {name:"gender",value:gender,label:"Gender"}];
     const inputStyle = "bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2";
 
     return (

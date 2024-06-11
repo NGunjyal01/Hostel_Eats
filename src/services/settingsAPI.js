@@ -3,7 +3,7 @@ import { settingsEndpoints } from "./apis";
 import axios from "axios";
 import { addUser } from "../slices/userSlice";
 
-const { UPDATE_DISPLAY_PICTURE_API } = settingsEndpoints;
+const { UPDATE_DISPLAY_PICTURE_API,UPDATE_PROFILE_API } = settingsEndpoints;
 const config = {headers:{'Content-Type':'multipart/form-data'},withCredentials:true};
 
 export async function updateProfilePicture(formData,dispatch){
@@ -25,4 +25,33 @@ export async function updateProfilePicture(formData,dispatch){
     finally{
         toast.dismiss(toastId);
     }
+}
+
+export async function updateProfile(formData,dispatch){
+    const toastId = toast.loading("Loading...");
+    try{
+        const response = await axios.post(UPDATE_PROFILE_API,formData,config);
+        console.log("UPDATE PROFILE API RESPONSE..................",response);
+        if(!response.data.success){
+            const error = new Error(response.data.message);
+            error.code = "CustomError";
+            throw error;
+        }
+        else{
+            toast.success("Successfully Updated Profile Information");
+            const user = response.data.data;
+            dispatch(addUser({...user,dob:response.data.data.dob.split('T')[0]}));
+            localStorage.setItem('user',JSON.stringify({...user,dob:response.data.data.dob.split('T')[0]}));
+        }
+    }
+    catch(error){
+        if(error.code==="CustomError"){
+            toast.error(error.message);
+        }
+        else{
+            console.log("ERROR DURING UPDATE PROFILE API...................",error);
+            toast.error("Error During Update Profile");
+        }
+    }
+    toast.dismiss(toastId);
 }

@@ -45,8 +45,10 @@ export async function login(email,password,navigate,dispatch){
         }
         else{
             toast.success("Login Successful");
-            dispatch(addUser(response.data.existingUser));
-            localStorage.setItem("user",JSON.stringify(response.data.existingUser));
+            const user = response.data.existingUser;
+            const dob = response.data.existingUser.dob;
+            dispatch(addUser({...user,dob:dob.split('T')[0]}));
+            localStorage.setItem("user",JSON.stringify({...user,dob:dob.split('T')[0]}));
             navigate('/');
         }
     }

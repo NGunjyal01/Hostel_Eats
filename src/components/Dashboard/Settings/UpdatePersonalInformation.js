@@ -1,15 +1,36 @@
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateProfile } from "../../../services/settingsAPI";
+import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
 
 const UpdatePersonalInformation = () => {
 
     const user = useSelector(store => store.user);
     const {firstName,lastName,phone,gender,dob} = user;
-    const {register,handleSubmit,formState:{errors}} = useForm();
+    const {register,handleSubmit,formState:{ errors, isDirty, dirtyFields },reset} = useForm();
+    const [showCancel,setShowCancel] = useState(false);
     const inputStyle = "bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2";
     const genders = ["Male","Female","Others"];
+    const dispatch = useDispatch();
 
-    const handleOnSubmit = ()=>{
+    useEffect(()=>{
+       if(Object.keys(dirtyFields).length>0){
+            setShowCancel(true);
+       }
+    },[Object.keys(dirtyFields).length]);
+
+    const handleOnSubmit = (data) =>{
+        if(Object.keys(dirtyFields).length===0){
+            return toast.error("No Changes Made");
+        }
+        else{
+            updateProfile(data,dispatch);
+        }
+    }
+    const handleCancelBtn = ()=>{
+        setShowCancel(false);
+        reset();
     }
 
     return (
@@ -56,17 +77,17 @@ const UpdatePersonalInformation = () => {
                     <label htmlFor="gender">Gender</label>
                     <select id="gender" name="gender" className={`${inputStyle}`} {...register('gender',{required:{value:true,message:"Please enter your Gender."}})}
                     defaultValue={gender}>
+                        <option value="" selected disabled hidden>Choose here</option> 
                         {genders.map(gender => <option key={gender}>{gender}</option>)}
                     </select>
                     {errors.gender && ( <span className="mt-1 text-xs text-red-500">
                         {errors.gender.message}
                     </span>)}
                 </div>
-            
             </div>
             <div className="absolute flex space-x-5 right-10 bottom-5">
-                <button className="bg-white text-black w-32 rounded-lg py-2">Cancel</button>
-                <button className="bg-[#76ABAE] w-32 rounded-lg py-2" type="submit" onClick={handleOnSubmit}>Save</button>
+                {showCancel && <button className="bg-white text-black w-32 rounded-lg py-2" type="button" onClick={handleCancelBtn}>Cancel</button>}
+                <button className="bg-[#76ABAE] w-32 rounded-lg py-2" type="submit">Save</button>
             </div>
         </form>
     )

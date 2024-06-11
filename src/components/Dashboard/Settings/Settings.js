@@ -1,8 +1,8 @@
-import { useLocation } from "react-router-dom"
-import UpdateAuth from "./UpdateAuth"
-import UpdatePersonalInformation from "./UpdatePersonalInformation"
-import UpdateProfilePicture from "./UpdateProfilePicture"
-import { useEffect } from "react"
+import { useLocation } from "react-router-dom";
+import UpdateAuth from "./UpdateAuth";
+import UpdatePersonalInformation from "./UpdatePersonalInformation";
+import UpdateProfilePicture from "./UpdateProfilePicture";
+import { useEffect } from "react";
 
 
 
