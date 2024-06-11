@@ -22,7 +22,7 @@ exports.editCanteen= async(req,res) =>{
         shopid,
         canteenName,
         canteenContact,
-        Address,
+        address,
         openingTime,
         closingTime,
       } = req.body;
@@ -94,7 +94,7 @@ exports.editCanteen= async(req,res) =>{
         {
           canteenName,
           canteenContact,
-          Address,
+          address,
           openingTime,
           closingTime,
         },

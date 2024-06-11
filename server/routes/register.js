@@ -4,10 +4,11 @@ const { userSignup } = require("../controllers/signup"); //For both customer and
 const {userLogin}=require("../controllers/login");
 const {auth,isCustomer,isOwner}=require("../middlewares/auth");
 const {addCanteen,addItem,getAllCanteen, getCanteenDetails,addItems}=require("../controllers/canteen");
-const {updateDisplayPicture}=require("../controllers/profileSettings");
+const {updateDisplayPicture, updateProfile}=require("../controllers/profileSettings");
 const {editCanteen,editItem,deleteItem,deleteCanteen}=require("../controllers/modifyCanteen")
 
 const {searchItem}=require("../controllers/customer");
+const { route } = require("express/lib/router");
 //Signup Part
 router.post("/signup", userSignup);
 //login Part
@@ -35,6 +36,7 @@ router.post("/owner/deleteCanteen",deleteCanteen);
 router.post("/customer/searchItem",searchItem);
 
 router.post("/profile/updateDisplayPicture",updateDisplayPicture);
+router.post("/profile/updateProfile",updateProfile);
 //Protected Route
 router.get("/customer",auth,isCustomer,(req,res)=>{
     res.json({
