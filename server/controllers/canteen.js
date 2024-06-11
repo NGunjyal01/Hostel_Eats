@@ -13,21 +13,21 @@ exports.addCanteen = async (req, res) => {
     const { canteenName, canteenContact, address,ownerContact,ownerName,ownerEmail, licenseNumber,openingTime,closingTime } = req.body;
     if (!canteenName || !canteenContact || !address || !ownerContact || !ownerName || !ownerEmail || !licenseNumber ||!openingTime || !closingTime) {
       
-      return res.status(400).json({
-        status: 400,
+      return res.status(200).json({
+        success: false,
         message: "Please fill all fields",
       });
     }
     const existingShop = await Merchant.findOne({ canteenName });
     if (existingShop) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "Canteen Already Exist",
       });
     }
           const existingCanteenPhone = await Merchant.findOne({ canteenContact });
           if (existingCanteenPhone) {
-            return res.status(400).json({
+            return res.status(200).json({
               success: false,
               message: "Canteen Phone Number Already Exist",
             });
@@ -35,7 +35,7 @@ exports.addCanteen = async (req, res) => {
 
             const existingLicenseNumber = await Merchant.findOne({ licenseNumber});
             if (existingLicenseNumber) {
-              return res.status(400).json({
+              return res.status(200).json({
                 success: false,
                 message: "License Number Already Exist",
               });
@@ -83,7 +83,7 @@ exports.addItem= async(req,res) =>{
    const fileType=file.name.split('.')[fileLength.length-1].toLowerCase();
   //Image size must be less than 1mb
  if (file.size > 1 * 1024 * 1024) {
-   return res.status(400).json({
+   return res.status(200).json({
      success: false,
      message: "Image File size is more than 1mb",
    });
@@ -91,8 +91,8 @@ exports.addItem= async(req,res) =>{
   
 
    if (!name || !description || !category || !price) {
-     return res.status(400).json({
-       status: 400,
+     return res.status(200).json({
+       success:false,
        message: "Please fill all fields",
      });
    }
@@ -109,7 +109,7 @@ if (!mongoose.Types.ObjectId.isValid(shopid)) {
      _id:shopid
    });
    if (!exisitingShop) {
-     return res.status(400).json({
+     return res.status(200).json({
        success: false,
        message: "Merchant Not Exist",
      });
@@ -119,7 +119,7 @@ if (!mongoose.Types.ObjectId.isValid(shopid)) {
      const items = await Item.find({ shopid: shopid, name: name  });
 
      if (items.length > 0) {
-   return res.status(202).json({
+   return res.status(200).json({
     success:false,
     message:"Item is already Present",
    })
@@ -134,7 +134,7 @@ if (!mongoose.Types.ObjectId.isValid(shopid)) {
 
 
     if (!isFileTypeSupported(fileType, supportedTypes)) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "Image file Not supported",
       });

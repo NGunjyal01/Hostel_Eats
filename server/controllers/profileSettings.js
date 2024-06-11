@@ -41,7 +41,7 @@ exports.updateDisplayPicture = async(req,res) =>{
     //Image size must be less than 100kb
 
     if (file.size > 1*1024*1024) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "Image File size is more than 1mb",
       });
@@ -49,7 +49,7 @@ exports.updateDisplayPicture = async(req,res) =>{
    
   
     if (!isFileTypeSupported(fileType, supportedTypes)) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "Image file Not supported",
       });
@@ -106,7 +106,7 @@ exports.updateProfile = async(req,res) =>{
     if (!isNaN(parsedDate.getTime())) {
       updateData.dob = parsedDate;
     } else {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "Invalid date format",
       });
@@ -165,3 +165,5 @@ exports.updateProfile = async(req,res) =>{
     })
   }
 }
+
+//update Auth
