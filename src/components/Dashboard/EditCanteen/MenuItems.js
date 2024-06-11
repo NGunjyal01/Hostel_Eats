@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItem, editItem } from "../../../services/ownerAPI";
 import ItemCardOwner from "./ItemCardOwner";
 import toast from "react-hot-toast";
+import { allCategories } from "../../../utils/constants";
 
 
 const MenuItems = ({btnState,setBtnState}) => {
@@ -18,6 +19,7 @@ const MenuItems = ({btnState,setBtnState}) => {
     const [editItemDetails,setEditItemDetails] = useState(null);
     const { register: registerAddForm, handleSubmit: handleSubmitAddForm, reset: resetAddForm, formState: { errors: errorsAddForm } } = useForm();
     const { register: registerEditForm, handleSubmit: handleSubmitEditForm, reset: resetEditForm, formState: { errors: errorsEditForm },setValue: setEditValue } = useForm();
+    const inputStyle = "bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2";
 
     useEffect(()=>{
         if(editItemDetails){
@@ -115,25 +117,29 @@ const MenuItems = ({btnState,setBtnState}) => {
                     </div>}
                     <div className="col-span-6 flex flex-col mt-8">
                         <label htmlFor="name">Name</label>
-                        <input type="text" name="name" id="name" placeholder="Enter Item Name" className="bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2"
+                        <input type="text" name="name" id="name" placeholder="Enter Item Name" className={`${inputStyle}`}
                         {...registerEditForm('name',{required:{value:true,message:"Please Enter Item Name"}})}/>
                         {errorsEditForm.name && <p className="mt-1 text-xs text-red-500">{errorsEditForm.name.message}</p>}
                     </div>
                     <div className="col-span-6 flex flex-col mt-8">
                         <label htmlFor="category">Category</label>
-                        <input type="text" name="category" id="category" placeholder="Enter Category" className="bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2"
-                        {...registerEditForm('category',{required:{value:true,message:"Please Enter Category"}})}/>
+                        <select id="category" name="category" className={`${inputStyle}`} {...registerEditForm('category',{required:{value:true,message:"Please Enter Category"}})} >
+                        <option value="" selected disabled hidden>Choose here</option>  
+                            {allCategories.map(category => <option key={category} value={category}>
+                                {category}
+                            </option>)}
+                        </select>
                         {errorsEditForm.category && <p className="mt-1 text-xs text-red-500">{errorsEditForm.category.message}</p>}
                     </div>
                     <div className="col-span-6 flex flex-col mt-8">
                         <label htmlFor="price">Price</label>
-                        <input type="text" name="price" id="price" placeholder="Enter Item Price" className="bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2"
+                        <input type="text" name="price" id="price" placeholder="Enter Item Price" className={`${inputStyle}`}
                         {...registerEditForm('price',{required:{value:true,message:"Please Enter Item Price"}})}/>
                         {errorsEditForm.price && <p className="mt-1 text-xs text-red-500">{errorsEditForm.price.message}</p>}
                     </div>
                     <div className="col-span-6 flex flex-col mt-8">
                         <label htmlFor="description">Description</label>
-                        <input type="text" name="description" id="description" placeholder="Enter Item Description" className="bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2"
+                        <input type="text" name="description" id="description" placeholder="Enter Item Description" className={`${inputStyle}`}
                         {...registerEditForm('description',{required:{value:true,message:"Please Enter Item Description"}})}/>
                         {errorsEditForm.description && <p className="mt-1 text-xs text-red-500">{errorsEditForm.description.message}</p>}
                     </div>
@@ -160,25 +166,29 @@ const MenuItems = ({btnState,setBtnState}) => {
                     </div>}
                     <div className="col-span-6 flex flex-col mt-8">
                         <label htmlFor="name">Name</label>
-                        <input type="text" name="name" id="name" placeholder="Enter Item Name" className="bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2"
+                        <input type="text" name="name" id="name" placeholder="Enter Item Name" className={`${inputStyle}`}
                         {...registerAddForm('name',{required:{value:true,message:"Please Enter Item Name"}})}/>
                         {errorsAddForm.name && <p className="mt-1 text-xs text-red-500">{errorsAddForm.name.message}</p>}
                     </div>
                     <div className="col-span-6 flex flex-col mt-8">
                         <label htmlFor="category">Category</label>
-                        <input type="text" name="category" id="category" placeholder="Enter Category" className="bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2"
-                        {...registerAddForm('category',{required:{value:true,message:"Please Enter Category"}})}/>
+                        <select id="category" name="category" className={`${inputStyle}`} {...registerAddForm('category',{required:{value:true,message:"Please Select Category"}})} >
+                        <option value="" selected disabled hidden>Choose here</option>  
+                            {allCategories.map(category => <option key={category} value={category}>
+                                {category}
+                            </option>)}
+                        </select>
                         {errorsAddForm.category && <p className="mt-1 text-xs text-red-500">{errorsAddForm.category.message}</p>}
                     </div>
                     <div className="col-span-6 flex flex-col mt-8">
                         <label htmlFor="price">Price</label>
-                        <input type="text" name="price" id="price" placeholder="Enter Item Price" className="bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2"
+                        <input type="text" name="price" id="price" placeholder="Enter Item Price" className={`${inputStyle}`}
                         {...registerAddForm('price',{required:{value:true,message:"Please Enter Item Price"}})}/>
                         {errorsAddForm.price && <p className="mt-1 text-xs text-red-500">{errorsAddForm.price.message}</p>}
                     </div>
                     <div className="col-span-6 flex flex-col mt-8">
                         <label htmlFor="description">Description</label>
-                        <input type="text" name="description" id="description" placeholder="Enter Item Description" className="bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2"
+                        <input type="text" name="description" id="description" placeholder="Enter Item Description" className={`${inputStyle}`}
                         {...registerAddForm('description',{required:{value:true,message:"Please Enter Item Description"}})}/>
                         {errorsAddForm.description && <p className="mt-1 text-xs text-red-500">{errorsAddForm.description.message}</p>}
                     </div>

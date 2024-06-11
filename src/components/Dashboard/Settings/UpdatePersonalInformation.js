@@ -13,7 +13,7 @@ const UpdatePersonalInformation = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit(handleOnSubmit)} className="bg-[#222831] w-[70%] h-fit p-10 pb-28 mt-10 rounded-xl flex flex-col relative">
+        <form onSubmit={handleSubmit(handleOnSubmit)} className="bg-[#222831] w-[70%] h-fit p-10 pb-28 mt-10 ml-[15%] rounded-xl flex flex-col relative">
             <h1 className="text-lg">Update Personal Information</h1>
             <div className="grid grid-cols-12">
                 <div className="col-span-6 flex flex-col mt-8">

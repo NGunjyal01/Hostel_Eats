@@ -7,6 +7,11 @@ const MyProfile = () => {
     const user = useSelector(store => store.user);
     const navigate = useNavigate();
     const {firstName,lastName,email,phone} = user;
+    const inputInfo = [{name:"firstName",value:firstName,label:"First Name"},
+        {name:"lastName",value:lastName,label:"Last Name"},
+        {name:"email",value:email,label:"Email Address"},
+        {name:"phone",value:phone,label:"Phone Number"}];
+    const inputStyle = "bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2";
 
     return (
         <div className="flex flex-col items-center mb-28">
@@ -17,27 +22,21 @@ const MyProfile = () => {
                     <h1 className="text-xl">{firstName + " " + lastName}</h1>
                     <h1 className="">{email}</h1>
                 </div>
-                <button className="absolute right-10" onClick={()=>{navigate("/dashboard/cart")}}>
-                    edit
+                <button className="bg-[#76ABAE] w-32 rounded-lg py-2 absolute right-10" onClick={()=>navigate('/dashboard/settings/')}>
+                    Edit
                 </button>
             </div>
             <div className="bg-[#222831] w-[70%] h-fit p-10 mt-14 rounded-xl relative">
                 <h1 className="text-2xl">Personal Details</h1>
-                <div className="flex space-x-80 mt-7">
-                    <div className="space-y-1">
-                        <h1>First Name</h1>
-                        <h1>{firstName}</h1>
-                        <h1 className="pt-10">Email</h1>
-                        <h1>{email}</h1>
-                    </div>
-                    <div className="space-y-1">
-                        <h1>Last Name</h1>
-                        <h1>{lastName}</h1>
-                        <h1 className="pt-10">Phone Number</h1>
-                        <h1>{phone}</h1>
-                    </div>
+                <div className="grid grid-cols-2 mt-5">
+                    {inputInfo.map(info => <div key={info.name} className="flex flex-col mt-8 col-span-1">
+                        <label htmlFor={info.name}>{info.label}</label>
+                        <input value={info.value} disabled={true} className={`${inputStyle}`}/>
+                    </div>)}
                 </div>
-                <button className="absolute top-10 right-10">edit</button>
+                <button className="bg-[#76ABAE] w-32 rounded-lg py-2 absolute right-10 top-8" onClick={()=>navigate('/dashboard/settings/?scrollToMenu=true',{state:{scrollTo:"Information"}})}>
+                    Edit
+                </button>
             </div>
         </div>
     )
