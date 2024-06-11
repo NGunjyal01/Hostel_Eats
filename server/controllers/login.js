@@ -10,7 +10,7 @@ exports.userLogin = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
      
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "Please fill all fields",
       });
@@ -18,7 +18,7 @@ exports.userLogin = async (req, res) => {
 
     let existingUser = await User.findOne({ email });
     if (!existingUser) {
-      return res.status(401).json({
+      return res.status(200).json({
         success: false,
         message: "User Not Found Please Signup First",
       });
@@ -61,14 +61,14 @@ exports.userLogin = async (req, res) => {
       });
     } else {
         //Incorrect Situation
-      return res.status(403).json({
+      return res.status(200).json({
         succes: false,
         message: "Password Incorrect",
       });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    res.status(400).json({
       success: false,
       message: "Log In Failure",
     });
