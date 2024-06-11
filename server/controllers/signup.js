@@ -8,22 +8,22 @@ exports.userSignup = async (req, res) => {
       req.body;1
     if (! accountType || ! phone ||  ! firstName || ! lastName || ! email || ! password ) {
       console.log(req.body);
-      return res.status(400).json({
-        status: 400,
+      return res.status(200).json({
+        status: 200,
         message: "Please filll all fields",
       });
     }
 
     const existingPhone = await User.findOne({ phone});
     if (existingPhone) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "Phone Number Already Exist",
       });
     }
       const existingEmail = await User.findOne({ email });
       if (existingEmail) {
-        return res.status(400).json({
+        return res.status(200).json({
           success: false,
           message: "Email Already Exist",
         });
@@ -34,7 +34,7 @@ exports.userSignup = async (req, res) => {
     try {
       hashedPassword = await bcrypt.hash(password, 10);
     } catch (error) {
-      return res.status(500).json({
+      return res.status(400).json({
         success: false,
         message: "Error in Hashing Password",
       });
