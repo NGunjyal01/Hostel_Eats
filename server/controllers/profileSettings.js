@@ -100,7 +100,7 @@ exports.updateProfile = async(req,res) =>{
       });
     }
     const updateData = {};
-    const [day, month, year] = dob.split("-").map(Number);
+    const [year, month, day] = dob.split("-").map(Number);
     const parsedDate = new Date(year, month - 1, day + 1);
 
     if (!isNaN(parsedDate.getTime())) {
