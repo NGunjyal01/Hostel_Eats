@@ -33,7 +33,7 @@ exports.editCanteen= async(req,res) =>{
         });
       }
       if (!shopid) {
-        return res.status.json({
+        return res.status(200).json({
           success: false,
           message: "Please Give Canteen ID",
         });
@@ -51,7 +51,7 @@ exports.editCanteen= async(req,res) =>{
 
       const existingCanteen = await Merchant.findOne({ _id: shopid });
       if (!existingCanteen) {
-        return res.status(404).json({
+        return res.status(200).json({
           success: false,
           message: "Canteen Is Not Present means your id is not valid",
         });
@@ -168,13 +168,13 @@ if(file){
   const fileType = file.name.split(".")[fileLength.length - 1].toLowerCase();
   //Image size must be less than 100kb
   if (file.size > 1* 1024*1024) {
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: "Image File size is more than 1mb",
     });
   }
   if (!isFileTypeSupported(fileType, supportedTypes)) {
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: "Image file Not supported",
     });
