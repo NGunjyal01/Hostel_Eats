@@ -10,13 +10,25 @@ export async function signup (signUpData,navigate,dispatch){
     try{
         const response = await axios.post(SIGNUP_API,signUpData);
         console.log("SIGNUP API RESPONSE............", response);
-        toast.success("Signup Successful");
-        navigate("/login");
+        if(!response.data.success){
+            const error = new Error(response.data.message);
+            error.code = "CustomError";
+            throw error;
+        }
+        else{
+            toast.success("Signup Successful");
+            navigate("/login");
+        }
     }
     catch(error){
-        console.log("Error During SignUp: ",error);
-        toast.error("Signup Failed");
-        navigate("/signup")
+        if(error.code==="CustomError"){
+            toast.error(error.message);
+        }
+        else{
+            console.log("Error During SignUp: ",error);
+            toast.error("Signup Failed");
+            navigate("/signup");
+        }
     }
     toast.dismiss(toastId);
 }
@@ -26,16 +38,27 @@ export async function login(email,password,navigate,dispatch){
     try{
         const response = await axios.post(LOGIN_API,{email,password},{headers:{'Content-Type':'application/json'},withCredentials:true});
         console.log("LOGIN API RESPONSE..............",response);
-        toast.success("Login Successful");
-        dispatch(addUser(response.data.existingUser));
-        localStorage.setItem("user",JSON.stringify(response.data.existingUser));
-        navigate('/');
-        console.log("navigating to root route")
+        if(!response.data.success){
+            const error = new Error(response.data.message);
+            error.code = "CustomError";
+            throw error;
+        }
+        else{
+            toast.success("Login Successful");
+            dispatch(addUser(response.data.existingUser));
+            localStorage.setItem("user",JSON.stringify(response.data.existingUser));
+            navigate('/');
+        }
     }
     catch(error){
-        console.log("Error During Login: ",error);
-        toast.error("Login Failed");
-        navigate('/login');
+        if(error.code==="CustomError"){
+            toast.error(error.message);
+        }
+        else{
+            console.log("Error During Login.................",error);
+            toast.error("Login Failed");
+            navigate('/login');
+        }
     }
     toast.dismiss(toastId);
 }

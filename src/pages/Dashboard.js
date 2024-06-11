@@ -7,14 +7,12 @@ import { FaCartShopping } from "react-icons/fa6";
 import { FaHeart } from "react-icons/fa";
 import { IoIosLogOut } from "react-icons/io";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { setCurrTab,setPrevTab } from "../slices/tabSlice";
 import { IoRestaurantSharp } from "react-icons/io5";
 import { FaEye } from "react-icons/fa";
-import { FiEdit } from "react-icons/fi";
 import ConfirmationalModal from "../components/common/ConfirmationalModal";
 import { logout } from "../services/authAPI";
-import { getAllCanteen } from "../services/ownerAPI";
 
 const Dashboard = () => {
 
@@ -28,9 +26,7 @@ const Dashboard = () => {
         visible: { opacity: 1, y: 0 },
         exit: { opacity: 0, y: (currTab-prevTab>=0)?20:-20 },
     }; 
-    useEffect(()=>{
-        getAllCanteen(dispatch);
-    },[]);
+
     const sideTabs =[{name:"Profile",icon:<FaUserCircle size={25} className="mx-4 relative z-10"/>,to:'/dashboard/my-profile'}];
     if(user.accountType==="Customer"){
         sideTabs.push({name:"Orders",icon:<IoBag size={25} className="mx-4 relative z-10"/>,to:'/dashboard/orders'});

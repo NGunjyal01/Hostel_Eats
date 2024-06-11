@@ -2,8 +2,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { formatTime } from "../../utils/formatTime";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { deleteCanteen } from "../../services/ownerAPI";
-import { useState } from "react";
+import { deleteCanteen, getAllCanteen } from "../../services/ownerAPI";
+import { useEffect, useState } from "react";
 import ConfirmationalModal from "../common/ConfirmationalModal";
 
 const View_Canteen = () => {
@@ -13,6 +13,10 @@ const View_Canteen = () => {
   const { allCanteen } = canteen;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(()=>{
+    getAllCanteen(dispatch);
+  },[]);
 
   const handleEditClick = (id)=>{
     navigate("/dashboard/edit_canteen/"+id);
