@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 const UpdatePersonalInformation = () => {
 
     const user = useSelector(store => store.user);
-    const {firstName,lastName,phone,email,gender,dob} = user;
+    const {firstName,lastName,phone,gender,dob} = user;
     const {register,handleSubmit,formState:{errors}} = useForm();
     const inputStyle = "bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2";
     const genders = ["Male","Female","Others"];
@@ -15,7 +15,7 @@ const UpdatePersonalInformation = () => {
     return (
         <form onSubmit={handleSubmit(handleOnSubmit)} className="bg-[#222831] w-[70%] h-fit p-10 pb-28 mt-10 ml-[15%] rounded-xl flex flex-col relative">
             <h1 className="text-lg">Update Personal Information</h1>
-            <div className="grid grid-cols-12">
+            <div className="grid grid-cols-12 mt-5">
                 <div className="col-span-6 flex flex-col mt-8">
                     <label htmlFor="firstName">First Name</label>
                     <input type="text" name="firstName" placeholder="Enter First Name" id="firstName"
@@ -30,14 +30,6 @@ const UpdatePersonalInformation = () => {
                     className={`${inputStyle}`} {...register('lastName',{required:true})} defaultValue={lastName}/>
                     {errors.lastName && ( <span className="mt-1 text-xs text-red-500">
                         Please enter your last name.
-                    </span>)}
-                </div>
-                <div className="col-span-6 flex flex-col mt-8">
-                    <label htmlFor="email">Email Address</label>
-                    <input type="text" name="email" placeholder="Enter Email Address" id="email" 
-                    className={`${inputStyle}`} {...register('email',{required:true})} defaultValue={email}/>
-                    {errors.email && ( <span className="mt-1 text-xs text-red-500">
-                        Please enter your email.
                     </span>)}
                 </div>
                 <div className="col-span-6 flex flex-col mt-8">
