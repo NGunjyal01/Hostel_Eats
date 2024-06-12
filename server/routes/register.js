@@ -4,7 +4,7 @@ const { userSignup } = require("../controllers/signup"); //For both customer and
 const {userLogin}=require("../controllers/login");
 const {auth,isCustomer,isOwner}=require("../middlewares/auth");
 const {addCanteen,addItem,getAllCanteen, getCanteenDetails,addItems}=require("../controllers/canteen");
-const {updateDisplayPicture, updateProfile,updateEmail}=require("../controllers/profileSettings");
+const {updateDisplayPicture, updateProfile,updateEmail,updatePassword}=require("../controllers/profileSettings");
 const {editCanteen,editItem,deleteItem,deleteCanteen}=require("../controllers/modifyCanteen")
 
 const {searchItem}=require("../controllers/customer");
@@ -38,7 +38,7 @@ router.post("/customer/searchItem",searchItem);
 router.post("/profile/updateDisplayPicture",updateDisplayPicture);
 router.post("/profile/updateProfile",updateProfile);
 router.post("/profile/updateEmail",updateEmail)
-
+router.post("/profile/updatePassword",updatePassword)
 
 
 //Protected Route
