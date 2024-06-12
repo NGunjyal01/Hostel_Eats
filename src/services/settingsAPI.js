@@ -55,3 +55,11 @@ export async function updateProfile(formData,dispatch){
     }
     toast.dismiss(toastId);
 }
+
+export async function updateEmail(formData){
+
+}
+
+export async function updatePassword(formData){
+    
+}

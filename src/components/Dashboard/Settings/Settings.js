@@ -1,8 +1,9 @@
 import { useLocation } from "react-router-dom";
-import UpdateAuth from "./UpdateAuth";
 import UpdatePersonalInformation from "./UpdatePersonalInformation";
 import UpdateProfilePicture from "./UpdateProfilePicture";
 import { useEffect } from "react";
+import UpdateEmail from "./UpdateEmail";
+import UpdatePassword from "./UpdatePassword";
 
 
 
@@ -23,7 +24,8 @@ const Settings = () => {
             <h1 className="-translate-x-[23rem] text-3xl font-semibold">Edit Profile</h1>
             <UpdateProfilePicture/>
             <div id="Information" className="w-full"><UpdatePersonalInformation/></div>
-            <UpdateAuth/>
+            <UpdateEmail/>
+            <UpdatePassword/>
         </div>
     )
 }

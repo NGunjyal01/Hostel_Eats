@@ -22,6 +22,7 @@ export const ownerEndpoints = {
 export const settingsEndpoints = {
     UPDATE_DISPLAY_PICTURE_API: BASE_URL + "/profile/updateDisplayPicture",
     UPDATE_PROFILE_API: BASE_URL + "/profile/updateProfile",
-    UPDATE_AUTH_API: BASE_URL + "/profile/updateAuth",
+    UPDATE_EMAIL_API: BASE_URL + "/profile/updateEmail",
+    UPDATE_PASSWORD_API: BASE_URL + "/profile/updatePassword",
     DELETE_PROFILE_API: BASE_URL + "/profile/deleteProfile",
 }
