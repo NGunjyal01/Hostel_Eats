@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { FaUserCircle } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { useState } from "react";
 import { logout } from "../../services/authAPI";
@@ -8,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Tab from "./Tab";
 import { setCurrTab, setPrevTab } from "../../slices/tabSlice";
 import ConfirmationalModal from "./ConfirmationalModal";
+import { FaCartShopping } from "react-icons/fa6";
 
 const Header = () => {
 
@@ -17,7 +17,7 @@ const Header = () => {
     const [showDropDownMenu,setShowDropDownMenu] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const tabs = [{name:'Home',to:'/'},{name:'About Us',to:'/about-us'},{name:'Explore',to:'/explore'},{name:'Add Canteen',to:'/add-canteen'}]
+    let tabs = [{name:'Home',to:'/'},{name:'About Us',to:'/about-us'},{name:'Explore',to:'/explore'},{name:'Add Canteen',to:'/add-canteen'}]
     const handleUserIconClick = ()=>{
         navigate('/dashboard/my-profile');
     }
@@ -32,10 +32,12 @@ const Header = () => {
         sideTabs.push({name:"Orders",to:'/dashboard/orders'});
         sideTabs.push({name:"Cart",to:'/dashboard/cart'});
         sideTabs.push({name:"Favourites",to:'/dashboard/favourites'});
+        tabs = tabs.filter(tab => tab.name!=="Add Canteen");
     }
     else if(user?.accountType==="Owner"){
         sideTabs.push({name:"Add Canteen",to:'/dashboard/add_canteeno'});
         sideTabs.push({name:"View Canteen",to:'/dashboard/view_canteen'});
+        tabs = tabs.filter(tab => tab.name!=="Explore");
     }
     sideTabs.push({name:"Settings",to:'/dashboard/settings'});
     const handleSideTabClick = (index)=>{
@@ -48,14 +50,14 @@ const Header = () => {
     return (
         <div className="fixed w-full z-40 flex bg-gradient-to-r from-black to-[#222831] text-white pt-10 pb-4">
             <h1 className="ml-[10%]">Hostel Eats</h1>
-            <div className="ml-[25%] space-x-7 flex">
+            <div className={`gap-7 flex ${user ? 'ml-[28%]':'ml-[24%]'}`}>
                 {tabs.map(tab => <Tab><NavLink to={tab.to} className={({isActive}) => ` ${isActive?"text-[#76ABAE]":""}`}>{tab.name}</NavLink></Tab>)}
             </div>
-            {!user && <div className="ml-[25%] space-x-4">
+            {!user && <div className="absolute flex gap-4 right-24 -mt-2">
                 <NavLink to='/login' className={({isActive}) => `bg-[#31363F] rounded-lg px-4 py-2 hover:text-[#76ABAE] ${isActive?"text-[#76ABAE]":""}`}>LogIn</NavLink>
                 <NavLink to='/signup' className={({isActive}) => `bg-[#31363F] rounded-lg px-4 py-2 hover:text-[#76ABAE] ${isActive?"text-[#76ABAE]":""}`}>SignUp</NavLink>
             </div>}  
-            {user && <><div className="group absolute right-24 top-7 flex justify-center items-center space-x-1 cursor-pointer transition-transform ease-out" onClick={handleUserIconClick}
+            {user && <><div className="group absolute right-[12%] top-9 flex justify-center items-center gap-1 cursor-pointer transition-transform ease-out" onClick={handleUserIconClick}
             onMouseEnter={()=>{setShowDropDownMenu(true)}} onMouseLeave={()=>{setShowDropDownMenu(false)}}>
                 <img src={user.imageUrl} className="size-10 rounded-md"/>  
                 <AnimatePresence>
@@ -71,6 +73,7 @@ const Header = () => {
                 </AnimatePresence> 
                 <div className="absolute -right-6"><IoMdArrowDropdown size={20} className="group-hover:rotate-180 transition-transform ease-out duration-200"/></div>
             </div></>}
+            {user?.accountType==="Customer" && <span className="absolute -mt-1 right-[7%] cursor-pointer" onClick={()=>{navigate('/dashboard/cart')}}><FaCartShopping size={40}/><span className="absolute text-black top-0 left-[1.1rem] font-semibold">0</span></span>}
             {confirmationalModal && <ConfirmationalModal modalData={confirmationalModal}/>}
         </div>
     )
