@@ -2,30 +2,31 @@ const mongoose=require("mongoose");
 const User=require("../models/user");
 const Merchant=require("../models/merchant");
 const Item=require("../models/item");
-const {isFileTypeSupported,uploadFileToCloudinary,} = require("../utils/cloudinary");
+const {isFileTypeSupported,uploadFileToCloudinary,deleteImageFromCloudinary} = require("../utils/cloudinary");
 require("dotenv").config();
 const jwt=require("jsonwebtoken");
+const bcrypt=require("bcrypt");
 
 exports.updateDisplayPicture = async(req,res) =>{
   try{
-    const { token }= req.cookies;
-        if (!token) {
-          return res.status(200).json({
-            success: false,
-            message: "Your token is expired kindly login first",
-          });
-        }
-    const payload=await jwt.verify(token,process.env.JWT_SECRET);
-
-      const exisitingUser = await User.findOne({
-        email: payload.email,
+    const { token } = req.cookies;
+    if (!token) {
+      return res.status(200).json({
+        success: false,
+        message: "Your token is expired kindly login first",
       });
-      if (!exisitingUser) {
-        return res.status(200).json({
-          success: false,
-          message: "User Not Exist Kindy Signup First",
-        });
-      }
+    }
+    const payload = await jwt.verify(token, process.env.JWT_SECRET);
+
+    const exisitingUser = await User.findOne({
+      email: payload.email,
+    });
+    if (!exisitingUser) {
+      return res.status(200).json({
+        success: false,
+        message: "User Not Exist Kindy Signup First",
+      });
+    }
 
     if (!req.files) {
       return res.status(200).json({
@@ -40,14 +41,13 @@ exports.updateDisplayPicture = async(req,res) =>{
     const fileType = file.name.split(".")[fileLength.length - 1].toLowerCase();
     //Image size must be less than 100kb
 
-    if (file.size > 1*1024*1024) {
+    if (file.size > 1 * 1024 * 1024) {
       return res.status(200).json({
         success: false,
         message: "Image File size is more than 1mb",
       });
     }
-   
-  
+
     if (!isFileTypeSupported(fileType, supportedTypes)) {
       return res.status(200).json({
         success: false,
@@ -55,17 +55,29 @@ exports.updateDisplayPicture = async(req,res) =>{
       });
     }
     const response = await uploadFileToCloudinary(file, "Profile-Photos");
-    const userId=payload.id;
-await User.findByIdAndUpdate(
-  userId,{imageUrl:response.secure_url},{new:true
-})
-   
+    const userId = payload.id;
+    // Check if the existing image URL is from the DiceBear API
+    const diceBearUrlPattern =
+      /^https:\/\/api\.dicebear\.com\/5\.x\/initials\/svg\?/;
+    if (
+      exisitingUser.imageUrl &&
+      !diceBearUrlPattern.test(exisitingUser.imageUrl)
+    ) {
+      // Delete the existing image from Cloudinary
+      const publicId = exisitingUser.imageUrl
+      await deleteImageFromCloudinary(publicId);
+    }
+
+    await User.findByIdAndUpdate(
+      userId,
+      { imageUrl: response.secure_url },
+      { new: true }
+    );
 
     res.status(200).json({
-      data:response.secure_url,
+      data: response.secure_url,
       success: true,
-      message: `${exisitingUser.firstName} ${exisitingUser.lastName
-      } photo updated successfully`,
+      message: `${exisitingUser.firstName} ${exisitingUser.lastName} photo updated successfully`,
     });
   }catch(error){
        console.log(error);
@@ -167,3 +179,71 @@ exports.updateProfile = async(req,res) =>{
 }
 
 //update Auth
+
+
+exports.updateEmail = async(req,res) =>{
+  try{
+    const { token } = req.cookies;
+    if (!token) {
+      return res.status(200).json({
+        success: false,
+        message: "Your token is expired kindly login first",
+      });
+    }
+    const payload = await jwt.verify(token, process.env.JWT_SECRET);
+    const { currEmail, newEmail } = req.body;
+   const isExist = await User.findOne({ email: currEmail });
+   if (!isExist) {
+     return res.status(200).json({
+       success: false,
+       message: "User Not Exist",
+     });
+   }
+    // If same email Entered then there is no need to change
+        if (currEmail == newEmail) {
+      return res.status(200).json({
+        success: true,
+        message: "You have Entered the Same email",
+      });
+    }
+ 
+ //If anyone have same email 
+    const existingUser = await User.findOne({
+      email: newEmail,
+      _id: { $ne: payload.id },
+    });
+
+    if (existingUser) {
+      return res.status(200).json({
+        success: false,
+        message: `${newEmail} already Exist`,
+      });
+    }
+    //If owner then we have ownerEmail in merchant Collection
+    if(payload.role=='Owner'){
+
+            const existingCanteens = await Merchant.updateMany(
+              { ownerEmail: currEmail },
+              { $set: { ownerEmail: newEmail } }
+            );
+
+    }
+    // Update the user's email
+    const updatedUser = await User.findByIdAndUpdate(
+      payload.id,
+      { email: newEmail },
+      { new: true }
+    );
+    res.status(200).json({
+      success: true,
+      message: "Email Updated Successfully"
+    });
+  }
+  catch(error){
+    console.log(error);
+    res.status(400).json({
+      success:false,
+      message:"Something Went Wrong"
+    })
+  }
+}
