@@ -209,7 +209,7 @@ exports.updateEmail = async(req,res) =>{
     // If same email Entered then there is no need to change
         if (currEmail == newEmail) {
       return res.status(200).json({
-        success: true,
+        success: false,
         message: "You have Entered the Same email",
       });
     }
