@@ -51,7 +51,7 @@ const Header = () => {
         <div className="fixed w-full z-40 flex bg-gradient-to-r from-black to-[#222831] text-white pt-10 pb-4">
             <h1 className="ml-[10%]">Hostel Eats</h1>
             <div className={`gap-7 flex ${user ? 'ml-[28%]':'ml-[24%]'}`}>
-                {tabs.map(tab => <Tab><NavLink to={tab.to} className={({isActive}) => ` ${isActive?"text-[#76ABAE]":""}`}>{tab.name}</NavLink></Tab>)}
+                {tabs.map(tab => <span key={tab.name}><Tab><NavLink to={tab.to} className={({isActive}) => ` ${isActive?"text-[#76ABAE]":""}`}>{tab.name}</NavLink></Tab></span>)}
             </div>
             {!user && <div className="absolute flex gap-4 right-24 -mt-2">
                 <NavLink to='/login' className={({isActive}) => `bg-[#31363F] rounded-lg px-4 py-2 hover:text-[#76ABAE] ${isActive?"text-[#76ABAE]":""}`}>LogIn</NavLink>
