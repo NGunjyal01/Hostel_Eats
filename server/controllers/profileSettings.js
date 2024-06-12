@@ -184,14 +184,20 @@ exports.updateProfile = async(req,res) =>{
 exports.updateEmail = async(req,res) =>{
   try{
     const { token } = req.cookies;
+
     if (!token) {
       return res.status(200).json({
         success: false,
         message: "Your token is expired kindly login first",
       });
     }
+
+    //Extracting Payload from token
     const payload = await jwt.verify(token, process.env.JWT_SECRET);
-    const { currEmail, newEmail } = req.body;
+
+    const { currEmail, newEmail } = req.body; //request body
+
+    //Check if Exist email or not
    const isExist = await User.findOne({ email: currEmail });
    if (!isExist) {
      return res.status(200).json({
@@ -199,6 +205,7 @@ exports.updateEmail = async(req,res) =>{
        message: "User Not Exist",
      });
    }
+
     // If same email Entered then there is no need to change
         if (currEmail == newEmail) {
       return res.status(200).json({
@@ -207,7 +214,7 @@ exports.updateEmail = async(req,res) =>{
       });
     }
  
- //If anyone have same email 
+ //If anyone have same new email 
     const existingUser = await User.findOne({
       email: newEmail,
       _id: { $ne: payload.id },
@@ -219,6 +226,7 @@ exports.updateEmail = async(req,res) =>{
         message: `${newEmail} already Exist`,
       });
     }
+
     //If owner then we have ownerEmail in merchant Collection
     if(payload.role=='Owner'){
 
@@ -228,6 +236,7 @@ exports.updateEmail = async(req,res) =>{
             );
 
     }
+
     // Update the user's email
     const updatedUser = await User.findByIdAndUpdate(
       payload.id,
@@ -244,6 +253,73 @@ exports.updateEmail = async(req,res) =>{
     res.status(400).json({
       success:false,
       message:"Something Went Wrong"
+    })
+  }
+}
+
+
+
+//update Password
+
+exports.updatePassword = async(req,res) =>{
+
+  try{
+    const { token } = req.cookies;
+
+
+    if (!token) {
+      return res.status(200).json({
+        success: false,
+        message: "Your token is expired kindly login first",
+      });
+    }
+
+    //extracting Payload
+    const payload = await jwt.verify(token, process.env.JWT_SECRET);
+
+    const { currPass, newPass } = req.body;  //request
+
+    const existingUser=await User.findById(payload.id) //finding the existing User
+
+    //Checking if Current Password matched with Data base password
+    if (!(await bcrypt.compare(currPass, existingUser.password))) {
+      return res.status(200).json({
+        success: false,
+        message: "Current Password not matched",
+      });
+    }
+
+
+    //Hashing Of new pAssword
+    let hashedPassword;
+    try {
+      hashedPassword = await bcrypt.hash(newPass, 10);
+    } catch (error) {
+      return res.status(200).json({
+        success: false,
+        message: "Error in Hashing Password",
+      });
+    }
+
+
+    // Update the user Password with new Password
+    const updatedUser = await User.findByIdAndUpdate(
+      payload.id,
+      { password:hashedPassword },
+      { new: true }
+    );
+
+
+    res.status(200).json({
+      success:true,
+      message:"Password Update Successfully",
+    })
+  }
+  catch(error){
+    console.log(error);
+    res.status(400).json({
+      success:false,
+      message:"Something Went Wrong",
     })
   }
 }
