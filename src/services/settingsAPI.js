@@ -85,5 +85,31 @@ export async function updateEmail(formData){
 }
 
 export async function updatePassword(formData){
-    
+    const toastId = toast.loading("Loading...");
+    try{
+        const response = await axios.post(UPDATE_PASSWORD_API,formData,config);
+        console.log("UPDATE PASSWORD API RESPONSE................",response);
+        if(!response.data.success){
+            const error = new Error(response.data.message);
+            error.code = "CustomError";
+            throw error;
+        }
+        else{
+            toast.success("Sucessfully Updated Password");
+            return true;
+        }
+    }
+    catch(error){
+        if(error.code === "CustomError"){
+            toast.error(error.message);
+        }
+        else{
+            console.log("ERROR DURING UPDATE PASSWORD API................",error);
+            toast.error("Error Duringg Update Password");
+        }
+        return false;
+    }
+    finally{
+        toast.dismiss(toastId);
+    }
 }
