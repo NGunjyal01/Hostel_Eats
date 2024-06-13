@@ -19,12 +19,12 @@ import Add_CanteenO from './components/Dashboard/Add_CanteenO';
 import View_Canteen from './components/Dashboard/View_Canteen';
 import Edit_Canteen from './components/Dashboard/EditCanteen/Edit_Canteen';
 import Explore from './pages/Explore';
+import CanteenPage from './pages/CanteenPage'; // Import CanteenPage
 
 function App() {
-
   const user = useSelector(store => store.user);
   
-  return(
+  return (
     <Routes>
       <Route path='/' element={<Body/>}>
         <Route index element={<Home/>}/>
@@ -37,15 +37,18 @@ function App() {
         <Route element={<PrivateRoute><Dashboard/></PrivateRoute>}>
           <Route path='dashboard/my-profile' element={<MyProfile/>}/>
           <Route path='dashboard/settings' element={<Settings/>}/>
-          {user?.accountType==="Customer" && <><Route path='dashboard/orders' element={<Orders/>}/>
+          {user?.accountType==="Customer" && <>
+            <Route path='dashboard/orders' element={<Orders/>}/>
             <Route path='dashboard/cart' element={<Cart/>}/>
             <Route path='dashboard/favourites' element={<Favourite/>}/>
           </>}
-          {user?.accountType==="Owner" && <><Route path='dashboard/add_canteeno' element={<Add_CanteenO/>}/>
+          {user?.accountType==="Owner" && <>
+            <Route path='dashboard/add_canteeno' element={<Add_CanteenO/>}/>
             <Route path='dashboard/view_canteen' element={<View_Canteen/>}/>
             <Route path='dashboard/edit_canteen/:id' element={<Edit_Canteen/>}/>
           </>}
         </Route>
+        <Route path='canteen/:canteenId' element={<CanteenPage/>}/> {/* Add route for CanteenPage */}
       </Route>
     </Routes>
   );
