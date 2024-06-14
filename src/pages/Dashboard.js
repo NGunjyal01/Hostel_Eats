@@ -53,11 +53,11 @@ const Dashboard = () => {
 
     return (
         <div className="relative flex w-full min-h-screen bg-gradient-to-r from-black to-[#222831] text-white pb-20">
-            <div className="pt-40 pl-10 w-[18%] min-h-screen flex flex-col space-y-5">
+            <div className="hidden sm:flex flex-col space-y-5 sm:pt-[25%] md:pt-[20%] lg:pt-[17%] xl:pt-[12%] pl-10 md:w-[25%] lg:w-[18%] min-h-screen">
                 {/* Content for the left section */}
                 {sideTabs.map((tab,index)=> <motion.div className="relative" key={tab.name} initial="hidden" animate="visible" exit="exit" variants={linkVariants} onClick={()=>{handleSideTabClick(index)}}>
-                    <NavLink to={tab.to} className={({isActive})=>`flex items-center hover:scale-105 transition-transform ease-out
-                    ${isActive?'text-black py-3':'py-3'}`}>
+                    <NavLink to={tab.to} className={({isActive})=>`flex items-center hover:scale-105 transition-transform ease-out sm:text-sm md:text-base
+                    py-3 ${isActive?'text-black':''}`}>
                         {({isActive})=><>
                         {isActive && <motion.div initial="hidden" animate="visible" exit="exit" variants={linkVariants} className="absolute inset-0 bg-[#76ABAE] rounded-lg z-0 transot" transition={{ duration: 0.1 }}/>}
                         {tab.icon}<span className="relative z-10">{tab.name}</span>
@@ -68,7 +68,7 @@ const Dashboard = () => {
                    <IoIosLogOut size={25} className="mx-4"/> <span>Logout</span>
                 </button>
             </div>
-            <div className="min-h-screen pt-[10%] w-full">
+            <div className="min-h-screen pt-[40%] sm:pt-[20%] md:pt-[17%] lg:pt-[13%] xl:pt-[10%] w-full">
                 {/* Content for the right section */}
                 <Outlet/>
             </div>

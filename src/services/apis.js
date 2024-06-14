@@ -6,6 +6,15 @@ export const endpoints = {
     LOGIN_API: BASE_URL + "/login",
 }
 
+// Customer Emdpoints
+export const customerEndpoints = {
+    SEARCH_ITEM_API: BASE_URL + "/customer/searchItem",
+    SEARCH_ITEM_BY_CANTEEN_API: BASE_URL + "/customer/searchItemByCanteen",
+    GET_CART_ITEMS_API: BASE_URL + "/customer/getCartItems",
+    GET_ORDER_HISTROY_API: BASE_URL + "/customer/getOrderHistory",
+    GET_FAVOURITE_ITEMS_API: BASE_URL + "/customer/getFavouriteItems",
+}
+
 // Owner Endpoints 
 export const ownerEndpoints = {
     CREATE_CANTEEN_API: BASE_URL + "/owner/addCanteen",
@@ -26,3 +35,12 @@ export const settingsEndpoints = {
     UPDATE_PASSWORD_API: BASE_URL + "/profile/updatePassword",
     DELETE_PROFILE_API: BASE_URL + "/profile/deleteProfile",
 }
+
+// Payment Endpoints
+export const paymentEndpoints = {
+    ORDER_PAYMENT_API: BASE_URL + "/payment/capturePayment",
+    ORDER_VERIFY_API: BASE_URL + "/payment/verifyPayment",
+    SEND_PAYMENT_SUCCESS_EMAIL_API: BASE_URL + "/payment/sendPaymentSuccessEmail",
+}
+
+export const GET_POPULAR_DISHES_API = BASE_URL + "/getPopularDishes";

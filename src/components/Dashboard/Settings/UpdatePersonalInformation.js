@@ -10,7 +10,7 @@ const UpdatePersonalInformation = () => {
     const {firstName,lastName,phone,gender,dob} = user;
     const {register,handleSubmit,formState:{ errors, isDirty, dirtyFields },reset} = useForm();
     const [showCancel,setShowCancel] = useState(false);
-    const inputStyle = "bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2";
+    const inputStyle = "bg-[#31363F] w-[95%] sm:w-[80%] px-2 py-2 rounded-md mt-2";
     const genders = ["Male","Female","Others"];
     const dispatch = useDispatch();
 
@@ -34,10 +34,10 @@ const UpdatePersonalInformation = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit(handleOnSubmit)} className="bg-[#222831] w-[70%] h-fit p-10 pb-28 mt-10 ml-[15%] rounded-xl flex flex-col relative">
-            <h1 className="text-lg">Update Personal Information</h1>
-            <div className="grid grid-cols-12 mt-5">
-                <div className="col-span-6 flex flex-col mt-8">
+        <form onSubmit={handleSubmit(handleOnSubmit)} className="bg-[#222831] w-[80%] sm:w-[70%] h-fit ml-[10%] sm:ml-[15%] px-4 md:px-5 lg:px-10 py-4 sm:py-5 md:py-7 lg:py-10 mt-10 rounded-md sm:rounded-lg md:rounded-xl relative">
+            <h1 className="text-sm sm:text-base lg:text-lg">Update Personal Information</h1>
+            <div className="grid grid-cols-12 lg:mt-3 mb-12 text-sm md:text-base">
+                <div className="col-span-full sm:col-span-6 flex flex-col mt-5 sm:mt-8">
                     <label htmlFor="firstName">First Name</label>
                     <input type="text" name="firstName" placeholder="Enter First Name" id="firstName"
                     className={`${inputStyle}`} {...register('firstName',{required:true})} defaultValue={firstName}/>
@@ -45,7 +45,7 @@ const UpdatePersonalInformation = () => {
                         Please enter your first name.
                     </span>)}
                 </div>
-                <div className="col-span-6 flex flex-col mt-8">
+                <div className="col-span-full sm:col-span-6 flex flex-col mt-5 sm:mt-8">
                     <label htmlFor="lastName">Last Name</label>
                     <input type="text" name="lastName" placeholder="Enter Last Name" id="lastName" 
                     className={`${inputStyle}`} {...register('lastName',{required:true})} defaultValue={lastName}/>
@@ -53,7 +53,7 @@ const UpdatePersonalInformation = () => {
                         Please enter your last name.
                     </span>)}
                 </div>
-                <div className="col-span-6 flex flex-col mt-8">
+                <div className="col-span-full sm:col-span-6 flex flex-col mt-5 sm:mt-8">
                     <label htmlFor="phone">Phone Number</label>
                     <input type="text" name="phone" placeholder="Enter Phone Number" id="phone" 
                     className={`${inputStyle}`} {...register('phone',{required:{value:true, message:"Please enter you Phone Number."},
@@ -63,7 +63,7 @@ const UpdatePersonalInformation = () => {
                         {errors.phone.message}
                     </span>)}
                 </div>
-                <div className="col-span-6 flex flex-col mt-8">
+                <div className="col-span-full sm:col-span-6 flex flex-col mt-5 sm:mt-8">
                     <label htmlFor="dob">Date of Birth</label>
                     <input type="date" name="dob" id="dob" 
                     className={`${inputStyle}`} {...register('dob',{ required: {value: true, message: "Please enter your Date of Birth."},
@@ -73,7 +73,7 @@ const UpdatePersonalInformation = () => {
                         {errors.dob.message}
                     </span>)}
                 </div>
-                <div className="col-span-6 flex flex-col mt-8">
+                <div className="col-span-full sm:col-span-6 flex flex-col mt-5 sm:mt-8">
                     <label htmlFor="gender">Gender</label>
                     <select id="gender" name="gender" className={`${inputStyle}`} {...register('gender',{required:{value:true,message:"Please enter your Gender."}})}
                     defaultValue={gender}>
@@ -85,9 +85,9 @@ const UpdatePersonalInformation = () => {
                     </span>)}
                 </div>
             </div>
-            <div className="absolute flex space-x-5 right-10 bottom-5">
-                {showCancel && <button className="bg-white text-black w-32 rounded-lg py-2" type="button" onClick={handleCancelBtn}>Cancel</button>}
-                <button className="bg-[#76ABAE] w-32 rounded-lg py-2" type="submit">Save</button>
+            <div className="absolute flex gap-5 right-5 sm:right-10 bottom-4">
+                {showCancel && <button className="bg-white text-black w-14 sm:w-20 md:w-24 lg:w-32 rounded-md sm:rounded-lg py-1 md:py-2 text-xs sm:text-base" type="button" onClick={handleCancelBtn}>Cancel</button>}
+                <button className="bg-[#76ABAE] w-14 sm:w-20 md:w-24 lg:w-32 rounded-md sm:rounded-lg py-1 md:py-2 text-xs sm:text-base" type="submit">Save</button>
             </div>
         </form>
     )

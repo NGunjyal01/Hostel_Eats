@@ -8,6 +8,7 @@ import Tab from "./Tab";
 import { setCurrTab, setPrevTab } from "../../slices/tabSlice";
 import ConfirmationalModal from "./ConfirmationalModal";
 import { FaCartShopping } from "react-icons/fa6";
+import AnimatedHamburgerButton from "./AnimatedHamburgerButton";
 
 const Header = () => {
 
@@ -49,15 +50,15 @@ const Header = () => {
 
     return (
         <div className="fixed w-full z-40 flex bg-gradient-to-r from-black to-[#222831] text-white pt-10 pb-4">
-            <h1 className="ml-[10%]">Hostel Eats</h1>
-            <div className={`gap-7 flex ${user ? 'ml-[28%]':'ml-[24%]'}`}>
+            <h1 className="ml-[8%] sm:ml-[8%] md:ml-[10%] text-xl sm:text-xl md:text-2xl lg:text-3xl">Hostel Eats</h1>
+            <div className={`hidden sm:flex gap-7 sm:text-sm md:text-base ${user ? 'sm:ml-[15%] md:ml-[20%] lg:ml-[25%]':'lg:ml-[24%]'}`}>
                 {tabs.map(tab => <span key={tab.name}><Tab><NavLink to={tab.to} className={({isActive}) => ` ${isActive?"text-[#76ABAE]":""}`}>{tab.name}</NavLink></Tab></span>)}
             </div>
             {!user && <div className="absolute flex gap-4 right-24 -mt-2">
                 <NavLink to='/login' className={({isActive}) => `bg-[#31363F] rounded-lg px-4 py-2 hover:text-[#76ABAE] ${isActive?"text-[#76ABAE]":""}`}>LogIn</NavLink>
                 <NavLink to='/signup' className={({isActive}) => `bg-[#31363F] rounded-lg px-4 py-2 hover:text-[#76ABAE] ${isActive?"text-[#76ABAE]":""}`}>SignUp</NavLink>
             </div>}  
-            {user && <><div className="group absolute right-[12%] top-9 flex justify-center items-center gap-1 cursor-pointer transition-transform ease-out" onClick={handleUserIconClick}
+            {user && <><div className="group hidden sm:flex justify-center items-center gap-1 absolute sm:right-[17%] md:right-[15%] lg:right-[13%] top-9 cursor-pointer transition-transform ease-out" onClick={handleUserIconClick}
             onMouseEnter={()=>{setShowDropDownMenu(true)}} onMouseLeave={()=>{setShowDropDownMenu(false)}}>
                 <img src={user.imageUrl} className="size-10 rounded-md"/>  
                 <AnimatePresence>
@@ -73,8 +74,11 @@ const Header = () => {
                 </AnimatePresence> 
                 <div className="absolute -right-6"><IoMdArrowDropdown size={20} className="group-hover:rotate-180 transition-transform ease-out duration-200"/></div>
             </div></>}
-            {user?.accountType==="Customer" && <span className="absolute -mt-1 right-[7%] cursor-pointer" onClick={()=>{navigate('/dashboard/cart')}}><FaCartShopping size={40}/><span className="absolute text-black top-0 left-[1.1rem] font-semibold">0</span></span>}
+            {user?.accountType==="Customer" && <span className="absolute hidden sm:block -mt-1 right-[7%] cursor-pointer" onClick={()=>{navigate('/dashboard/cart')}}><FaCartShopping size={40}/><span className="absolute text-black top-0 left-[1.1rem] font-semibold">0</span></span>}
             {confirmationalModal && <ConfirmationalModal modalData={confirmationalModal}/>}
+            <div className="sm:hidden flex absolute right-[5%] top-[18%]">
+                <AnimatedHamburgerButton />
+            </div>
         </div>
     )
 }
