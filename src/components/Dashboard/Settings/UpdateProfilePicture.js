@@ -39,7 +39,7 @@ const UpdateProfilePicture = () => {
     }
 
     return (
-        <div className="bg-[#222831] w-[80%] sm:w-[70%] h-fit px-3 sm:px-4 md:px-5 lg:px-10 py-4 sm:py-5 md:py-7 lg:py-10 mt-10 rounded-md sm:rounded-lg md:rounded-xl flex items-center gap-5 sm:gap-7 md:gap-16 xl:gap-20 relative">
+        <div className="bg-[#222831] w-[80%] lg:w-[70%] h-fit px-3 sm:px-4 md:px-5 lg:px-10 py-4 sm:py-5 md:py-7 lg:py-10 mt-10 rounded-md sm:rounded-lg md:rounded-xl flex items-center gap-5 sm:gap-7 md:gap-16 xl:gap-20 relative">
             <h1 className="absolute -mt-[57%] sm:-mt-[49%] md:-mt-[43%] lg:-mt-[37%] xl:-mt-[30%] -ml-2 sm:-ml-3 md:-ml-5 lg:-ml-10 text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold">Edit Profile</h1>
             <img src={user.imageUrl} className="size-16 md:size-20 rounded-lg"/>
             <div className="space-y-3 sm:space-y-5 md:space-y-7">

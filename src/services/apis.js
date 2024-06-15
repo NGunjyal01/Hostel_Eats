@@ -10,6 +10,7 @@ export const endpoints = {
 export const customerEndpoints = {
     SEARCH_ITEM_API: BASE_URL + "/customer/searchItem",
     SEARCH_ITEM_BY_CANTEEN_API: BASE_URL + "/customer/searchItemByCanteen",
+    SET_CART_ITEMS_API: BASE_URL + "/customer/setCartItems",
     GET_CART_ITEMS_API: BASE_URL + "/customer/getCartItems",
     GET_ORDER_HISTROY_API: BASE_URL + "/customer/getOrderHistory",
     GET_FAVOURITE_ITEMS_API: BASE_URL + "/customer/getFavouriteItems",

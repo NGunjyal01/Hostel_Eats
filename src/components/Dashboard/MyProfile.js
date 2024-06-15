@@ -16,7 +16,7 @@ const MyProfile = () => {
 
     return (
         <div className="flex flex-col items-center mb-28">
-            <div className="bg-[#222831] w-[80%] sm:w-[70%] h-fit px-3 sm:px-4 md:px-5 lg:px-10 py-4 sm:py-5 md:py-7 lg:py-10 mt-10 rounded-md sm:rounded-lg md:rounded-xl flex items-center gap-4 sm:gap-7 md:gap-10 lg:gap-14 xl:gap-20 relative">
+            <div className="bg-[#222831] w-[80%] lg:w-[70%] h-fit px-3 sm:px-4 md:px-5 lg:px-10 py-4 sm:py-5 md:py-7 lg:py-10 mt-10 rounded-md sm:rounded-lg md:rounded-xl flex items-center gap-4 sm:gap-7 md:gap-10 lg:gap-14 xl:gap-20 relative">
                 <h1 className="absolute -mt-[57%] sm:-mt-[49%] md:-mt-[40%] lg:-mt-[35%] xl:-mt-[30%] -ml-2 sm:-ml-3 md:-ml-5 lg:-ml-10 text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold">Profile</h1>
                 <img src={user.imageUrl} className="size-12 sm:size-16 md:size-20 rounded-lg"/>
                 <div className="md:space-y-2 sm:text-sm md:text-base ">
@@ -27,7 +27,7 @@ const MyProfile = () => {
                     Edit
                 </button>
             </div>
-            <div className="bg-[#222831] w-[80%] sm:w-[70%] h-fit pb-12 px-4 md:px-5 lg:px-10 py-5 sm:py-7 lg:py-10 mt-14 rounded-md sm:rounded-lg md:rounded-xl relative">
+            <div className="bg-[#222831] w-[80%] lg:w-[70%] h-fit pb-12 px-4 md:px-5 lg:px-10 py-5 sm:py-7 lg:py-10 mt-14 rounded-md sm:rounded-lg md:rounded-xl relative">
                 <h1 className=" md:text-xl lg:text-2xl">Personal Details</h1>
                 <div className="grid sm:grid-cols-2 md:mt-5 sm:text-sm md:text-base">
                     {inputInfo.map(info => <div key={info.name} className="flex flex-col mt-8 col-span-1">
