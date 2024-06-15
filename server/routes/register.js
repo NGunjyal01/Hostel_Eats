@@ -7,7 +7,7 @@ const {addCanteen,addItem,getAllCanteen, getCanteenDetails,addItems}=require("..
 const {updateDisplayPicture, updateProfile,updateEmail,updatePassword}=require("../controllers/profileSettings");
 const {editCanteen,editItem,deleteItem,deleteCanteen}=require("../controllers/modifyCanteen")
 
-const {searchItem}=require("../controllers/customer");
+const { searchItem, searchItemCanteen } = require("../controllers/customer");
 const { route } = require("express/lib/router");
 //Signup Part
 router.post("/signup", userSignup);
