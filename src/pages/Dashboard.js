@@ -27,17 +27,17 @@ const Dashboard = () => {
         exit: { opacity: 0, y: (currTab-prevTab>=0)?20:-20 },
     }; 
 
-    const sideTabs =[{name:"Profile",icon:<FaUserCircle size={25} className="mx-4 relative z-10"/>,to:'/dashboard/my-profile'}];
+    const sideTabs =[{name:"Profile",icon:<FaUserCircle className="dashboardLogo mx-4 relative z-10"/>,to:'/dashboard/my-profile'}];
     if(user.accountType==="Customer"){
-        sideTabs.push({name:"Orders",icon:<IoBag size={25} className="mx-4 relative z-10"/>,to:'/dashboard/orders'});
-        sideTabs.push({name:"Cart",icon:<FaCartShopping size={25} className="mx-4 relative z-10"/>,to:'/dashboard/cart'});
-        sideTabs.push({name:"Favourites",icon:<FaHeart size={25} className="mx-4 relative z-10"/>,to:'/dashboard/favourites'});
+        sideTabs.push({name:"Orders",icon:<IoBag className="dashboardLogo mx-4 relative z-10"/>,to:'/dashboard/orders'});
+        sideTabs.push({name:"Cart",icon:<FaCartShopping className="dashboardLogo mx-4 relative z-10"/>,to:'/dashboard/cart'});
+        sideTabs.push({name:"Favourites",icon:<FaHeart className="dashboardLogo mx-4 relative z-10"/>,to:'/dashboard/favourites'});
     }
     else if(user.accountType==="Owner"){
-        sideTabs.push({name:"Add Canteen",icon:<IoRestaurantSharp size={25} className="mx-4 relative z-10"/>,to:'/dashboard/Add_CanteenO'});
-        sideTabs.push({name:"View Canteen",icon:<FaEye size={25} className="mx-4 relative z-10"/>,to:'/dashboard/View_Canteen'});
+        sideTabs.push({name:"Add Canteen",icon:<IoRestaurantSharp className="dashboardLogo mx-4 relative z-10"/>,to:'/dashboard/Add_CanteenO'});
+        sideTabs.push({name:"View Canteen",icon:<FaEye className="dashboardLogo mx-4 relative z-10"/>,to:'/dashboard/View_Canteen'});
     }
-    sideTabs.push({name:"Settings",icon:<IoSettingsSharp size={25} className="mx-4 relative z-10"/>,to:'/dashboard/settings'});
+    sideTabs.push({name:"Settings",icon:<IoSettingsSharp className="dashboardLogo mx-4 relative z-10"/>,to:'/dashboard/settings'});
     const handleSideTabClick = (index)=>{
         localStorage.setItem("prevTab",JSON.stringify(currTab));
         dispatch(setPrevTab(currTab));
@@ -53,11 +53,11 @@ const Dashboard = () => {
 
     return (
         <div className="relative flex w-full min-h-screen bg-gradient-to-r from-black to-[#222831] text-white pb-20">
-            <div className="pt-40 pl-10 w-[18%] min-h-screen flex flex-col space-y-5">
+            <div className="hidden sm:flex flex-col space-y-5 sm:pt-[25%] md:pt-[20%] lg:pt-[17%] xl:pt-[12%] pl-10 sm:w-[35%] md:w-[27%] lg:w-[22%] xl:w-[17%] min-h-screen">
                 {/* Content for the left section */}
                 {sideTabs.map((tab,index)=> <motion.div className="relative" key={tab.name} initial="hidden" animate="visible" exit="exit" variants={linkVariants} onClick={()=>{handleSideTabClick(index)}}>
-                    <NavLink to={tab.to} className={({isActive})=>`flex items-center hover:scale-105 transition-transform ease-out
-                    ${isActive?'text-black py-3':'py-3'}`}>
+                    <NavLink to={tab.to} className={({isActive})=>`flex items-center hover:scale-105 transition-transform ease-out sm:text-sm lg:text-base
+                    py-3 ${isActive?'text-black':''}`}>
                         {({isActive})=><>
                         {isActive && <motion.div initial="hidden" animate="visible" exit="exit" variants={linkVariants} className="absolute inset-0 bg-[#76ABAE] rounded-lg z-0 transot" transition={{ duration: 0.1 }}/>}
                         {tab.icon}<span className="relative z-10">{tab.name}</span>
@@ -65,10 +65,10 @@ const Dashboard = () => {
                     </NavLink>
                 </motion.div>)}
                 <button className="flex items-center hover:scale-105 transition-transform ease-out py-3" onClick={handleLogOut}>
-                   <IoIosLogOut size={25} className="mx-4"/> <span>Logout</span>
+                   <IoIosLogOut className="dashboardLogo mx-4"/> <span>Logout</span>
                 </button>
             </div>
-            <div className="min-h-screen pt-[10%] w-full">
+            <div className="min-h-screen pt-[40%] sm:pt-[20%] md:pt-[17%] lg:pt-[13%] xl:pt-[10%] w-full">
                 {/* Content for the right section */}
                 <Outlet/>
             </div>

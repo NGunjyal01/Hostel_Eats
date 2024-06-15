@@ -16,7 +16,7 @@ const UpdatePassword = () => {
     const [showConfirmationalModal,setShowConfirmationalModal] = useState(null);
     const {register,handleSubmit,formState: {errors, dirtyFields},reset} = useForm();
     const changedFieldsLength = Object.keys(dirtyFields).length;
-    const inputStyle = "bg-[#31363F] w-[80%] px-2 py-2 rounded-md mt-2";
+    const inputStyle = "bg-[#31363F] w-[95%] sm:w-[80%] px-2 py-2 rounded-md mt-2";
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -56,30 +56,30 @@ const UpdatePassword = () => {
     }
 
     return (
-        <div className="bg-[#222831] w-[70%] h-fit p-10 pb-28 mt-10 rounded-xl flex flex-col relative">
+        <div className="bg-[#222831] w-[80%] lg:w-[70%] h-fit px-4 md:px-5 lg:px-10 py-4 sm:py-5 md:py-7 lg:py-10 mt-10 rounded-md sm:rounded-lg md:rounded-xl relative">
             <h1 className="text-lg">Update Password</h1>
-            <form onSubmit={handleSubmit(handleOnSubmit)} className="grid grid-cols-12 mt-5">
-                <div className="col-span-6 flex flex-col mt-8 relative">
+            <form onSubmit={handleSubmit(handleOnSubmit)} className="grid grid-cols-12 lg:mt-5 mb-14 text-sm lg:text-base">
+                <div className="col-span-full md:col-span-6 flex flex-col mt-5 sm:mt-8 relative">
                     <label htmlFor="currPass">Current Password</label>
                     <input type={!toggleEyeBtn.currEye?"password":"text"} placeholder="Enter Current Password" id="currPass" name="currPass" 
                     className={`${inputStyle}`} {...register('currPass',{required:{value:true,message:"Please Enter Your Current Passowrd"}})}/>
-                    <button className="absolute right-24 top-11" onClick={()=>{handleToggleEyeBtn("currEye")}}>{!toggleEyeBtn.currEye?<IoEye/>:<IoEyeOff/>}</button>
+                    <button className="absolute right-5 sm:right-20 md:right-14 lg:right-20 xl:right-24 top-10 lg:top-11" onClick={()=>{handleToggleEyeBtn("currEye")}}>{!toggleEyeBtn.currEye?<IoEye/>:<IoEyeOff/>}</button>
                     {errors.currPass && ( <span className="mt-1 text-xs text-red-500">
                         {errors.currPass.message}
                     </span>)}
                 </div>
-                <div className="col-span-6 flex flex-col mt-8 relative">
+                <div className="col-span-full md:col-span-6 flex flex-col mt-5 sm:mt-8 relative">
                     <label htmlFor="newPass">New Password</label>
                     <input type={!toggleEyeBtn.newEye?"password":"text"} placeholder="Enter New Password" id="newPass" name="newPass"
                     className={`${inputStyle}`} {...register('newPass',{required:{value:true,message:"Please Enter New Password"}})}/>
-                    <button className="absolute right-24 top-11" onClick={()=>{handleToggleEyeBtn("newEye")}}>{!toggleEyeBtn.newEye?<IoEye/>:<IoEyeOff/>}</button>
+                    <button className="absolute right-5 sm:right-20 md:right-14 lg:right-20 xl:right-24 top-10 lg:top-11" onClick={()=>{handleToggleEyeBtn("newEye")}}>{!toggleEyeBtn.newEye?<IoEye/>:<IoEyeOff/>}</button>
                     {errors.newPass && ( <span className="mt-1 text-xs text-red-500">
                         {errors.newPass.message}
                     </span>)}
                 </div>
                 <div className="absolute flex space-x-5 right-10 bottom-5">
-                    {showCancel && <button className="bg-white text-black w-32 rounded-lg py-2" type="button" onClick={handleCancelBtn}>Cancel</button>}
-                    <button className="bg-[#76ABAE] w-32 rounded-lg py-2" type="submit">Save</button>
+                    {showCancel && <button className="bg-white text-black w-14 sm:w-20 md:w-24 lg:w-32 rounded-md md:rounded-lg py-0.5 sm:py-1 md:py-2" type="button" onClick={handleCancelBtn}>Cancel</button>}
+                    <button className="bg-[#76ABAE] w-14 sm:w-20 md:w-24 lg:w-32 rounded-md md:rounded-lg py-0.5 sm:py-1 md:py-2" type="submit">Save</button>
                 </div>
             </form>
             {showConfirmationalModal && <div className="-ml-[57.3%]"><ConfirmationalModal modalData={showConfirmationalModal}/></div>}

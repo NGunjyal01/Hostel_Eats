@@ -1,0 +1,15 @@
+.dashboardLogo{
+    font-size: 25px;
+}
+
+@media only screen and (max-width: 1024px) {
+    .dashboardLogo{
+        font-size: 20px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .dashboardLogo{
+        font-size: 15px;
+    }
+}

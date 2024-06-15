@@ -39,14 +39,15 @@ const UpdateProfilePicture = () => {
     }
 
     return (
-        <div className="bg-[#222831] w-[70%] h-fit p-10 mt-10 rounded-xl flex items-center space-x-20 relative">
-            <img src={user.imageUrl} className="size-24 rounded-md"/>
-            <div className="space-y-7">
-                <h1 className="text-">Update Profile Picture</h1>
-                <div className="flex gap-5">
+        <div className="bg-[#222831] w-[80%] lg:w-[70%] h-fit px-3 sm:px-4 md:px-5 lg:px-10 py-4 sm:py-5 md:py-7 lg:py-10 mt-10 rounded-md sm:rounded-lg md:rounded-xl flex items-center gap-5 sm:gap-7 md:gap-16 xl:gap-20 relative">
+            <h1 className="absolute -mt-[57%] sm:-mt-[49%] md:-mt-[43%] lg:-mt-[37%] xl:-mt-[30%] -ml-2 sm:-ml-3 md:-ml-5 lg:-ml-10 text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold">Edit Profile</h1>
+            <img src={user.imageUrl} className="size-16 md:size-20 rounded-lg"/>
+            <div className="space-y-3 sm:space-y-5 md:space-y-7">
+                <h1 className="text-xs sm:text-sm lg:text-base">Update Profile Picture</h1>
+                <div className="flex gap-1.5 sm:gap-5">
                     <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileChange} accept="image/png, image/gif, image/jpeg"/>
-                    <button className="bg-white text-black w-32 py-2 rounded-lg" onClick={handleClick}>Select</button>
-                    <button className="bg-[#76ABAE] w-32 py-2 rounded-lg" onClick={handleUpload}>
+                    <button className="bg-white text-black w-16 sm:w-20 md:w-24 lg:w-32 rounded-md sm:rounded-lg py-1 md:py-2 text-[0.65rem] sm:text-base" onClick={handleClick}>Select</button>
+                    <button className="bg-[#76ABAE] w-16 sm:w-20 md:w-24 lg:w-32 rounded-md sm:rounded-lg py-1 md:py-2 text-[0.65rem] sm:text-base" onClick={handleUpload}>
                         {loading ? <span>Uploading...</span> : <span className="flex justify-center items-center gap-1">Upload <MdFileUpload/></span>}
                     </button>
                 </div>
