@@ -4,25 +4,32 @@ const Item=require("../models/item");
 const Merchant=require("../models/merchant");
 const jwt=require("jsonwebtoken");
 require("dotenv").config();
+const {getCanteenStatus}=require("../utils/status")
+
 
 //Search Item means Explore Page
 
 exports.searchItem= async(req,res) =>{
     try{
+
       const { token } = req.cookies;
+
       if (!token) {
         return res.status(200).json({
           success: false,
           message: "Your Token is Expired Kindly login first",
         });
       }
+
       const payload=await jwt.verify(token,process.env.JWT_SECRET);
+
       if(payload.role=="Owner"){
         return res.status(200).json({
             success:false,
             message:"Owner Account Type is Not valid",
         })
       }
+
       const { itemName } = req.body;
 
       if (!itemName) {
@@ -31,49 +38,38 @@ exports.searchItem= async(req,res) =>{
           message: "Please provide Item Name",
         });
       }
+
       const items = await Item.find({
         name: { $regex: itemName, $options: "i" },
       }).populate("shopid");
 
       //all the regular expression contains itemName will be fetched
+
       if (items.length == 0) {
         return res.status(200).json({
           success: false,
           message: `${itemName} is not found`,
         });
       }
+
+
 const expressTime = new Date();
 const currentTime = new Date(
   expressTime.getTime() - expressTime.getTimezoneOffset() * 60000
 );
 //console.log("Current time Here:", currentTime); //Modified according to time zone
 
-const currentTimeString = currentTime.toISOString();
-const [date, time] = currentTimeString.split("T");
-const [year, month, day] = date.split("-");
-const [hours, minutes, seconds] = time.split(":");
 
-// console.log("Current hour:", hours);
-// console.log("Current minutes:", minutes);
+
+
 const result = items.map((item) => {
+
 const openingTime = item.shopid.openingTime.toString();
-const [openHour, openMinutes] = openingTime.split(":");
   const closingTime = item.shopid.closingTime.toString();
-  const [closeHour, closeMinutes] = closingTime.split(":");
+  //Open or closed
+  const status=getCanteenStatus(openingTime,closingTime,currentTime);
 
 
-const currentHour = parseInt(hours);
-const currentMinutes = parseInt(minutes);
-const openingHour = parseInt(openHour);
-const openingMinutes = parseInt(openMinutes);
-const closingHour = parseInt(closeHour);
-const closingMinutes = parseInt(closeMinutes);
-let status;
-if ( currentHour < openingHour || (currentHour === openingHour && currentMinutes < openingMinutes) ||currentHour > closingHour ||(currentHour === closingHour && currentMinutes > closingMinutes)) {
-  status = "Closed";
-} else {
-  status = "Open";
-}
 
   return {
     itemid: item._id,
@@ -83,12 +79,37 @@ if ( currentHour < openingHour || (currentHour === openingHour && currentMinutes
     category: item.category,
     price: item.price,
     canteenName: item.shopid.canteenName,
+    imageUrl:item.imageUrl,
     status: status,
   };
 });
-      //shop name add krna hai abhi
+
+   const canteenResults = [
+     ...new Set(items.map((item) => item.shopid)),
+   ].map((canteenId) => {
+     const canteen = items.find(
+       (item) => item.shopid === canteenId
+     ).shopid;
+     const openingTime = canteen.openingTime.toString();
+     const closingTime = canteen.closingTime.toString();
+     const status = getCanteenStatus(openingTime, closingTime, currentTime);
+     const itemImage = items.find(
+       (item) => item.shopid=== canteenId
+     ).imageUrl;
+
+     return {
+       shopid: canteen._id,
+       canteenName: canteen.canteenName,
+       openingTime:canteen.openingTime,
+       closingTime:canteen.closingTime,
+       status: status,
+       imageUrl: itemImage, 
+     };
+   });
+      
       res.status(200).json({
-        data: result,
+        items: result,
+        canteens:canteenResults,
         success: true,
         message: `${itemName} is found successfully`,
       });
@@ -101,5 +122,3 @@ if ( currentHour < openingHour || (currentHour === openingHour && currentMinutes
         })
     }
 }
-
-//search based on Item and Restaurant
