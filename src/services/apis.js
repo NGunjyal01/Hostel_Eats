@@ -14,6 +14,7 @@ export const customerEndpoints = {
     GET_CART_ITEMS_API: BASE_URL + "/customer/getCartItems",
     GET_ORDER_HISTROY_API: BASE_URL + "/customer/getOrderHistory",
     GET_FAVOURITE_ITEMS_API: BASE_URL + "/customer/getFavouriteItems",
+    GET_CANTEEN_PAGE_DETAILS_API: BASE_URL + "/customer/getCanteenDetails"
 }
 
 // Owner Endpoints 
