@@ -28,12 +28,12 @@ const SignUp = () => {
     }
 
     const handleOnSubmit = (data)=>{
-        console.log(data);
+        const formData = {...data,accountType:accountType};
         if(data.password!==data.confirmPassword){
             return toast.error("Passwords do not match");
         }
         //signingup
-        signup(data,navigate,dispatch);
+        signup(formData,navigate,dispatch);
         //reset
         setAccountType("Customer");
     }
