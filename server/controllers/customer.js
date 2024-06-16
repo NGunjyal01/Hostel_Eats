@@ -128,53 +128,64 @@ const openingTime = item.shopid.openingTime.toString();
 
 exports.getCanteenDetails = async(req,res) =>{
   try{
-         const { token } = req.cookies;
+    const { token } = req.cookies;
 
-       if (!token) {
-       return res.status(200).json({
-         success: false,
-         message: "Your Token is Expired Kindly login first",
-       });
-      }
-
-const payload = await jwt.verify(token, process.env.JWT_SECRET);
-
-       if (payload.role == "Owner") {
-        return res.status(200).json({
-       success: false,
-       message: "Owner Account Type is Not valid",
+    if (!token) {
+      return res.status(200).json({
+        success: false,
+        message: "Your Token is Expired Kindly login first",
       });
-       }
+    }
 
-       const {id}=req.query;
+    const payload = await jwt.verify(token, process.env.JWT_SECRET);
 
-       if (!mongoose.Types.ObjectId.isValid(id)) {
-         return res.status(400).json({
-           success: false,
-           message: "Invalid ID does not satisfy mongoose criteria",
-         });
-       }
+    if (payload.role == "Owner") {
+      return res.status(200).json({
+        success: false,
+        message: "Owner Account Type is Not valid",
+      });
+    }
 
-         const specificCanteen = await Merchant.findOne({ _id: id })
-           .populate("menuitems")
-           .select(
-             "-ownerContact -ownerName -ownerEmail -monthlyRevenue -totalRevenue"
-           );;
+    const { id } = req.query;
 
-         if(!specificCanteen){
-          return res.status(200).json({
-            success:false,
-            message:"Canteen Not present",
-          })
-         }
- 
-   res.status(200).json({
-     data: specificCanteen,
-     success: true,
-     message: `${specificCanteen.canteenName} full Details`,
-   });
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ID does not satisfy mongoose criteria",
+      });
+    }
 
-         
+    const specificCanteen = await Merchant.findOne({ _id: id })
+      .populate("menuitems")
+      .select(
+        "-ownerContact -ownerName -ownerEmail -monthlyRevenue -totalRevenue"
+      );
+
+    if (!specificCanteen) {
+      return res.status(200).json({
+        success: false,
+        message: "Canteen Not present",
+      });
+    }
+
+
+    const expressTime = new Date();
+    const currentTime = new Date(
+      expressTime.getTime() - expressTime.getTimezoneOffset() * 60000
+    );
+    //console.log("Current time Here:", currentTime); //Modified according to time zone
+    const openingTime = specificCanteen.openingTime.toString();
+    const closingTime = specificCanteen.closingTime.toString();
+    const status = getCanteenStatus(openingTime, closingTime, currentTime);
+  const canteenDetails = specificCanteen.toObject();
+  canteenDetails.status = status;//adding status of canteen
+
+  
+    res.status(200).json({
+      data: canteenDetails,
+      success: true,
+      message: `${specificCanteen.canteenName} full Details`,
+    });
   }
   catch(error){
      console.log(error);
