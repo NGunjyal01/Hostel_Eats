@@ -6,7 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaRegArrowAltCircleLeft, FaRegArrowAltCircleRight } from 'react-icons/fa';
 import ConfirmationalModal from '../components/common/ConfirmationalModal';
-import { searchItem, searchCanteen, getPopularDishes } from '../services/customerAPI';
+import { searchItem, searchCanteen, getPopularDishes, getCanteenPageDetails } from '../services/customerAPI';
 import { useNavigate } from 'react-router-dom';
 import { setCanteensData } from '../slices/canteenPageSlice';
 
@@ -58,7 +58,13 @@ const Explore = () => {
     const fetchPopularDishes = async () => {
         try {
             const dishes = await getPopularDishes();
-            setPopularDishes(Array.isArray(dishes) ? dishes.slice(0, 4) : []);
+            if (Array.isArray(dishes.data)) {
+                const dishesWithCanteenNames = await Promise.all(dishes.data.slice(0, 4).map(async (dish) => {
+                    const canteenDetails = await getCanteenPageDetails(dish.shopid);
+                    return { ...dish, canteenName: canteenDetails?.canteenName || 'Unknown Canteen' };
+                }));
+                setPopularDishes(dishesWithCanteenNames);
+            }
         } catch (error) {
             console.error("Error fetching popular dishes:", error);
         }
@@ -160,14 +166,14 @@ const Explore = () => {
     };
 
     const handleCardClick = (canteenId) => {
-        navigate(`/canteen/:${canteenId}`);
+        navigate(`/canteen/${canteenId}`);
     };
 
     const settings = {
         dots: true,
         infinite: true,
         speed: 500,
-        slidesToShow: 3,
+        slidesToShow: 4,
         slidesToScroll: 1,
         nextArrow: <CustomNextArrow />,
         prevArrow: <CustomPrevArrow />,
@@ -175,12 +181,19 @@ const Explore = () => {
             {
                 breakpoint: 1024,
                 settings: {
-                    slidesToShow: 2,
+                    slidesToShow: 3,
                     slidesToScroll: 1,
                 }
             },
             {
                 breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 480,
                 settings: {
                     slidesToShow: 1,
                     slidesToScroll: 1,
@@ -190,11 +203,11 @@ const Explore = () => {
     };
 
     const renderDishCard = (dish) => (
-        <div key={dish.itemid} className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer" onClick={() => handleCardClick(dish.shopid)}>
-            <img src={dish.imageUrl} alt={dish.itemName} className="w-full h-40 object-cover rounded-lg mb-4" />
+        <div key={dish.itemid} className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between" onClick={() => handleCardClick(dish.shopid)}>
+            <img src={dish.imageUrl} alt={dish.itemName} className="w-full h-48 object-cover rounded-lg mb-4" />
             <h3 className="text-xl font-semibold mb-2">{dish.itemName}</h3>
-            <p className="text-gray-400 mb-4">Available at: {dish.canteenName}</p>
-            <p className="text-gray-400 mb-4">Price: {dish.price}</p>
+            <p className="text-gray-400 mb-2">Available at: {dish.canteenName}</p>
+            <p className="text-gray-400 mb-2">Price: {dish.price}</p>
             {quantities[dish.itemid] ? (
                 <div className="flex items-center justify-center space-x-4" onClick={(e) => e.stopPropagation()}>
                     <button
@@ -294,32 +307,42 @@ const Explore = () => {
             )}
 
             {!showSearchOptions && (
-                <div className="mb-10">
-                    <h2 className="ml-6 text-2xl font-bold mb-4">Popular Dishes</h2>
+                <div className="mb-10 px-8">
+                    <h2 className="text-2xl font-bold ml-6 mb-20 mt-16">Popular Dishes</h2>
                     <Slider {...settings} className="mx-4">
                         {popularDishes.map(dish => (
-                            <div key={dish.itemid} className="px-2">
-                                <div className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer" onClick={() => handleCardClick(dish.shopid)}>
-                                    <img src={dish.imageUrl} alt={dish.itemName} className="w-full h-40 object-cover rounded-lg mb-4" />
-                                    <h3 className="text-xl font-semibold mb-2">{dish.itemName}</h3>
-                                    <p className="text-gray-400 mb-4">Available at: {dish.canteenName}</p>
+                            <div key={dish._id} className="px-2">
+                                <div className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between" onClick={() => handleCardClick(dish.shopid)}>
+                                    <img src={dish.imageUrl} alt={dish.itemName} className="w-full h-48 object-cover rounded-lg mb-4" />
+                                    <h3 className="text-xl font-semibold mb-2">{dish.name}</h3>
+                                    <p className="text-gray-400 mb-2">Available at: {dish.canteenName}</p>
+                                    <p className="text-gray-400 mb-2">Price: {dish.price}</p>
                                     {quantities[dish.itemid] ? (
-                                        <div className="flex items-center justify-center space-x-4">
+                                        <div className="flex items-center justify-center space-x-4" onClick={(e) => e.stopPropagation()}>
                                             <button
-                                                onClick={() => handleDecrement(dish.itemid)}
+                                                onClick={(e) => handleDecrement(dish.itemid, e)}
                                                 className="px-10 py-1 bg-red-500 text-white rounded-lg"
                                             >
                                                 -
                                             </button>
                                             <span>{quantities[dish.itemid]}</span>
                                             <button
-                                                onClick={() => handleIncrement(dish.itemid)}
+                                                onClick={(e) => handleIncrement(dish.itemid, e)}
                                                 className="px-10 py-1 bg-[#76ABAE] text-white rounded-lg"
                                             >
                                                 +
                                             </button>
                                         </div>
-                                    ) : null}
+                                    ) : (
+                                        searchInput && (
+                                            <button
+                                                onClick={(e) => handleAdd(dish, e)}
+                                                className="w-full py-2 font-extrabold bg-[#76ABAE] text-white rounded-lg"
+                                            >
+                                                ADD
+                                            </button>
+                                        )
+                                    )}
                                 </div>
                             </div>
                         ))}
