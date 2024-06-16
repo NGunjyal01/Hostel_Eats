@@ -1,15 +1,24 @@
 .dashboardLogo{
     font-size: 25px;
 }
+.deleteBtn{
+    font-size: 35px;
+}
 
 @media only screen and (max-width: 1024px) {
     .dashboardLogo{
         font-size: 20px;
+    }
+    .deleteBtn{
+        font-size: 30px;
     }
 }
 
 @media only screen and (max-width: 768px) {
     .dashboardLogo{
         font-size: 15px;
+    }
+    .deleteBtn{
+        font-size: 25px;
     }
 }

@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { formatTime } from "../../utils/formatTime";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { deleteCanteen, getAllCanteen } from "../../services/ownerAPI";
+import { deleteCanteen, getAllCanteen, getCanteenDetails } from "../../services/ownerAPI";
 import { useEffect, useState } from "react";
 import ConfirmationalModal from "../common/ConfirmationalModal";
 
@@ -60,7 +60,7 @@ const View_Canteen = () => {
       {showComfirmationalModal && <div className="relative -ml-[135%]"><ConfirmationalModal modalData={showComfirmationalModal}/></div>}
       <div className="lg:hidden w-[80%] sm:w-[70%] mt-10">
         <h1 className="absolute -mt-[12%] sm:-mt-[8%] md:-mt-[7%] text-lg sm:text-xl md:text-2xl font-semibold">My Canteens</h1>
-        {allCanteen.map(({id,canteenName,openingTime,closingTime,totalRevenue},index) => 
+        {allCanteen ? allCanteen.map(({id,canteenName,openingTime,closingTime,totalRevenue},index) => 
           <div key={id} className={`bg-[#222831] h-fit px-3 sm:px-5 py-4 sm:py-5 relative border-b-2 border-x-2 text-sm md:text-base ${index%2?"bg-[#222831]":"bg-[#31363F]"} ${index===0?'border-t-2':''}`}>
             <div className="grid grid-cols-2 gap-4 sm:gap-0">
               <h1 className="col-span-1">Canteen Name</h1>
@@ -85,7 +85,10 @@ const View_Canteen = () => {
                 <button className="text-red-600" onClick={()=>{handleDeleteBtn(id,canteenName)}}><MdDelete size={20}/></button>
               </div>
             </div>
-        </div>)}
+        </div>)
+        :<div className="mt-10 sm:text-lg md:text-xl uppercase font-bold tracking-widest">
+            <h1>No canteen Found</h1>
+        </div>}
       </div>
     </div>
   )
