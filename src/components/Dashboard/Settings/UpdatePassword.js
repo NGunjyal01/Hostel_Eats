@@ -63,7 +63,7 @@ const UpdatePassword = () => {
                     <label htmlFor="currPass">Current Password</label>
                     <input type={!toggleEyeBtn.currEye?"password":"text"} placeholder="Enter Current Password" id="currPass" name="currPass" 
                     className={`${inputStyle}`} {...register('currPass',{required:{value:true,message:"Please Enter Your Current Passowrd"}})}/>
-                    <button className="absolute right-5 sm:right-20 md:right-14 lg:right-20 xl:right-24 top-10 lg:top-11" onClick={()=>{handleToggleEyeBtn("currEye")}}>{!toggleEyeBtn.currEye?<IoEye/>:<IoEyeOff/>}</button>
+                    <button className="absolute right-5 sm:right-20 md:right-14 lg:right-20 xl:right-24 top-10 lg:top-11" type='button' onClick={(e)=>{handleToggleEyeBtn("currEye")}}>{!toggleEyeBtn.currEye?<IoEye/>:<IoEyeOff/>}</button>
                     {errors.currPass && ( <span className="mt-1 text-xs text-red-500">
                         {errors.currPass.message}
                     </span>)}
@@ -72,7 +72,7 @@ const UpdatePassword = () => {
                     <label htmlFor="newPass">New Password</label>
                     <input type={!toggleEyeBtn.newEye?"password":"text"} placeholder="Enter New Password" id="newPass" name="newPass"
                     className={`${inputStyle}`} {...register('newPass',{required:{value:true,message:"Please Enter New Password"}})}/>
-                    <button className="absolute right-5 sm:right-20 md:right-14 lg:right-20 xl:right-24 top-10 lg:top-11" onClick={()=>{handleToggleEyeBtn("newEye")}}>{!toggleEyeBtn.newEye?<IoEye/>:<IoEyeOff/>}</button>
+                    <button className="absolute right-5 sm:right-20 md:right-14 lg:right-20 xl:right-24 top-10 lg:top-11" type='button' onClick={(e)=>{handleToggleEyeBtn("newEye")}}>{!toggleEyeBtn.newEye?<IoEye/>:<IoEyeOff/>}</button>
                     {errors.newPass && ( <span className="mt-1 text-xs text-red-500">
                         {errors.newPass.message}
                     </span>)}

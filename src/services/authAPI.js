@@ -33,10 +33,10 @@ export async function signup (signUpData,navigate,dispatch){
     toast.dismiss(toastId);
 }
 
-export async function login(email,password,navigate,dispatch){
+export async function login(formData,navigate,dispatch){
     const toastId = toast.loading("Loading...");
     try{
-        const response = await axios.post(LOGIN_API,{email,password},{headers:{'Content-Type':'application/json'},withCredentials:true});
+        const response = await axios.post(LOGIN_API,formData,{headers:{'Content-Type':'application/json'},withCredentials:true});
         console.log("LOGIN API RESPONSE..............",response);
         if(!response.data.success){
             const error = new Error(response.data.message);
