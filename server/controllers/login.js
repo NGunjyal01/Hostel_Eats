@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("../models/user");
+const Item=require("../models/item");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -76,4 +77,29 @@ exports.userLogin = async (req, res) => {
 };
 
 
-//Log IN with OTP (Using phone number)
+//popularDishes
+
+exports.getPopularDishes= async(req,res)=>{
+  try{
+    const items=await Item.aggregate([{$sample:{size:10}}])
+
+    if(items.size==0){
+      return res.status(200).json({
+        success:false,
+        message:"No items present",
+      })
+    }
+    res.status(200).json({
+      data:items,
+      success:true,
+      message:"Items fetched Successfully",
+    })
+  }
+  catch(error){
+    console.log(error);
+    res.status(400).json({
+      success: false,
+      message: "Something Went Wrong",
+    });
+  }
+}

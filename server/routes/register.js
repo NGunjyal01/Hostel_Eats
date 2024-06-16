@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { userSignup } = require("../controllers/signup"); //For both customer and owner
-const {userLogin}=require("../controllers/login");
+const {userLogin, getPopularDishes}=require("../controllers/login");
 const {auth,isCustomer,isOwner}=require("../middlewares/auth");
 
 const {updateDisplayPicture, updateProfile,updateEmail,updatePassword}=require("../controllers/profileSettings");
@@ -12,7 +12,8 @@ const { route } = require("express/lib/router");
 router.post("/signup", userSignup);
 //login Part
 router.post("/login",userLogin);
-
+//popular dishes
+router.get("/getPopularDishes",getPopularDishes)
 
 
 
