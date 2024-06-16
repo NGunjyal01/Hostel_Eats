@@ -36,7 +36,13 @@ cloudinary.cloudinaryConnect();
 //API Routes
 
 const register=require("./routes/register");
+const ownerRoutes=require("./routes/ownerRoutes");
+const profileRoutes=require("./routes/profileRoutes")
+const customerRoutes=require("./routes/customerRoutes");
 app.use("/",register);
+app.use("/owner",ownerRoutes);
+app.use("/customer",customerRoutes);
+app.use("/profile",profileRoutes)
 
 app.listen(PORT,()=>{
 console.log(`App is running at ${PORT}`);
