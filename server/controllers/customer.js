@@ -122,3 +122,65 @@ const openingTime = item.shopid.openingTime.toString();
         })
     }
 }
+
+
+//Canteen Page fetch on click
+
+exports.getCanteenDetails = async(req,res) =>{
+  try{
+         const { token } = req.cookies;
+
+       if (!token) {
+       return res.status(200).json({
+         success: false,
+         message: "Your Token is Expired Kindly login first",
+       });
+      }
+
+const payload = await jwt.verify(token, process.env.JWT_SECRET);
+
+       if (payload.role == "Owner") {
+        return res.status(200).json({
+       success: false,
+       message: "Owner Account Type is Not valid",
+      });
+       }
+
+       const {id}=req.query;
+
+       if (!mongoose.Types.ObjectId.isValid(id)) {
+         return res.status(400).json({
+           success: false,
+           message: "Invalid ID does not satisfy mongoose criteria",
+         });
+       }
+
+         const specificCanteen = await Merchant.findOne({ _id: id })
+           .populate("menuitems")
+           .select(
+             "-ownerContact -ownerName -ownerEmail -monthlyRevenue -totalRevenue"
+           );;
+
+         if(!specificCanteen){
+          return res.status(200).json({
+            success:false,
+            message:"Canteen Not present",
+          })
+         }
+ 
+   res.status(200).json({
+     data: specificCanteen,
+     success: true,
+     message: `${specificCanteen.canteenName} full Details`,
+   });
+
+         
+  }
+  catch(error){
+     console.log(error);
+     return res.status(400).json({
+       success: false,
+       message: "Something Went Wrong",
+     });
+  }
+}
