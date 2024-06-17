@@ -4,6 +4,12 @@
 .deleteBtn{
     font-size: 35px;
 }
+.cartLogo{
+    font-size: 40px;
+}
+.arrowLogo{
+    font-size: 20px;
+}
 
 @media only screen and (max-width: 1024px) {
     .dashboardLogo{
@@ -12,6 +18,13 @@
     .deleteBtn{
         font-size: 30px;
     }
+    .cartLogo{
+        font-size: 35px;    
+    }
+    .arrowLogo{
+        font-size: 15px;
+    }
+    
 }
 
 @media only screen and (max-width: 768px) {
@@ -21,4 +34,8 @@
     .deleteBtn{
         font-size: 25px;
     }
+    .cartLogo{
+        font-size: 30px;    
+    }
+    
 }
