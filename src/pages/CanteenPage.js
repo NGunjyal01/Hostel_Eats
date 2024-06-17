@@ -31,16 +31,16 @@ const CanteenPage = () => {
 
     return (
         <div className="bg-gradient-to-r from-black to-[#222831] min-h-screen p-6 text-white pt-24">
-            <div className="bg-[#31363F] w-7/12 mx-auto p-6 rounded-lg shadow-2xl mb-6">
-                <h1 className="text-4xl font-bold mb-2">{canteenData.canteenName}</h1>
-                <p className="text-gray-400 mb-1">Address: {canteenData.address}</p>
-                <p className="text-gray-400 mb-1">Opening Time: {canteenData.openingTime}</p>
-                <p className="text-gray-400 mb-1">Closing Time: {canteenData.closingTime}</p>
-                <p className="text-gray-400 mb-1">Status: {canteenData.status}</p>
+            <div className="bg-[#31363F] w-7/12 mx-auto p-6 rounded-lg shadow-2xl mb-6 flex flex-col items-center">
+                <h1 className="text-4xl font-bold mb-2 text-center">{canteenData.canteenName}</h1>
+                <p className="text-gray-400 mb-1 text-center">Address: {canteenData.address}</p>
+                <p className="text-gray-400 mb-1 text-center">Opening Time: {canteenData.openingTime}</p>
+                <p className="text-gray-400 mb-1 text-center">Closing Time: {canteenData.closingTime}</p>
+                <p className="text-gray-400 mb-1 text-center">Status: {canteenData.status}</p>
             </div>
             <div className="text-center">
                 <h2 className="text-2xl font-bold mb-4 flex items-center justify-center">
-                <   span className="flex-grow border-t border-gray-400 mx-2"></span>
+                    <span className="flex-grow border-t border-gray-400 mx-2"></span>
                     <span className="mx-4">Menu</span>
                     <span className="flex-grow border-t border-gray-400 mx-2"></span>
                 </h2>
@@ -55,7 +55,7 @@ const CanteenPage = () => {
 
             <div className="grid grid-cols-1 gap-6 justify-items-center">
                 {canteenData.menuitems.map(item => (
-                    <div key={item._id} className="bg-[#31363F] p-4 rounded-lg shadow-lg w-7/12 flex justify-between items-center pb-8">
+                    <div key={item._id} className="bg-[#31363F] p-4 rounded-lg shadow-lg w-7/12 flex justify-between items-center pb-12">
                         <div>
                             <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
                             <p className="text-gray-400 mb-2">{item.description}</p>

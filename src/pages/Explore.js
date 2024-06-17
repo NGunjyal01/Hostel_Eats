@@ -6,7 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaRegArrowAltCircleLeft, FaRegArrowAltCircleRight } from 'react-icons/fa';
 import ConfirmationalModal from '../components/common/ConfirmationalModal';
-import { searchItem, searchCanteen, getPopularDishes, getCanteenPageDetails } from '../services/customerAPI';
+import { searchItem, getPopularDishes, getCanteenPageDetails } from '../services/customerAPI';
 import { useNavigate } from 'react-router-dom';
 import { setCanteensData } from '../slices/canteenPageSlice';
 
@@ -75,21 +75,22 @@ const Explore = () => {
         const formData = {
             itemName: lowerCaseInput
         };
-
+        let dishResult;
         try {
-            const dishResult = await searchItem(formData);
-            setFilteredDishes(Array.isArray(dishResult) ? dishResult : []);
+            dishResult = await searchItem(formData);
+            const exactMatch = dishResult.filter(dish => dish.itemName.toLowerCase() === lowerCaseInput);
+            const partialMatch = dishResult.filter(dish => dish.itemName.toLowerCase().includes(lowerCaseInput) && dish.itemName.toLowerCase() !== lowerCaseInput);
+            setFilteredDishes([...exactMatch, ...partialMatch]);
         } catch (error) {
             console.error("Error searching for items:", error);
             setFilteredDishes([]);
         }
 
         try {
-            const canteenResult = await searchCanteen(formData);
-            if (Array.isArray(canteenResult)) {
-                dispatch(setCanteensData(canteenResult));
+            if (Array.isArray(dishResult)) {
+                dispatch(setCanteensData(dishResult));
             }
-            setFilteredCanteens(Array.isArray(canteenResult) ? canteenResult : []);
+            setFilteredCanteens(Array.isArray(dishResult) ? dishResult : []);
         } catch (error) {
             console.error("Error searching for canteens:", error);
             setFilteredCanteens([]);
@@ -177,6 +178,27 @@ const Explore = () => {
         slidesToScroll: 1,
         nextArrow: <CustomNextArrow />,
         prevArrow: <CustomPrevArrow />,
+        appendDots: dots => (
+            <div
+                style={{
+                    position: "relative",
+                    top: "30px"
+                }}
+            >
+                <ul style={{ margin: "0px", padding: "0" }}> {dots} </ul>
+            </div>
+        ),
+        customPaging: i => (
+            <div
+                style={{
+                    width: "10px",
+                    height: "10px",
+                    backgroundColor: "#76ABAE",
+                    borderRadius: "50%",
+                    display: "inline-block"
+                }}
+            ></div>
+        ),
         responsive: [
             {
                 breakpoint: 1024,
@@ -202,9 +224,9 @@ const Explore = () => {
         ]
     };
 
-    const renderDishCard = (dish) => (
-        <div key={dish.itemid} className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between" onClick={() => handleCardClick(dish.shopid)}>
-            <img src={dish.imageUrl} alt={dish.itemName} className="w-full h-48 object-cover rounded-lg mb-4" />
+    const renderDishCard = (dish, showAddButton = true) => (
+        <div key={dish.itemid} className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between">
+            <img src={dish.imageUrl} alt={dish.itemName} className="w-full h-36 object-cover rounded-lg mb-4" />
             <h3 className="text-xl font-semibold mb-2">{dish.itemName}</h3>
             <p className="text-gray-400 mb-2">Available at: {dish.canteenName}</p>
             <p className="text-gray-400 mb-2">Price: {dish.price}</p>
@@ -225,7 +247,7 @@ const Explore = () => {
                     </button>
                 </div>
             ) : (
-                searchInput && (
+                showAddButton && (
                     <button
                         onClick={(e) => handleAdd(dish, e)}
                         className="w-full py-2 font-extrabold bg-[#76ABAE] text-white rounded-lg"
@@ -286,7 +308,7 @@ const Explore = () => {
                     <h2 className="text-2xl font-bold mb-4">{searchType === 'dishes' ? 'Search Results for Dishes' : 'Search Results for Canteens'}</h2>
                     {searchType === 'dishes' ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredDishes.map(dish => renderDishCard(dish))}
+                            {filteredDishes.map(dish => renderDishCard(dish, true))}
                         </div>
                     ) : (
                         <div className="space-y-6">
@@ -306,44 +328,13 @@ const Explore = () => {
                 </div>
             )}
 
-            {!showSearchOptions && (
+            {!searchInput && (
                 <div className="mb-10 px-8">
                     <h2 className="text-2xl font-bold ml-6 mb-20 mt-16">Popular Dishes</h2>
                     <Slider {...settings} className="mx-4">
                         {popularDishes.map(dish => (
                             <div key={dish._id} className="px-2">
-                                <div className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between" onClick={() => handleCardClick(dish.shopid)}>
-                                    <img src={dish.imageUrl} alt={dish.itemName} className="w-full h-48 object-cover rounded-lg mb-4" />
-                                    <h3 className="text-xl font-semibold mb-2">{dish.name}</h3>
-                                    <p className="text-gray-400 mb-2">Available at: {dish.canteenName}</p>
-                                    <p className="text-gray-400 mb-2">Price: {dish.price}</p>
-                                    {quantities[dish.itemid] ? (
-                                        <div className="flex items-center justify-center space-x-4" onClick={(e) => e.stopPropagation()}>
-                                            <button
-                                                onClick={(e) => handleDecrement(dish.itemid, e)}
-                                                className="px-10 py-1 bg-red-500 text-white rounded-lg"
-                                            >
-                                                -
-                                            </button>
-                                            <span>{quantities[dish.itemid]}</span>
-                                            <button
-                                                onClick={(e) => handleIncrement(dish.itemid, e)}
-                                                className="px-10 py-1 bg-[#76ABAE] text-white rounded-lg"
-                                            >
-                                                +
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        searchInput && (
-                                            <button
-                                                onClick={(e) => handleAdd(dish, e)}
-                                                className="w-full py-2 font-extrabold bg-[#76ABAE] text-white rounded-lg"
-                                            >
-                                                ADD
-                                            </button>
-                                        )
-                                    )}
-                                </div>
+                                {renderDishCard(dish, false)}
                             </div>
                         ))}
                     </Slider>
