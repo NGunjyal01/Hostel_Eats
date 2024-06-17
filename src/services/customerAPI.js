@@ -18,15 +18,6 @@ export const searchItem = async (formData) => {
     }
 };
 
-export const searchCanteen = async (canteenName) => {
-    try {
-        const response = await axios.post(customerEndpoints.SEARCH_ITEM_API, canteenName, config);
-        console.log("searchCanteenAPI response----->", response);
-        return response.data.canteens;
-    } catch (error) {
-        console.error("Error fetching search items:", error);
-    }
-};
 
 export const getPopularDishes = async () => {
     try {
