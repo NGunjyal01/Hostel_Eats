@@ -60,7 +60,7 @@ const Header = () => {
                 <NavLink to='/signup' className={({isActive}) => `bg-[#31363F] rounded-lg px-4 py-2 hover:text-[#76ABAE] ${isActive?"text-[#76ABAE]":""}`}>SignUp</NavLink>
             </div>}  
             {user && <><div className={`group hidden sm:flex justify-center items-center absolute top-9 cursor-pointer transition-transform ease-out 
-            ${user.accountType==='Owner'?'right-[8%]':'sm:right-[15%] md:right-[14%] lg:right-[13%] xl:right-[11.5%]'}`} 
+            ${user.accountType==='Owner'?'right-[8%]':'sm:right-[15%] md:right-[14%] lg:right-[13%] xl:right-[12%]'}`} 
             onClick={handleUserIconClick}
             onMouseEnter={()=>{setShowDropDownMenu(true)}} onMouseLeave={()=>{setShowDropDownMenu(false)}}>
                 <img src={user.imageUrl} className="sm:size-8 lg:size-10 rounded-md"/>  
