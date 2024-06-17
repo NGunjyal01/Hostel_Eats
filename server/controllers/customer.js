@@ -1,10 +1,12 @@
 const mongoose=require("mongoose");
 const User=require("../models/user");
 const Item=require("../models/item");
+const Cart=require("../models/cart");
 const Merchant=require("../models/merchant");
 const jwt=require("jsonwebtoken");
 require("dotenv").config();
-const {getCanteenStatus}=require("../utils/status")
+const {getCanteenStatus}=require("../utils/status");
+const { faListNumeric } = require("@fortawesome/free-solid-svg-icons");
 
 
 //Search Item means Explore Page
@@ -12,23 +14,7 @@ const {getCanteenStatus}=require("../utils/status")
 exports.searchItem= async(req,res) =>{
     try{
 
-      const { token } = req.cookies;
-
-      if (!token) {
-        return res.status(200).json({
-          success: false,
-          message: "Your Token is Expired Kindly login first",
-        });
-      }
-
-      const payload=await jwt.verify(token,process.env.JWT_SECRET);
-
-      if(payload.role=="Owner"){
-        return res.status(200).json({
-            success:false,
-            message:"Owner Account Type is Not valid",
-        })
-      }
+      
 
       const { itemName } = req.body;
 
@@ -128,23 +114,7 @@ const openingTime = item.shopid.openingTime.toString();
 
 exports.getCanteenDetails = async(req,res) =>{
   try{
-    const { token } = req.cookies;
 
-    if (!token) {
-      return res.status(200).json({
-        success: false,
-        message: "Your Token is Expired Kindly login first",
-      });
-    }
-
-    const payload = await jwt.verify(token, process.env.JWT_SECRET);
-
-    if (payload.role == "Owner") {
-      return res.status(200).json({
-        success: false,
-        message: "Owner Account Type is Not valid",
-      });
-    }
 
     const { id } = req.query;
 
@@ -195,3 +165,106 @@ exports.getCanteenDetails = async(req,res) =>{
      });
   }
 }
+
+
+//Add to Cart
+
+exports.addItemToCart=async(req,res)=>{
+  
+  try{
+    const payload = req.user;
+    const { itemId, quantity } = req.body;
+
+    let cart = await Cart.findOne({ userid: payload.id }).populate('items.item');
+
+    //cart not present
+    if (!cart) {
+      cart = new Cart({ userid: payload.id, items: [] });
+    }
+
+    const item = await Item.findById({_id:itemId});
+     if (!item) {
+         return res.status(404).json({
+              success: false,
+              message: "Item not found",
+     });
+    }
+
+    // Ensure all items in the cart are from the same canteen
+    if (  cart.items.length > 0 &&  item.shopid.toString() !== cart.items[0].item.shopid.toString()
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Adding items from different canteen is not allowed",
+      });
+    }
+    
+    //checking If item already pressent then update quantity
+
+    const itemIdx = cart.items.findIndex(
+      (item) => item.item._id.toString() === itemId
+    );
+
+    if (itemIdx > -1) {
+      cart.items[itemIdx].quantity += quantity;
+    } else {
+      cart.items.push({ item: itemId, quantity });
+    }
+
+    //calculating price:
+        await cart.populate("items.item");
+
+    cart.totalPrice = cart.items.reduce((total, cartItem) => {
+      return total + cartItem.item.price * cartItem.quantity;
+    }, 0);
+    await cart.save();
+    res.status(200).json({
+      data: cart,
+      success: true,
+      message: "Item Added to Cart Successfully",
+    });
+  }
+  catch(error){
+      console.log(error);
+      return res.status(400).json({
+        success: false,
+        message: "Something Went Wrong",
+      });
+  }
+  
+}
+
+//Get From Cart
+exports.getItemFromCart = async (req, res) => {
+
+try{
+const payload=req.user;
+ const cart=await Cart.findOne({userid:payload.id}).populate('items.item');
+ 
+ if(!cart){
+  return res.status(200).json({
+    success:false,
+    message:"Cart is empty",
+  })
+ }
+
+  res.status(200).json({
+    data:cart,
+    success:true,
+    message:"Cart Items fetched Successfully",
+  })
+
+}
+catch(error){
+  console.log(error);
+  res.status(400).json({
+    success:false,
+    message:"Something Went Wrong",
+  })
+}
+
+ 
+};
+
+//Remove Item From Cart
+exports.removeItemFromCart = async (req, res) => {};
