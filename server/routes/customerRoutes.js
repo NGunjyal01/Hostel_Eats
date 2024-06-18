@@ -11,6 +11,6 @@ customerRouter.post("/searchItemByCanteen",customerCheck,searchItemByCanteen);
 customerRouter.post("/addCartItem",customerCheck,addItemToCart);
 customerRouter.get("/getCartItems",customerCheck,getItemFromCart);
 customerRouter.post("/removeCartItem",customerCheck,removeItemFromCart);
-customerRouter.post("/resetCartItem",customerCheck,resetCartItem);
+customerRouter.get("/resetCartItem",customerCheck,resetCartItem);
 
 module.exports=customerRouter;
