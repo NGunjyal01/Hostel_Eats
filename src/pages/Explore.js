@@ -6,7 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaRegArrowAltCircleLeft, FaRegArrowAltCircleRight } from 'react-icons/fa';
 import ConfirmationalModal from '../components/common/ConfirmationalModal';
-import { searchItem, getPopularDishes, getCanteenPageDetails, addCartItem, removeCartItem, resetCartItem } from '../services/customerAPI';
+import { searchItem, searchCanteen, getPopularDishes, getCanteenPageDetails, addCartItem, removeCartItem, resetCartItem } from '../services/customerAPI';
 import { useNavigate } from 'react-router-dom';
 import { setCanteensData } from '../slices/canteenPageSlice';
 
@@ -84,9 +84,8 @@ const Explore = () => {
         const formData = {
             itemName: lowerCaseInput
         };
-        let dishResult;
         try {
-            dishResult = await searchItem(formData);
+            const dishResult = await searchItem(formData);
             const exactMatch = dishResult.filter(dish => dish.itemName.toLowerCase() === lowerCaseInput);
             const partialMatch = dishResult.filter(dish => dish.itemName.toLowerCase().includes(lowerCaseInput) && dish.itemName.toLowerCase() !== lowerCaseInput);
             setFilteredDishes([...exactMatch, ...partialMatch]);
@@ -98,11 +97,12 @@ const Explore = () => {
         }
 
         try {
-            if (Array.isArray(dishResult)) {
-                dispatch(setCanteensData(dishResult));
+            const result=await searchCanteen(formData);
+            if (Array.isArray(result)) {
+                dispatch(setCanteensData(result));
             }
-            setFilteredCanteens(Array.isArray(dishResult) ? dishResult : []);
-            localStorage.setItem('filteredCanteens', JSON.stringify(Array.isArray(dishResult) ? dishResult : []));
+            setFilteredCanteens(Array.isArray(result) ? result : []);
+            localStorage.setItem('filteredCanteens', JSON.stringify(Array.isArray(result) ? result : []));
         } catch (error) {
             console.error("Error searching for canteens:", error);
             setFilteredCanteens([]);
@@ -198,8 +198,6 @@ const Explore = () => {
         setPendingItem(null);
         setShowModal(false);
 
-        // Optional: Refresh the cart view or navigate to a different page
-        // navigate('/some-page'); // Optional
     };
 
     const handleModalCancel = () => {
@@ -354,7 +352,7 @@ const Explore = () => {
                     ) : (
                         <div className="space-y-6">
                             {filteredCanteens.map(canteen => (
-                                <div key={canteen.id} className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer" onClick={() => handleCardClick(canteen.shopid)}>
+                                <div key={canteen.shopid} className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer" onClick={() => handleCardClick(canteen.shopid)}>
                                     <img src={canteen.imageUrl} alt={canteen.canteenName} className="w-24 h-24 object-cover rounded-lg mr-4" />
                                     <div>
                                         <h3 className="text-xl font-semibold mb-2">{canteen.canteenName}</h3>
