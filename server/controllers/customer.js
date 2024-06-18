@@ -151,7 +151,8 @@ exports.getCanteenDetails = async (req, res) => {
 exports.addItemToCart = async (req, res) => {
   try {
     const payload = req.user;
-    const { itemid, quantity } = req.body;
+    const { itemid} = req.body;
+    const quantity=1;
 
     let cart = await Cart.findOne({ userid: payload.id }).populate(
       "items.item"
@@ -171,10 +172,7 @@ exports.addItemToCart = async (req, res) => {
     }
 
     // Ensure all items in the cart are from the same canteen
-    if (
-      cart.items.length > 0 &&
-      item.shopid.toString() !== cart.items[0].item.shopid.toString()
-    ) {
+    if (cart.items.length > 0 &&item.shopid.toString() !== cart.items[0].item.shopid.toString() ) {
       return res.status(400).json({
         success: false,
         message: "Adding items from different canteen is not allowed",
@@ -183,9 +181,7 @@ exports.addItemToCart = async (req, res) => {
 
     //checking If item already pressent then update quantity
 
-    const itemIdx = cart.items.findIndex(
-      (item) => item.item._id.toString() === itemid
-    );
+    const itemIdx = cart.items.findIndex( (item) => item.item._id.toString() === itemid);
 
     if (itemIdx > -1) {
       cart.items[itemIdx].quantity += quantity;
@@ -249,15 +245,35 @@ exports.removeItemFromCart = async (req, res) => {
     const payload = req.user;
     const { itemid } = req.body;
 
-    const cart = await Cart.findOne({ userid: payload.id });
+    const cart = await Cart.findOne({ userid: payload.id }).populate(
+      "items.item"
+    );
+
     if (!cart) {
       return res.status(200).json({
         success: false,
         message: "Cart is Empty",
       });
     }
-    //Removing item from cart
-    cart.items = cart.items.filter((item) => item.item.toString() !== itemid);
+    //find the item in the cart
+
+    const itemIdx = cart.items.findIndex(
+      (item) => item.item._id.toString() === itemid
+    );
+
+    if (itemIdx === -1) {
+      return res.status(200).json({
+        success: false,
+        message: "Item Not found in cart",
+      });
+    }
+
+    // Reduce the quantity by 1
+    cart.items[itemIdx].quantity -= 1;
+    //quanity 0 then delete
+    if(cart.items[itemIdx].quantity<=0){
+      cart.items.splice(itemIdx,1)
+    }
 
     if (cart.items.length === 0) {
       await Cart.deleteOne({ userid: payload.id });
@@ -268,7 +284,7 @@ exports.removeItemFromCart = async (req, res) => {
       });
     }
 
-    await cart.populate("items.item");
+  
     //New price of cart
     cart.totalPrice = cart.items.reduce((total, cartItem) => {
       return total + cartItem.item.price * cartItem.quantity;
@@ -288,3 +304,44 @@ exports.removeItemFromCart = async (req, res) => {
     });
   }
 };
+
+exports.searchItemByCanteen =async(req,res) =>{
+  try{ 
+      const payload=req.user;
+
+      const {shopid,itemName}=req.body;
+
+      const canteen=await Merchant.findOne({_id:shopid});
+      if(!canteen){
+        return res.status(200).json({
+          success:false,
+          message:"canteen Not Exist",
+        })
+      }
+      await canteen.populate('menuitems');
+
+    const searchedItems=canteen.menuitems.filter(item=>item.name.toLowerCase().includes(itemName.toLowerCase()));
+
+
+
+    if(searchedItems.length===0){
+      return res.status(200).json({
+        success:false,
+        message:"No items found",
+      })
+    }
+    
+    res.status(200).json({
+      data: searchedItems,
+      success: true,
+      message: `${searchedItems.length} items found`,
+    });
+  }
+  catch(error){
+    console.log(error);
+    res.status(400).json({
+      success:false,
+      message:"Something went wrong",
+    })
+  }
+}
