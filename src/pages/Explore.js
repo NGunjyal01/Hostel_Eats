@@ -53,6 +53,15 @@ const Explore = () => {
 
     useEffect(() => {
         fetchPopularDishes();
+        const savedSearchInput = localStorage.getItem('searchInput');
+        const savedFilteredDishes = localStorage.getItem('filteredDishes');
+        const savedFilteredCanteens = localStorage.getItem('filteredCanteens');
+        const savedShowSearchOptions = localStorage.getItem('showSearchOptions');
+
+        if (savedSearchInput) setSearchInput(savedSearchInput);
+        if (savedFilteredDishes) setFilteredDishes(JSON.parse(savedFilteredDishes));
+        if (savedFilteredCanteens) setFilteredCanteens(JSON.parse(savedFilteredCanteens));
+        if (savedShowSearchOptions) setShowSearchOptions(JSON.parse(savedShowSearchOptions));
     }, []);
 
     const fetchPopularDishes = async () => {
@@ -81,9 +90,11 @@ const Explore = () => {
             const exactMatch = dishResult.filter(dish => dish.itemName.toLowerCase() === lowerCaseInput);
             const partialMatch = dishResult.filter(dish => dish.itemName.toLowerCase().includes(lowerCaseInput) && dish.itemName.toLowerCase() !== lowerCaseInput);
             setFilteredDishes([...exactMatch, ...partialMatch]);
+            localStorage.setItem('filteredDishes', JSON.stringify([...exactMatch, ...partialMatch]));
         } catch (error) {
             console.error("Error searching for items:", error);
             setFilteredDishes([]);
+            localStorage.setItem('filteredDishes', JSON.stringify([]));
         }
 
         try {
@@ -91,9 +102,11 @@ const Explore = () => {
                 dispatch(setCanteensData(dishResult));
             }
             setFilteredCanteens(Array.isArray(dishResult) ? dishResult : []);
+            localStorage.setItem('filteredCanteens', JSON.stringify(Array.isArray(dishResult) ? dishResult : []));
         } catch (error) {
             console.error("Error searching for canteens:", error);
             setFilteredCanteens([]);
+            localStorage.setItem('filteredCanteens', JSON.stringify([]));
         }
     };
 
@@ -108,6 +121,8 @@ const Explore = () => {
         if (searchInput) {
             setShowSearchOptions(true);
             filterResults(searchInput);
+            localStorage.setItem('searchInput', searchInput);
+            localStorage.setItem('showSearchOptions', JSON.stringify(true));
         }
     };
 
@@ -116,6 +131,10 @@ const Explore = () => {
         setShowSearchOptions(false);
         setFilteredDishes([]);
         setFilteredCanteens([]);
+        localStorage.removeItem('searchInput');
+        localStorage.removeItem('filteredDishes');
+        localStorage.removeItem('filteredCanteens');
+        localStorage.removeItem('showSearchOptions');
     };
 
     const handleAdd = (dish, e) => {
