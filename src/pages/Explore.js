@@ -6,7 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaRegArrowAltCircleLeft, FaRegArrowAltCircleRight } from 'react-icons/fa';
 import ConfirmationalModal from '../components/common/ConfirmationalModal';
-import { searchItem, getPopularDishes, getCanteenPageDetails } from '../services/customerAPI';
+import { searchItem, getPopularDishes, getCanteenPageDetails, addCartItem, removeCartItem, resetCartItem } from '../services/customerAPI';
 import { useNavigate } from 'react-router-dom';
 import { setCanteensData } from '../slices/canteenPageSlice';
 
@@ -137,7 +137,7 @@ const Explore = () => {
         localStorage.removeItem('showSearchOptions');
     };
 
-    const handleAdd = (dish, e) => {
+    const handleAdd = async (dish, e) => {
         e.stopPropagation();
         const cartIsEmpty = Object.keys(quantities).length === 0;
     
@@ -147,16 +147,32 @@ const Explore = () => {
         } else {
             setCurrentCanteen(dish.shopid);
             setQuantities(prevQuantities => ({ ...prevQuantities, [dish.itemid]: 1 }));
+    
+            // Call the addCartItem API
+            console.log("Adding dish to cart:", dish);  // Log dish details
+            await addCartItem({ itemid: dish.itemid }, dispatch);
         }
     };
+    
 
-    const handleIncrement = (id, e) => {
+    const handleIncrement = async (id, e) => {
         e.stopPropagation();
-        setQuantities(prevQuantities => ({ ...prevQuantities, [id]: prevQuantities[id] + 1 }));
+
+        // Call the addCartItem API
+        await addCartItem({ itemid: id }, dispatch);
+
+        setQuantities(prevQuantities => ({
+            ...prevQuantities,
+            [id]: (prevQuantities[id] || 0) + 1
+        }));
     };
 
-    const handleDecrement = (id, e) => {
+    const handleDecrement = async (id, e) => {
         e.stopPropagation();
+
+        // Call the removeCartItem API
+        await removeCartItem({ itemid: id }, dispatch);
+
         setQuantities(prevQuantities => {
             const newQuantities = { ...prevQuantities };
             if (newQuantities[id] > 1) {
@@ -164,20 +180,26 @@ const Explore = () => {
             } else {
                 delete newQuantities[id];
             }
-    
+
             if (Object.keys(newQuantities).length === 0) {
                 setCurrentCanteen(null);
             }
-    
+
             return newQuantities;
         });
     };
 
-    const handleModalConfirm = () => {
-        setQuantities({ [pendingItem.itemid]: 1 });
-        setCurrentCanteen(pendingItem.shopid);
+    const handleModalConfirm = async () => {
+        // Reset all items from the current cart
+        await resetCartItem();
+
+        setQuantities({});
+        setCurrentCanteen(null);
         setPendingItem(null);
         setShowModal(false);
+
+        // Optional: Refresh the cart view or navigate to a different page
+        // navigate('/some-page'); // Optional
     };
 
     const handleModalCancel = () => {
