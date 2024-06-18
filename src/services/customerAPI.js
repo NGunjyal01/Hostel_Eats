@@ -11,7 +11,7 @@ const { GET_CART_ITEMS_API,ADD_CART_ITEM_API,REMOVE_CART_ITEM_API } = customerEn
 export const searchItem = async (formData) => {
     try {
         const response = await axios.post(customerEndpoints.SEARCH_ITEM_API, formData, config);
-        console.log(response);
+        console.log("Search Item response====>",response);
         return response.data.items;
     } catch (error) {
         console.error("Error fetching search items:", error);
@@ -39,19 +39,27 @@ export const getCanteenPageDetails = async (id,dispatch) => {
     }
 };
 
-export async function addCartItem(item,dispatch){
+export async function addCartItem(item, dispatch) {
     const toastId = toast.loading("Loading...");
-    try{
-        const response = await axios.post(ADD_CART_ITEM_API,item,config);
-        console.log("ADD CART ITEM API RESPONSE...................",response);
+    try {
+        const response = await axios.post(ADD_CART_ITEM_API, item, config);
+        console.log("ADD CART ITEM API RESPONSE:", response);
         toast.success("Successfully Added Item");
-    }
-    catch(error){
-        console.log("ERROR DURING ADD CART ITEM API..................",error);
-        toast.error("Error During Add Cart Item");
+    } catch (error) {
+        if (error.response) {
+            console.error("Server responded with error:", error.response.data);
+            toast.error(`Error: ${error.response.data.message || "Unknown error"}`);
+        } else if (error.request) {
+            console.error("No response received:", error.request);
+            toast.error("Error: No response from server");
+        } else {
+            console.error("Error setting up request:", error.message);
+            toast.error(`Error: ${error.message}`);
+        }
     }
     toast.dismiss(toastId);
 }
+
 
 export async function removeCartItem(item,dispatch){
     const toastId = toast.loading("Loading...");
@@ -85,3 +93,13 @@ export async function getCartItems(dispatch){
         toast.error("Error During Get Cart Items");
     }
 }
+
+export const resetCartItem = async () => {
+    try {
+        const response = await axios.get(customerEndpoints.RESET_CART_ITEM_API, config);
+        console.log("Reset Cart Items API Response====>",response);
+        return response.data;
+    } catch (error) {
+        console.error("Error resetting cart items:", error);
+    }
+};
