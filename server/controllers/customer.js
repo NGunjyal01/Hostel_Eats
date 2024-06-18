@@ -345,3 +345,32 @@ exports.searchItemByCanteen =async(req,res) =>{
     })
   }
 }
+
+exports.resetCartItem = async(req,res) => {
+
+  try{
+  const payload=req.user;
+
+  const cart= await Cart.findOne({userid:payload.id});
+  if (!cart) {
+    return res.status(404).json({
+      success: false,
+      message: "Cart not found",
+    });
+  }
+ 
+  await Cart.deleteOne({userid:payload.id});
+
+  res.status(200).json({
+    success:true,
+    message:"Cart is empty",
+  })
+  }
+  catch(error){
+    console.log(error);
+    res.status(400).json({
+      success:false,
+      message:"Something Went Wrong",
+    })
+  }
+}
