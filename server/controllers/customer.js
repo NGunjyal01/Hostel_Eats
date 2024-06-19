@@ -310,7 +310,7 @@ exports.searchItemByCanteen =async(req,res) =>{
       const payload=req.user;
 
       const {shopid,itemName}=req.body;
-
+      
       const canteen=await Merchant.findOne({_id:shopid});
       if(!canteen){
         return res.status(200).json({
