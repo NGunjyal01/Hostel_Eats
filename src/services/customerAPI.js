@@ -105,9 +105,9 @@ export const resetCartItem = async () => {
     }
 };
 
-export const searchItemByCanteen = async () =>{
+export const searchItemByCanteen = async (formData) =>{
     try{
-        const response = await axios.get(customerEndpoints.SEARCH_ITEM_BY_CANTEEN_API,config);
+        const response = await axios.post(customerEndpoints.SEARCH_ITEM_BY_CANTEEN_API,formData,config);
         console.log("Search Item By Canteen API response====>",response);
         return response.data;
     } catch (error) {
