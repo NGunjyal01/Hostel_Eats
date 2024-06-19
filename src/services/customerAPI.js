@@ -12,19 +12,9 @@ export const searchItem = async (formData) => {
     try {
         const response = await axios.post(customerEndpoints.SEARCH_ITEM_API, formData, config);
         console.log("Search Item response====>",response);
-        return response.data.items;
+        return response.data;
     } catch (error) {
         console.error("Error fetching search items:", error);
-    }
-};
-
-export const searchCanteen = async (canteenName) =>{
-    try {
-    const response = await axios.post(customerEndpoints.SEARCH_ITEM_API,canteenName,config);
-    console.log(response);
-    return response.data.canteens;
-    } catch (error) {
-    console.error("Error fetching search items:", error);
     }
 };
 
@@ -107,8 +97,20 @@ export const resetCartItem = async () => {
     try {
         const response = await axios.get(customerEndpoints.RESET_CART_ITEM_API, config);
         console.log("Reset Cart Items API Response====>",response);
+        toast.success("Cart Reset Successfull");
         return response.data;
     } catch (error) {
         console.error("Error resetting cart items:", error);
+        toast.error("Error During Remove Cart Item");
     }
 };
+
+export const searchItemByCanteen = async () =>{
+    try{
+        const response = await axios.get(customerEndpoints.SEARCH_ITEM_BY_CANTEEN_API,config);
+        console.log("Search Item By Canteen API response====>",response);
+        return response.data;
+    } catch (error) {
+        console.log("Error searching for items:",error);
+    }
+}

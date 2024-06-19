@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { AiOutlineSearch, AiOutlineClose } from 'react-icons/ai';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaRegArrowAltCircleLeft, FaRegArrowAltCircleRight } from 'react-icons/fa';
 import ConfirmationalModal from '../components/common/ConfirmationalModal';
-import { searchItem, searchCanteen, getPopularDishes, getCanteenPageDetails, addCartItem, removeCartItem, resetCartItem } from '../services/customerAPI';
+import { searchItem, getPopularDishes, getCanteenPageDetails, addCartItem, removeCartItem, resetCartItem } from '../services/customerAPI';
 import { useNavigate } from 'react-router-dom';
 import { setCanteensData } from '../slices/canteenPageSlice';
+import { setCartItem, removeCartItems } from '../slices/cartSlice';
 
 const CustomPrevArrow = (props) => {
     const { onClick } = props;
@@ -43,11 +44,11 @@ const Explore = () => {
     const [filteredDishes, setFilteredDishes] = useState([]);
     const [filteredCanteens, setFilteredCanteens] = useState([]);
     const [searchType, setSearchType] = useState('dishes');
-    const [quantities, setQuantities] = useState({});
-    const [currentCanteen, setCurrentCanteen] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [pendingItem, setPendingItem] = useState(null);
+    const [currentCanteen, setCurrentCanteen] = useState(null);
 
+    const cart = useSelector(state => state.cart) || {};  // Ensure cart is always an object
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -84,10 +85,11 @@ const Explore = () => {
         const formData = {
             itemName: lowerCaseInput
         };
+        let dishResult;
         try {
-            const dishResult = await searchItem(formData);
-            const exactMatch = dishResult.filter(dish => dish.itemName.toLowerCase() === lowerCaseInput);
-            const partialMatch = dishResult.filter(dish => dish.itemName.toLowerCase().includes(lowerCaseInput) && dish.itemName.toLowerCase() !== lowerCaseInput);
+            dishResult = await searchItem(formData);
+            const exactMatch = dishResult.items.filter(dish => dish.itemName.toLowerCase() === lowerCaseInput);
+            const partialMatch = dishResult.items.filter(dish => dish.itemName.toLowerCase().includes(lowerCaseInput) && dish.itemName.toLowerCase() !== lowerCaseInput);
             setFilteredDishes([...exactMatch, ...partialMatch]);
             localStorage.setItem('filteredDishes', JSON.stringify([...exactMatch, ...partialMatch]));
         } catch (error) {
@@ -97,12 +99,11 @@ const Explore = () => {
         }
 
         try {
-            const result=await searchCanteen(formData);
-            if (Array.isArray(result)) {
-                dispatch(setCanteensData(result));
+            if (Array.isArray(dishResult.canteens)) {
+                dispatch(setCanteensData(dishResult.canteens));
             }
-            setFilteredCanteens(Array.isArray(result) ? result : []);
-            localStorage.setItem('filteredCanteens', JSON.stringify(Array.isArray(result) ? result : []));
+            setFilteredCanteens(Array.isArray(dishResult.canteens) ? dishResult.canteens : []);
+            localStorage.setItem('filteredCanteens', JSON.stringify(Array.isArray(dishResult.canteens) ? dishResult.canteens : []));
         } catch (error) {
             console.error("Error searching for canteens:", error);
             setFilteredCanteens([]);
@@ -139,65 +140,62 @@ const Explore = () => {
 
     const handleAdd = async (dish, e) => {
         e.stopPropagation();
-        const cartIsEmpty = Object.keys(quantities).length === 0;
-    
-        if (!cartIsEmpty && currentCanteen && currentCanteen !== dish.shopid) {
+        const cartIsEmpty = !cart || Object.keys(cart).length === 0;
+        const cartCanteenId = Object.keys(cart).length > 0 ? cart[Object.keys(cart)[0]].canteenId : null;
+
+
+        if (!cartIsEmpty && cartCanteenId !== dish.shopid) {
             setPendingItem(dish);
             setShowModal(true);
         } else {
             setCurrentCanteen(dish.shopid);
-            setQuantities(prevQuantities => ({ ...prevQuantities, [dish.itemid]: 1 }));
-    
-            // Call the addCartItem API
-            console.log("Adding dish to cart:", dish);  // Log dish details
+            const newQuantities = { ...cart, [dish.itemid]: 1 };
+            dispatch(setCartItem({ itemid: dish.itemid, quantity: newQuantities[dish.itemid] }));
+            localStorage.setItem('cart', JSON.stringify(newQuantities));
+
             await addCartItem({ itemid: dish.itemid }, dispatch);
         }
     };
-    
 
     const handleIncrement = async (id, e) => {
         e.stopPropagation();
 
-        // Call the addCartItem API
         await addCartItem({ itemid: id }, dispatch);
 
-        setQuantities(prevQuantities => ({
-            ...prevQuantities,
-            [id]: (prevQuantities[id] || 0) + 1
-        }));
+        const newQuantities = { ...cart, [id]: (cart[id] || 0) + 1 };
+        dispatch(setCartItem({ itemid: id, quantity: newQuantities[id] }));
+        localStorage.setItem('cart', JSON.stringify(newQuantities));
     };
 
     const handleDecrement = async (id, e) => {
         e.stopPropagation();
 
-        // Call the removeCartItem API
         await removeCartItem({ itemid: id }, dispatch);
 
-        setQuantities(prevQuantities => {
-            const newQuantities = { ...prevQuantities };
-            if (newQuantities[id] > 1) {
-                newQuantities[id]--;
-            } else {
-                delete newQuantities[id];
-            }
+        const newQuantities = { ...cart };
+        if (newQuantities[id] > 1) {
+            newQuantities[id]--;
+        } else {
+            delete newQuantities[id];
+        }
 
-            if (Object.keys(newQuantities).length === 0) {
-                setCurrentCanteen(null);
-            }
+        if (Object.keys(newQuantities).length === 0) {
+            setCurrentCanteen(null);
+        }
 
-            return newQuantities;
-        });
+        dispatch(setCartItem({ itemid: id, quantity: newQuantities[id] || 0 }));
+        localStorage.setItem('cart', JSON.stringify(newQuantities));
     };
 
     const handleModalConfirm = async () => {
         // Reset all items from the current cart
         await resetCartItem();
 
-        setQuantities({});
+        dispatch(removeCartItems());
+        localStorage.removeItem('cart');
         setCurrentCanteen(null);
         setPendingItem(null);
         setShowModal(false);
-
     };
 
     const handleModalCancel = () => {
@@ -208,6 +206,41 @@ const Explore = () => {
     const handleCardClick = (canteenId) => {
         navigate(`/canteen/${canteenId}`);
     };
+
+    const renderDishCard = (dish, showAddButton = true) => (
+        <div key={dish.itemid} className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between" onClick={() => handleCardClick(dish.shopid)}>
+            <img src={dish.imageUrl} alt={dish.itemName} className="w-full h-36 object-cover rounded-lg mb-4" />
+            <h3 className="text-xl font-semibold mb-2">{dish.itemName}</h3>
+            <p className="text-gray-400 mb-2">Available at: {dish.canteenName}</p>
+            <p className="text-gray-400 mb-2">Price: {dish.price}</p>
+            {cart && cart[dish.itemid] ? (
+                <div className="flex items-center justify-center space-x-4" onClick={(e) => e.stopPropagation()}>
+                    <button
+                        onClick={(e) => handleDecrement(dish.itemid, e)}
+                        className="px-10 py-1 bg-red-500 text-white rounded-lg"
+                    >
+                        -
+                    </button>
+                    <span>{cart[dish.itemid]}</span>
+                    <button
+                        onClick={(e) => handleIncrement(dish.itemid, e)}
+                        className="px-10 py-1 bg-[#76ABAE] text-white rounded-lg"
+                    >
+                        +
+                    </button>
+                </div>
+            ) : (
+                showAddButton && (
+                    <button
+                        onClick={(e) => handleAdd(dish, e)}
+                        className="w-full py-2 font-extrabold bg-[#76ABAE] text-white rounded-lg"
+                    >
+                        ADD
+                    </button>
+                )
+            )}
+        </div>
+    );
 
     const settings = {
         dots: true,
@@ -262,41 +295,6 @@ const Explore = () => {
             }
         ]
     };
-
-    const renderDishCard = (dish, showAddButton = true) => (
-        <div key={dish.itemid} className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between">
-            <img src={dish.imageUrl} alt={dish.itemName} className="w-full h-36 object-cover rounded-lg mb-4" />
-            <h3 className="text-xl font-semibold mb-2">{dish.itemName}</h3>
-            <p className="text-gray-400 mb-2">Available at: {dish.canteenName}</p>
-            <p className="text-gray-400 mb-2">Price: {dish.price}</p>
-            {quantities[dish.itemid] ? (
-                <div className="flex items-center justify-center space-x-4" onClick={(e) => e.stopPropagation()}>
-                    <button
-                        onClick={(e) => handleDecrement(dish.itemid, e)}
-                        className="px-10 py-1 bg-red-500 text-white rounded-lg"
-                    >
-                        -
-                    </button>
-                    <span>{quantities[dish.itemid]}</span>
-                    <button
-                        onClick={(e) => handleIncrement(dish.itemid, e)}
-                        className="px-10 py-1 bg-[#76ABAE] text-white rounded-lg"
-                    >
-                        +
-                    </button>
-                </div>
-            ) : (
-                showAddButton && (
-                    <button
-                        onClick={(e) => handleAdd(dish, e)}
-                        className="w-full py-2 font-extrabold bg-[#76ABAE] text-white rounded-lg"
-                    >
-                        ADD
-                    </button>
-                )
-            )}
-        </div>
-    );
 
     return (
         <div className="bg-gradient-to-r from-black to-[#222831] min-h-screen p-6 text-white relative z-0">
