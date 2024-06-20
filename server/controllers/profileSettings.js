@@ -10,6 +10,7 @@ const bcrypt=require("bcrypt");
 exports.updateDisplayPicture = async(req,res) =>{
   try{
     const { token } = req.cookies;
+    console.log(token);
     if (!token) {
       return res.status(200).json({
         success: false,
@@ -134,7 +135,7 @@ exports.updateProfile = async(req,res) =>{
     if(existingPhone){
       return res.status(200).json({
         success:false,
-        message:`Phone Number: ${phone} already exist in the database`,
+        message:`Phone Number: ${phone} already exist `,
       })
     }
     updateData.phone = phone;
