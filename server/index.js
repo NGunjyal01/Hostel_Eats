@@ -8,13 +8,32 @@ const PORT=process.env.PORT||3000;
 app.use(express.json()); 
 
 var cors = require("cors");
-//app.use(cors());
-app.use(
-  cors({
-    origin: "http://localhost:3000", //clien URL
-    credentials: true,
-  })
-);
+// //app.use(cors());
+// app.use(
+//   cors({
+//     origin: ["http://localhost:3000","http://192.168.31.158:3000"] ,//front end URL
+//     credentials: true,
+//   })
+// );
+
+const whitelist = [
+  process.env.FRONTEND_URL_LOCAL,
+  process.env.FRONTEND_URL_NETWORK,
+];
+console.log("Whitelist:", whitelist); 
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 app.use(cookieParser());
 //fileUpload
 const fileupload = require("express-fileupload"); //server tak file upload kar paye
@@ -44,6 +63,6 @@ app.use("/owner",ownerRoutes);
 app.use("/customer",customerRoutes);
 app.use("/profile",profileRoutes)
 
-app.listen(PORT,()=>{
+app.listen(PORT,'0.0.0.0',()=>{
 console.log(`App is running at ${PORT}`);
 })
