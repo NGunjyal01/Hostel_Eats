@@ -1,5 +1,12 @@
-const BASE_URL = process.env.REACT_APP_BASE_URL
+let BASE_URL;
 
+if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    BASE_URL = process.env.REACT_APP_BASE_URL_LOCAL;
+} 
+else {
+    BASE_URL = process.env.REACT_APP_BASE_URL_NETWORK;
+}
+console.log(BASE_URL)
 //Auth Endpoints
 export const endpoints = {
     SIGNUP_API: BASE_URL + "/signup",
