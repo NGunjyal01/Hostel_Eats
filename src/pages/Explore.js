@@ -9,7 +9,8 @@ import ConfirmationalModal from '../components/common/ConfirmationalModal';
 import { searchItem, getPopularDishes, getCanteenPageDetails, addCartItem, removeCartItem, resetCartItem } from '../services/customerAPI';
 import { useNavigate } from 'react-router-dom';
 import { setCanteensData } from '../slices/canteenPageSlice';
-import { setCartItem, removeCartItems } from '../slices/cartSlice';
+import { setCartItem, resetCartItems } from '../slices/cartSlice';
+import { current } from '@reduxjs/toolkit';
 
 const CustomPrevArrow = (props) => {
     const { onClick } = props;
@@ -44,7 +45,7 @@ const Explore = () => {
     const [filteredDishes, setFilteredDishes] = useState([]);
     const [filteredCanteens, setFilteredCanteens] = useState([]);
     const [searchType, setSearchType] = useState('dishes');
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(null);
     const [pendingItem, setPendingItem] = useState(null);
     const [currentCanteen, setCurrentCanteen] = useState(null);
 
@@ -140,62 +141,75 @@ const Explore = () => {
 
     const handleAdd = async (dish, e) => {
         e.stopPropagation();
-        const cartIsEmpty = !cart || Object.keys(cart).length === 0;
-        const cartCanteenId = Object.keys(cart).length > 0 ? cart[Object.keys(cart)[0]].canteenId : null;
-
-
-        if (!cartIsEmpty && cartCanteenId !== dish.shopid) {
+        const cartCanteenId = !cart ? null : Object.values(cart)[0]?.item?.shopid;
+        // console.log(dish)
+        console.log(currentCanteen)
+        if (cartCanteenId && cartCanteenId !== dish.shopid ) {
+            setCurrentCanteen(dish.shopid);
             setPendingItem(dish);
-            setShowModal(true);
+            setShowModal({
+                text1: "Ordering from multiple canteens is not supported",
+                text2: "Your cart will be reset if you want to add this item. Proceed?",
+                btn1Text: "Yes",
+                btn2Text: "No",
+                btn1Handler:() => handleModalConfirm(dish.itemid),
+                btn2Handler: handleModalCancel,
+            });
         } else {
             setCurrentCanteen(dish.shopid);
-            const newQuantities = { ...cart, [dish.itemid]: 1 };
-            dispatch(setCartItem({ itemid: dish.itemid, quantity: newQuantities[dish.itemid] }));
-            localStorage.setItem('cart', JSON.stringify(newQuantities));
-
-            await addCartItem({ itemid: dish.itemid }, dispatch);
+            addCartItem({ itemid: dish.itemid }, dispatch)
         }
     };
 
-    const handleIncrement = async (id, e) => {
+    const handleIncrement = async (dishId, e) => {
         e.stopPropagation();
+        const response = await addCartItem({ itemid: dishId }, dispatch);
 
-        await addCartItem({ itemid: id }, dispatch);
+        const updatedCart = response.data.data.items.reduce((acc, newItem) => {
+            const existingItemIndex = acc.findIndex(item => item.item._id === newItem.item._id);
+            if (existingItemIndex >= 0) {
+                acc[existingItemIndex] = newItem;
+            } else {
+                acc.push(newItem);
+            }
+            return acc;
+        }, Object.values(cart));
 
-        const newQuantities = { ...cart, [id]: (cart[id] || 0) + 1 };
-        dispatch(setCartItem({ itemid: id, quantity: newQuantities[id] }));
-        localStorage.setItem('cart', JSON.stringify(newQuantities));
+        dispatch(setCartItem(updatedCart));
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
     };
 
-    const handleDecrement = async (id, e) => {
+    const handleDecrement = async (dishId, e) => {
         e.stopPropagation();
+        const response = await removeCartItem({ itemid: dishId }, dispatch);
 
-        await removeCartItem({ itemid: id }, dispatch);
+        const updatedCart = response.data.data.items.reduce((acc, newItem) => {
+            const existingItemIndex = acc.findIndex(item => item.item._id === newItem.item._id);
+            if (existingItemIndex >= 0) {
+                if (newItem.quantity > 0) {
+                    acc[existingItemIndex] = newItem;
+                }
+            } else {
+                acc.push(newItem);
+            }
+            return acc;
+        }, Object.values(cart));
 
-        const newQuantities = { ...cart };
-        if (newQuantities[id] > 1) {
-            newQuantities[id]--;
-        } else {
-            delete newQuantities[id];
-        }
+        dispatch(setCartItem(updatedCart));
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
 
-        if (Object.keys(newQuantities).length === 0) {
+        if (Object.keys(updatedCart).length === 0) {
             setCurrentCanteen(null);
         }
-
-        dispatch(setCartItem({ itemid: id, quantity: newQuantities[id] || 0 }));
-        localStorage.setItem('cart', JSON.stringify(newQuantities));
     };
 
-    const handleModalConfirm = async () => {
-        // Reset all items from the current cart
-        await resetCartItem();
-
-        dispatch(removeCartItems());
-        localStorage.removeItem('cart');
-        setCurrentCanteen(null);
+    const handleModalConfirm = async (itemid) => {
+        const response=await resetCartItem();
+        if(response){
+        addCartItem({itemid:itemid},dispatch)
         setPendingItem(null);
-        setShowModal(false);
+        setShowModal(null);
+        }
     };
 
     const handleModalCancel = () => {
@@ -213,7 +227,7 @@ const Explore = () => {
             <h3 className="text-xl font-semibold mb-2">{dish.itemName}</h3>
             <p className="text-gray-400 mb-2">Available at: {dish.canteenName}</p>
             <p className="text-gray-400 mb-2">Price: {dish.price}</p>
-            {cart && cart[dish.itemid] ? (
+            {cart && cart[dish.itemid]?.quantity ? (
                 <div className="flex items-center justify-center space-x-4" onClick={(e) => e.stopPropagation()}>
                     <button
                         onClick={(e) => handleDecrement(dish.itemid, e)}
@@ -221,7 +235,7 @@ const Explore = () => {
                     >
                         -
                     </button>
-                    <span>{cart[dish.itemid]}</span>
+                    <span>{cart[dish.itemid].quantity}</span>
                     <button
                         onClick={(e) => handleIncrement(dish.itemid, e)}
                         className="px-10 py-1 bg-[#76ABAE] text-white rounded-lg"
@@ -380,14 +394,7 @@ const Explore = () => {
 
             {showModal && (
                 <ConfirmationalModal
-                    modalData={{
-                        text1: "Ordering from multiple canteens is not supported",
-                        text2: "Your cart will be reset if you want to add this item. Proceed?",
-                        btn1Text: "Yes",
-                        btn2Text: "No",
-                        btn1Handler: handleModalConfirm,
-                        btn2Handler: handleModalCancel,
-                    }}
+                    modalData={showModal}
                 />
             )}
         </div>
