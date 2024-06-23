@@ -66,8 +66,14 @@ export async function removeCartItem(item, dispatch) {
     try {
         const response = await axios.post(REMOVE_CART_ITEM_API, item, config);
         console.log("REMOVE CART ITEM API RESPONSE...................", response);
-        dispatch(setCartItem(response.data.data));
-        localStorage.setItem('cart',JSON.stringify(response.data.data));
+        if(response.data.success && response.data.message==="Cart is now empty and has been deleted"){
+            dispatch(resetCartItems());
+            localStorage.removeItem('cart');
+        }
+        else{
+            dispatch(setCartItem(response.data.data));
+            localStorage.setItem('cart',JSON.stringify(response.data.data));
+        }
         toast.success("Successfully Removed Item");
     } catch (error) {
         console.log("ERROR DURING REMOVE CART ITEM API....................", error);

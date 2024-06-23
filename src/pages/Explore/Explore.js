@@ -40,7 +40,8 @@ const CustomNextArrow = (props) => {
 const Explore = () => {
 
     const cart = useSelector(store => store.cart);
-    const cartItemIds = new Map(cart.items.map(item => [item.item._id,item.quantity]));
+    const cartItemIds = !cart ? new Map() : new Map(cart.items.map(item => [item.item._id,item.quantity]));
+    console.log(cartItemIds)
 
     const [searchInput, setSearchInput] = useState('');
     const [showSearchOptions, setShowSearchOptions] = useState(false);

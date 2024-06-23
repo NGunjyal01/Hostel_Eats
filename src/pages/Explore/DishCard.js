@@ -27,7 +27,7 @@ const DishCard = ({ dish, setShowModal,cartItemIds }) => {
     
     const handleAdd = async (e) => {
         e.stopPropagation();
-        const cartCanteenId = !cart ? null : cart.items[0].item.shopid;
+        const cartCanteenId = !cart ? null : cart.items[0].item.shopid._id;
         if (cartCanteenId && cartCanteenId !== shopid ) {
             setShowModal({
                 text1: "Ordering from multiple canteens is not supported",

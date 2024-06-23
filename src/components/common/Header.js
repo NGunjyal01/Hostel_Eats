@@ -13,6 +13,7 @@ import AnimatedHamburgerButton from "./AnimatedHamburgerButton";
 const Header = () => {
 
     const user = useSelector(store => store.user);
+    const cart = useSelector(store => store.cart);
     const [confirmationalModal,setConfirmationalModal] = useState(null);
     const {currTab} = useSelector(store => store.tabInfo);
     const [showDropDownMenu,setShowDropDownMenu] = useState(false);
@@ -79,7 +80,7 @@ const Header = () => {
             </div></>}
             {user?.accountType==="Customer" && <span className="absolute hidden sm:block -mt-1 right-[7%] cursor-pointer" onClick={()=>{navigate('/dashboard/cart')}}>
                 <FaCartShopping className="cartLogo"/>
-                <span className="absolute text-black sm:top-0.5 md:top-1 lg:top-0 sm:left-3.5 md:left-4 lg:left-[1.1rem] font-semibold sm:text-xs lg:text-base">0</span>
+                <span className="absolute text-black sm:top-0.5 md:top-1 lg:top-0 sm:left-3.5 md:left-4 lg:left-[1.1rem] font-semibold sm:text-xs lg:text-base">{!cart ? 0 : cart.totalQuantity}</span>
             </span>}
             {confirmationalModal && <ConfirmationalModal modalData={confirmationalModal}/>}
             <div className="sm:hidden flex absolute w-full">

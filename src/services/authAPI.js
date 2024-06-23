@@ -71,6 +71,7 @@ export function logout(navigate,dispatch){
     localStorage.removeItem("canteen");
     localStorage.removeItem("currTab");
     localStorage.removeItem("prevTab");
+    localStorage.removeItem('cart');
     toast.success("Logged Out");
     navigate('/');
 }
