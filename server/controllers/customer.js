@@ -190,12 +190,25 @@ exports.addItemToCart = async (req, res) => {
     }
 
     //calculating price:
-    await cart.populate("items.item");
+  await cart.populate({
+      path: 'items.item',
+      populate: { path: 'shopid', select: 'canteenName' }
+    });
 
     cart.totalPrice = cart.items.reduce((total, cartItem) => {
       return total + cartItem.item.price * cartItem.quantity;
     }, 0);
-    await cart.save();
+
+       cart.totalQuantity = cart.items.reduce((total, cartItem) => {
+         return total + cartItem.quantity;
+       }, 0);
+
+    
+
+    const canteenName = cart.items.length > 0 ? cart.items[0].item.shopid.canteenName : '';
+
+      cart.canteenName = canteenName;
+await cart.save();
     res.status(200).json({
       data: cart,
       success: true,
@@ -270,6 +283,7 @@ exports.removeItemFromCart = async (req, res) => {
 
     // Reduce the quantity by 1
     cart.items[itemIdx].quantity -= 1;
+    cart.totalQuantity-=1;
     //quanity 0 then delete
     if(cart.items[itemIdx].quantity<=0){
       cart.items.splice(itemIdx,1)
