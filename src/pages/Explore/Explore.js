@@ -5,12 +5,11 @@ import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaRegArrowAltCircleLeft, FaRegArrowAltCircleRight } from 'react-icons/fa';
-import ConfirmationalModal from '../components/common/ConfirmationalModal';
-import { searchItem, getPopularDishes, getCanteenPageDetails, addCartItem, removeCartItem, resetCartItem } from '../services/customerAPI';
+import ConfirmationalModal from '../../components/common/ConfirmationalModal';
+import { searchItem, getPopularDishes, getCanteenPageDetails, addCartItem, removeCartItem, resetCartItem } from '../../services/customerAPI';
 import { useNavigate } from 'react-router-dom';
-import { setCanteensData } from '../slices/canteenPageSlice';
-import { setCartItem, resetCartItems } from '../slices/cartSlice';
-import { current } from '@reduxjs/toolkit';
+import { setCanteensData } from '../../slices/canteenPageSlice';
+import DishCard from './DishCard';
 
 const CustomPrevArrow = (props) => {
     const { onClick } = props;
@@ -39,6 +38,10 @@ const CustomNextArrow = (props) => {
 };
 
 const Explore = () => {
+
+    const cart = useSelector(store => store.cart);
+    const cartItemIds = new Map(cart.items.map(item => [item.item._id,item.quantity]));
+
     const [searchInput, setSearchInput] = useState('');
     const [showSearchOptions, setShowSearchOptions] = useState(false);
     const [popularDishes, setPopularDishes] = useState([]);
@@ -46,10 +49,7 @@ const Explore = () => {
     const [filteredCanteens, setFilteredCanteens] = useState([]);
     const [searchType, setSearchType] = useState('dishes');
     const [showModal, setShowModal] = useState(null);
-    const [pendingItem, setPendingItem] = useState(null);
-    const [currentCanteen, setCurrentCanteen] = useState(null);
-
-    const cart = useSelector(state => state.cart) || {};  // Ensure cart is always an object
+    
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -139,122 +139,9 @@ const Explore = () => {
         localStorage.removeItem('showSearchOptions');
     };
 
-    const handleAdd = async (dish, e) => {
-        e.stopPropagation();
-        const cartCanteenId = !cart ? null : Object.values(cart)[0]?.item?.shopid;
-        // console.log(dish)
-        console.log(currentCanteen)
-        if (cartCanteenId && cartCanteenId !== dish.shopid ) {
-            setCurrentCanteen(dish.shopid);
-            setPendingItem(dish);
-            setShowModal({
-                text1: "Ordering from multiple canteens is not supported",
-                text2: "Your cart will be reset if you want to add this item. Proceed?",
-                btn1Text: "Yes",
-                btn2Text: "No",
-                btn1Handler:() => handleModalConfirm(dish.itemid),
-                btn2Handler: handleModalCancel,
-            });
-        } else {
-            setCurrentCanteen(dish.shopid);
-            addCartItem({ itemid: dish.itemid }, dispatch)
-        }
-    };
-
-    const handleIncrement = async (dishId, e) => {
-        e.stopPropagation();
-        const response = await addCartItem({ itemid: dishId }, dispatch);
-
-        const updatedCart = response.data.data.items.reduce((acc, newItem) => {
-            const existingItemIndex = acc.findIndex(item => item.item._id === newItem.item._id);
-            if (existingItemIndex >= 0) {
-                acc[existingItemIndex] = newItem;
-            } else {
-                acc.push(newItem);
-            }
-            return acc;
-        }, Object.values(cart));
-
-        dispatch(setCartItem(updatedCart));
-        localStorage.setItem('cart', JSON.stringify(updatedCart));
-    };
-
-    const handleDecrement = async (dishId, e) => {
-        e.stopPropagation();
-        const response = await removeCartItem({ itemid: dishId }, dispatch);
-
-        const updatedCart = response.data.data.items.reduce((acc, newItem) => {
-            const existingItemIndex = acc.findIndex(item => item.item._id === newItem.item._id);
-            if (existingItemIndex >= 0) {
-                if (newItem.quantity > 0) {
-                    acc[existingItemIndex] = newItem;
-                }
-            } else {
-                acc.push(newItem);
-            }
-            return acc;
-        }, Object.values(cart));
-
-        dispatch(setCartItem(updatedCart));
-        localStorage.setItem('cart', JSON.stringify(updatedCart));
-
-        if (Object.keys(updatedCart).length === 0) {
-            setCurrentCanteen(null);
-        }
-    };
-
-    const handleModalConfirm = async (itemid) => {
-        const response=await resetCartItem();
-        if(response){
-        addCartItem({itemid:itemid},dispatch)
-        setPendingItem(null);
-        setShowModal(null);
-        }
-    };
-
-    const handleModalCancel = () => {
-        setPendingItem(null);
-        setShowModal(false);
-    };
-
     const handleCardClick = (canteenId) => {
         navigate(`/canteen/${canteenId}`);
     };
-
-    const renderDishCard = (dish, showAddButton = true) => (
-        <div key={dish.itemid} className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between" onClick={() => handleCardClick(dish.shopid)}>
-            <img src={dish.imageUrl} alt={dish.itemName} className="w-full h-36 object-cover rounded-lg mb-4" />
-            <h3 className="text-xl font-semibold mb-2">{dish.itemName}</h3>
-            <p className="text-gray-400 mb-2">Available at: {dish.canteenName}</p>
-            <p className="text-gray-400 mb-2">Price: {dish.price}</p>
-            {cart && cart[dish.itemid]?.quantity ? (
-                <div className="flex items-center justify-center space-x-4" onClick={(e) => e.stopPropagation()}>
-                    <button
-                        onClick={(e) => handleDecrement(dish.itemid, e)}
-                        className="px-10 py-1 bg-red-500 text-white rounded-lg"
-                    >
-                        -
-                    </button>
-                    <span>{cart[dish.itemid].quantity}</span>
-                    <button
-                        onClick={(e) => handleIncrement(dish.itemid, e)}
-                        className="px-10 py-1 bg-[#76ABAE] text-white rounded-lg"
-                    >
-                        +
-                    </button>
-                </div>
-            ) : (
-                showAddButton && (
-                    <button
-                        onClick={(e) => handleAdd(dish, e)}
-                        className="w-full py-2 font-extrabold bg-[#76ABAE] text-white rounded-lg"
-                    >
-                        ADD
-                    </button>
-                )
-            )}
-        </div>
-    );
 
     const settings = {
         dots: true,
@@ -359,7 +246,7 @@ const Explore = () => {
                     <h2 className="text-2xl font-bold mb-4">{searchType === 'dishes' ? 'Search Results for Dishes' : 'Search Results for Canteens'}</h2>
                     {searchType === 'dishes' ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredDishes.map(dish => renderDishCard(dish, true))}
+                            {filteredDishes.map(dish => <DishCard  key={dish.itemid} dish={dish} setShowModal={setShowModal} cartItemIds={cartItemIds}/>)}
                         </div>
                     ) : (
                         <div className="space-y-6">
@@ -385,7 +272,7 @@ const Explore = () => {
                     <Slider {...settings} className="mx-4">
                         {popularDishes.map(dish => (
                             <div key={dish._id} className="px-2">
-                                {renderDishCard(dish, false)}
+                                <DishCard  key={dish.itemid} dish={dish} setShowModal={setShowModal} cartItemIds={cartItemIds}/>
                             </div>
                         ))}
                     </Slider>
@@ -393,9 +280,7 @@ const Explore = () => {
             )}
 
             {showModal && (
-                <ConfirmationalModal
-                    modalData={showModal}
-                />
+                <ConfirmationalModal modalData={showModal}/>
             )}
         </div>
     );

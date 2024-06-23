@@ -1,10 +1,21 @@
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { getCartItems } from "../../services/customerAPI";
 
 const MyProfile = () => {
 
     const user = useSelector(store => store.user);
+    const cart = useSelector(store => store.cart);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+        if(user?.accountType==="Customer"){
+            !cart && getCartItems(dispatch);
+        }
+    },[])
+
     const {firstName,lastName,email,phone,dob,gender} = user;
     const inputInfo = [{name:"firstName",value:firstName,label:"First Name"},
         {name:"lastName",value:lastName,label:"Last Name"},

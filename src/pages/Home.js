@@ -1,16 +1,8 @@
-import { useEffect } from "react"
+
 import MaggieImg from "../Maggie.png"
-import { useDispatch, useSelector } from "react-redux"
-import {getCartItems} from "../services/customerAPI"
 
 const Home = () => {
-    const user=useSelector(store=>store.user)
-    const dispatch=useDispatch()
-    useEffect(()=>{
-        if(user.accountType==="Customer"){
-            getCartItems(dispatch)
-        }
-    },[])
+
     return (
         <div className="bg-gradient-to-r from-black to-[#222831] text-white py-14">
            {/* Section 1 */}

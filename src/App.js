@@ -18,7 +18,7 @@ import Favourite from './components/Dashboard/Favourite';
 import Add_CanteenO from './components/Dashboard/Add_CanteenO';
 import View_Canteen from './components/Dashboard/View_Canteen';
 import Edit_Canteen from './components/Dashboard/EditCanteen/Edit_Canteen';
-import Explore from './pages/Explore';
+import Explore from './pages/Explore/Explore';
 import CanteenPage from './pages/CanteenPage'; // Import CanteenPage
 
 function App() {

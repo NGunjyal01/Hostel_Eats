@@ -43,7 +43,8 @@ export async function addCartItem(item, dispatch) {
     try {
         const response = await axios.post(ADD_CART_ITEM_API, item, config);
         console.log("ADD CART ITEM API RESPONSE:", response);
-        dispatch(setCartItem(response.data.data))
+        localStorage.setItem('cart',JSON.stringify(response.data.data));
+        dispatch(setCartItem(response.data.data));
         toast.success("Successfully Added Item");
     } catch (error) {
         if (error.response) {
@@ -65,7 +66,8 @@ export async function removeCartItem(item, dispatch) {
     try {
         const response = await axios.post(REMOVE_CART_ITEM_API, item, config);
         console.log("REMOVE CART ITEM API RESPONSE...................", response);
-        dispatch(setCartItem(response.data.data))
+        dispatch(setCartItem(response.data.data));
+        localStorage.setItem('cart',JSON.stringify(response.data.data));
         toast.success("Successfully Removed Item");
     } catch (error) {
         console.log("ERROR DURING REMOVE CART ITEM API....................", error);
@@ -81,13 +83,10 @@ export async function getCartItems(dispatch) {
         if (!response.data.success) {
             localStorage.setItem('cart', JSON.stringify(null));
             dispatch(resetCartItems());
-        } else {
-            const cartItems = response.data.data.items.reduce((acc, currentItem) => {
-                acc[currentItem.itemid] = { item: currentItem, quantity: currentItem.quantity };
-                return acc;
-            }, {});
-            localStorage.setItem('cart', JSON.stringify(cartItems));
-            dispatch(setCartItem(cartItems));
+        } 
+        else {
+            localStorage.setItem('cart', JSON.stringify(response.data.data));
+            dispatch(setCartItem(response.data.data));
         }
     } catch (error) {
         console.log("ERROR DURING GET CART ITEMS API.................", error);
