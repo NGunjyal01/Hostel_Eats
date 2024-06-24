@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { getCanteenPageDetails, searchItemByCanteen } from '../services/customerAPI';
+import { getCanteenPageDetails, searchItemByCanteen, addCartItem, removeCartItem, resetCartItem } from '../services/customerAPI';
+import ConfirmationalModal from '../components/common/ConfirmationalModal';
 import { setCanteenDetails } from '../slices/canteenPageSlice';
 
 const CanteenPage = () => {
     const { canteenId } = useParams();
     const dispatch = useDispatch();
     const canteenData = useSelector(state => state.canteenPage.selectedCanteen);
+    const cart = useSelector(store => store.cart);
     const [searchInput, setSearchInput] = useState('');
     const [itemsToDisplay, setItemsToDisplay] = useState([]);
+    const [showModal, setShowModal] = useState(null);
+    const cartItemMap = !cart ? new Map() : new Map(cart.items.map(item => [item.item._id, item.quantity]));
 
     useEffect(() => {
         const fetchCanteenData = async () => {
@@ -45,6 +49,46 @@ const CanteenPage = () => {
         } else {
             setItemsToDisplay([]);
         }
+    };
+
+    const handleModalConfirm = async (itemid) => {
+        const response = await resetCartItem();
+        if(response){
+            addCartItem({ itemid }, dispatch);
+            setShowModal(null);
+        }
+    };
+
+    const handleModalCancel = () => {
+        setShowModal(null);
+    };
+
+    const handleAdd = async (e, itemid, shopid) => {
+        e.stopPropagation();
+        const cartCanteenId = !cart ? null : cart.items[0].item.shopid._id;
+        if(cartCanteenId){
+            console.log("CartCanteenId=======>>>",cartCanteenId)
+            console.log("shopid=======>>>",shopid)
+        }
+        if (cartCanteenId && cartCanteenId !==shopid ) {
+            setShowModal({
+                text1: "Ordering from multiple canteens is not supported",
+                text2: "Your cart will be reset if you want to add this item. Proceed?",
+                btn1Text: "Yes",
+                btn2Text: "No",
+                btn1Handler: () => handleModalConfirm(itemid),
+                btn2Handler: handleModalCancel,
+            });
+        } else {
+            addCartItem({ itemid }, dispatch);
+        }
+    };
+    
+
+    const handleRemove = async (e, itemid) => {
+        e.stopPropagation();
+        console.log("ItemID======>>>",itemid);
+        removeCartItem({ itemid }, dispatch);
     };
 
     return (
@@ -83,12 +127,42 @@ const CanteenPage = () => {
                             <p className="text-gray-400 mb-2">Price: ₹{item.price}</p>
                         </div>
                         <div className="relative">
-                            <img src={item.imageUrl} alt={item.name} className="w-32 h-32 object-cover rounded-lg" />
-                            <button className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-[#76ABAE] text-white py-1 px-6 rounded-lg">ADD</button>
+    <img src={item.imageUrl} alt={item.name} className="w-32 h-32 object-cover rounded-lg" />
+    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-full flex justify-center">
+        {cartItemMap.has(item._id) ? (
+            <div className="flex items-center justify-center space-x-0">
+                <button
+                    onClick={(e) => handleRemove(e, item._id)}
+                    className="px-6 py-1 bg-red-500 text-white rounded-l-lg"
+                >
+                    -
+                </button>
+                <span className="px-4 py-1 bg-[#31363F] text-white">{cartItemMap.get(item._id)}</span>
+                            <button
+                        onClick={(e) => handleAdd(e, item._id, canteenId)}
+                        className="px-6 py-1 bg-[#76ABAE] text-white rounded-r-lg"
+                            >
+                    +
+                            </button>
                         </div>
+                        ) : (
+                        <button
+                            onClick={(e) => handleAdd(e, item._id, canteenId)}
+                            className="bg-[#76ABAE] text-white py-1 px-6 rounded-lg"
+                        >
+                            ADD
+                        </button>
+                        )}
+                            </div>
+                        </div>
+
                     </div>
                 ))}
             </div>
+
+            {showModal && (
+                <ConfirmationalModal modalData={showModal} />
+            )}
         </div>
     );
 }
