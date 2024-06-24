@@ -49,8 +49,8 @@ export const settingsEndpoints = {
 
 // Payment Endpoints
 export const paymentEndpoints = {
-    ORDER_PAYMENT_API: BASE_URL + "/payment/capturePayment",
-    ORDER_VERIFY_API: BASE_URL + "/payment/verifyPayment",
+    ORDER_PAYMENT_API: BASE_URL + "/payment/order",
+    ORDER_VERIFY_API: BASE_URL + "/payment/verify",
     SEND_PAYMENT_SUCCESS_EMAIL_API: BASE_URL + "/payment/sendPaymentSuccessEmail",
 }
 

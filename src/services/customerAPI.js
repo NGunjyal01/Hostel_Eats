@@ -21,7 +21,7 @@ export const searchItem = async (formData) => {
 export const getPopularDishes = async () => {
     try {
         const response = await axios.get(GET_POPULAR_DISHES_API, config);
-        console.log(response);
+        
         return response.data;
     } catch (error) {
         console.error("Error fetching popular dishes:", error);
@@ -47,16 +47,8 @@ export async function addCartItem(item, dispatch) {
         dispatch(setCartItem(response.data.data));
         toast.success("Successfully Added Item");
     } catch (error) {
-        if (error.response) {
-            console.error("Server responded with error:", error.response.data);
-            toast.error(`Error: ${error.response.data.message || "Unknown error"}`);
-        } else if (error.request) {
-            console.error("No response received:", error.request);
-            toast.error("Error: No response from server");
-        } else {
-            console.error("Error setting up request:", error.message);
-            toast.error(`Error: ${error.message}`);
-        }
+        console.log("ERROR DURING ADD CART ITEM API................",error);
+        toast.error("Error Adding Item");
     }
     toast.dismiss(toastId);
 }

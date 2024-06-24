@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addCartItem, removeCartItem, resetCartItem } from "../../services/customerAPI";
 
-const DishCard = ({ dish, setShowModal,cartItemIds }) => {
+const DishCard = ({ dish, setShowModal,cartItemMap }) => {
 
     const {itemid,itemName,canteenName,price,shopid,imageUrl} = dish;
     const cart = useSelector(store => store.cart);
@@ -38,13 +38,13 @@ const DishCard = ({ dish, setShowModal,cartItemIds }) => {
                 btn2Handler: handleModalCancel,
             });
         } else {
-            addCartItem({ itemid: itemid }, dispatch)
+            addCartItem({itemid}, dispatch)
         }
     };
 
     const handleRemove = (e) => {
         e.stopPropagation();
-        removeCartItem({ itemid: itemid }, dispatch);
+        removeCartItem({itemid}, dispatch);
     };
 
     return (<div key={itemid} className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between" onClick={() => handleCardClick(shopid)}>
@@ -52,7 +52,7 @@ const DishCard = ({ dish, setShowModal,cartItemIds }) => {
         <h3 className="text-xl font-semibold mb-2">{itemName}</h3>
         <p className="text-gray-400 mb-2">Available at: {canteenName}</p>
         <p className="text-gray-400 mb-2">Price: {price}</p>
-        {cartItemIds.has(itemid) ? (
+        {cartItemMap.has(itemid) ? (
             <div className="flex items-center justify-center space-x-4" onClick={(e) => e.stopPropagation()}>
                 <button
                     onClick={handleRemove}
@@ -60,7 +60,7 @@ const DishCard = ({ dish, setShowModal,cartItemIds }) => {
                 >
                     -
                 </button>
-                <span>{cartItemIds.get(itemid)}</span>
+                <span>{cartItemMap.get(itemid)}</span>
                 <button
                     onClick={handleAdd}
                     className="px-10 py-1 bg-[#76ABAE] text-white rounded-lg"
