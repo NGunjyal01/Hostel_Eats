@@ -58,10 +58,12 @@ const register=require("./routes/register");
 const ownerRoutes=require("./routes/ownerRoutes");
 const profileRoutes=require("./routes/profileRoutes")
 const customerRoutes=require("./routes/customerRoutes");
+const paymentRoutes =require("./routes/paymentRoutes");
 app.use("/",register);
 app.use("/owner",ownerRoutes);
 app.use("/customer",customerRoutes);
-app.use("/profile",profileRoutes)
+app.use("/profile",profileRoutes);
+app.use("/payment",paymentRoutes);
 
 app.listen(PORT,'0.0.0.0',()=>{
 console.log(`App is running at ${PORT}`);
