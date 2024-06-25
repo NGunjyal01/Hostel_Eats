@@ -2,6 +2,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { addCartItem, removeCartItem } from "../../services/customerAPI";
 import { useState } from "react";
+import { placeOrder } from "../../services/paymentAPI";
+import { useNavigate } from "react-router-dom";
 
 
 const Cart = () => {
@@ -9,14 +11,23 @@ const Cart = () => {
     const cart = useSelector(store => store.cart);
     const [isCash,setIsCash] = useState(false);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleAdd = async (itemid) => {
-        addCartItem({itemid}, dispatch)
+        addCartItem({itemid}, dispatch);
     };
 
     const handleRemove = (itemid) => {
         removeCartItem({itemid}, dispatch);
     };
+    
+    const handleOnlinePayment = ()=>{
+        placeOrder(navigate,dispatch);
+    }
+
+    const handleCashPayment = ()=>{
+
+    }
 
     return (
         <div className="flex flex-col items-center relative">
@@ -52,10 +63,10 @@ const Cart = () => {
                     </div>
                 </div>
                 <div className="mt-16 flex justify-center">
-                    {!isCash ? <button className="bg-[#76ABAE] w-[60%] py-2 rounded-lg">
+                    {!isCash ? <button className="bg-[#76ABAE] w-[60%] py-2 rounded-lg" onClick={handleOnlinePayment}>
                         Proceed To Pay {cart.totalPrice}
                     </button> 
-                    : <button className="bg-[#76ABAE] w-[60%] py-2 rounded-lg">
+                    : <button className="bg-[#76ABAE] w-[60%] py-2 rounded-lg" onClick={handleCashPayment}>
                         Confirm Order
                     </button>}
                 </div>
