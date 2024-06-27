@@ -1,6 +1,6 @@
 const express = require("express");
 const customerRouter = express.Router();
-const { searchItem, addItemToCart, getItemFromCart, removeItemFromCart, searchItemByCanteen, resetCartItem } = require("../controllers/customer");
+const { searchItem, addItemToCart, getItemFromCart, removeItemFromCart, searchItemByCanteen, resetCartItem, getOrderDetails } = require("../controllers/customer");
 const { getCanteenDetails } = require("../controllers/customer");
 const {customerCheck}=require("../middlewares/customer");
 //Customer Routes
@@ -12,5 +12,6 @@ customerRouter.post("/addCartItem",customerCheck,addItemToCart);
 customerRouter.get("/getCartItems",customerCheck,getItemFromCart);
 customerRouter.post("/removeCartItem",customerCheck,removeItemFromCart);
 customerRouter.get("/resetCartItem",customerCheck,resetCartItem);
+customerRouter.get("/getOrderHistory",customerCheck,getOrderDetails);
 
 module.exports=customerRouter;
