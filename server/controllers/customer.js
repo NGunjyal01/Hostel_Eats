@@ -3,6 +3,7 @@ const User = require("../models/user");
 const Item = require("../models/item");
 const Cart = require("../models/cart");
 const Merchant = require("../models/merchant");
+const Order=require("../models/order");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { getCanteenStatus } = require("../utils/status");
@@ -388,3 +389,50 @@ exports.resetCartItem = async(req,res) => {
     })
   }
 }
+
+
+//getOrderDetails
+
+exports.getOrderDetails = async (req, res) => {
+  try {
+    const payload = req.user;
+
+    const orders = await Order.find({ userid: payload.id })
+      .populate({
+        path: "items.item",
+        select: "_id shopid name description price category imageUrl",
+      })
+      .sort({ createdAt: -1 })
+      .select("_id userid items totalAmount status createdAt");
+
+    if (orders.length === 0) {
+      return res.status(200).json({
+        success: false,
+        message: "No orders found",
+      });
+    }
+    // Fetching canteen names for each order
+    const ordersWithCanteenNames = await Promise.all(
+      orders.map(async (order) => {
+        const shopId = order.items[0].item.shopid;
+        const merchant = await Merchant.findById(shopId).select("canteenName");
+
+        const orderObj = order.toObject();
+        orderObj.canteenName = merchant ? merchant.canteenName : "Unknown";
+
+        return orderObj;
+      })
+    );
+
+    res.status(200).json({
+      success: true,
+      data: ordersWithCanteenNames,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
