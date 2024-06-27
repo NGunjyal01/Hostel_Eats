@@ -4,6 +4,7 @@ import tabReducer from "../slices/tabSlice";
 import canteenReducer from "../slices/canteenSlice";
 import canteenPageReducer from "../slices/canteenPageSlice"
 import cartReducer from "../slices/cartSlice";
+import favouritesReducer from '../slices/favouritesSlice';
 
 const appStore = configureStore({
     reducer:{
@@ -12,6 +13,7 @@ const appStore = configureStore({
         canteen: canteenReducer,
         canteenPage: canteenPageReducer,
         cart: cartReducer,
+        favourites: favouritesReducer,
     }
 });
 
