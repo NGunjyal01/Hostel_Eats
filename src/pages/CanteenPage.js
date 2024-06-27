@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import { getCanteenPageDetails, searchItemByCanteen, addCartItem, removeCartItem, resetCartItem } from '../services/customerAPI';
 import ConfirmationalModal from '../components/common/ConfirmationalModal';
 import { setCanteenDetails } from '../slices/canteenPageSlice';
+import { toggleFavouriteItem } from '../services/favouriteAPI'; 
+import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 
 const CanteenPage = () => {
     const { canteenId } = useParams();
@@ -14,6 +16,7 @@ const CanteenPage = () => {
     const [itemsToDisplay, setItemsToDisplay] = useState([]);
     const [showModal, setShowModal] = useState(null);
     const cartItemMap = !cart ? new Map() : new Map(cart.items.map(item => [item.item._id, item.quantity]));
+    const favorites = useSelector(state => state.favourites) || [];
 
     useEffect(() => {
         const fetchCanteenData = async () => {
@@ -66,11 +69,7 @@ const CanteenPage = () => {
     const handleAdd = async (e, itemid, shopid) => {
         e.stopPropagation();
         const cartCanteenId = !cart ? null : cart.items[0].item.shopid._id;
-        if(cartCanteenId){
-            console.log("CartCanteenId=======>>>",cartCanteenId)
-            console.log("shopid=======>>>",shopid)
-        }
-        if (cartCanteenId && cartCanteenId !==shopid ) {
+        if (cartCanteenId && cartCanteenId !== shopid ) {
             setShowModal({
                 text1: "Ordering from multiple canteens is not supported",
                 text2: "Your cart will be reset if you want to add this item. Proceed?",
@@ -83,12 +82,16 @@ const CanteenPage = () => {
             addCartItem({ itemid }, dispatch);
         }
     };
-    
 
     const handleRemove = async (e, itemid) => {
         e.stopPropagation();
-        console.log("ItemID======>>>",itemid);
         removeCartItem({ itemid }, dispatch);
+    };
+
+    const handleToggleFavourite = (e, item) => {
+        e.stopPropagation();
+    console.log("handleToggleFavorite called with item:", item);
+    toggleFavouriteItem(item, dispatch);
     };
 
     return (
@@ -120,42 +123,48 @@ const CanteenPage = () => {
 
             <div className="grid grid-cols-1 gap-6 justify-items-center">
                 {itemsToDisplay.map(item => (
-                    <div key={item._id} className="bg-[#31363F] p-4 rounded-lg shadow-lg w-7/12 flex justify-between items-center pb-12">
+                    <div key={item._id} className="bg-[#31363F] p-4 rounded-lg shadow-lg w-7/12 flex justify-between items-center relative">
                         <div>
                             <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
                             <p className="text-gray-400 mb-2">{item.description}</p>
                             <p className="text-gray-400 mb-2">Price: ₹{item.price}</p>
                         </div>
-                        <div className="relative">
-    <img src={item.imageUrl} alt={item.name} className="w-32 h-32 object-cover rounded-lg" />
-    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-full flex justify-center">
-        {cartItemMap.has(item._id) ? (
-            <div className="flex items-center justify-center space-x-0">
-                <button
-                    onClick={(e) => handleRemove(e, item._id)}
-                    className="px-6 py-1 bg-red-500 text-white rounded-l-lg"
-                >
-                    -
-                </button>
-                <span className="px-4 py-1 bg-[#31363F] text-white">{cartItemMap.get(item._id)}</span>
-                            <button
-                        onClick={(e) => handleAdd(e, item._id, canteenId)}
-                        className="px-6 py-1 bg-[#76ABAE] text-white rounded-r-lg"
-                            >
-                    +
-                            </button>
-                        </div>
-                        ) : (
-                        <button
-                            onClick={(e) => handleAdd(e, item._id, canteenId)}
-                            className="bg-[#76ABAE] text-white py-1 px-6 rounded-lg"
-                        >
-                            ADD
-                        </button>
-                        )}
+                        <div className="relative flex items-center">
+                            <img src={item.imageUrl} alt={item.name} className="w-32 h-32 object-cover rounded-lg" />
+                            <div className="absolute top-2 right-2">
+                                {favorites.some(fav => fav.itemid === item._id) ? (
+                                    <AiFillHeart className="text-red-500 cursor-pointer" onClick={(e) => handleToggleFavourite(e, { itemid: item._id, name: item.name, canteenName: canteenData?.canteenName, price: item.price , imageUrl:item.imageUrl })} />
+                                ) : (
+                                    <AiOutlineHeart className="text-white cursor-pointer" onClick={(e) => handleToggleFavourite(e, { itemid: item._id, name: item.name, canteenName: canteenData?.canteenName, price: item.price , imageUrl:item.imageUrl })} />
+                                )}
+                            </div>
+                            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-full flex justify-center">
+                                {cartItemMap.has(item._id) ? (
+                                    <div className="flex items-center justify-center space-x-0">
+                                        <button
+                                            onClick={(e) => handleRemove(e, item._id)}
+                                            className="px-6 py-1 bg-red-500 text-white rounded-l-lg"
+                                        >
+                                            -
+                                        </button>
+                                        <span className="px-4 py-1 bg-[#31363F] text-white">{cartItemMap.get(item._id)}</span>
+                                        <button
+                                            onClick={(e) => handleAdd(e, item._id, canteenId)}
+                                            className="px-6 py-1 bg-[#76ABAE] text-white rounded-r-lg"
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button
+                                        onClick={(e) => handleAdd(e, item._id, canteenId)}
+                                        className="bg-[#76ABAE] text-white py-1 px-6 rounded-lg"
+                                    >
+                                        ADD
+                                    </button>
+                                )}
                             </div>
                         </div>
-
                     </div>
                 ))}
             </div>
