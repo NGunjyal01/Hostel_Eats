@@ -4,10 +4,12 @@ const Item = require("../models/item");
 const Cart = require("../models/cart");
 const Merchant = require("../models/merchant");
 const Order=require("../models/order");
+const Favourite=require("../models/favourite");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { getCanteenStatus } = require("../utils/status");
 const { faListNumeric } = require("@fortawesome/free-solid-svg-icons");
+
 
 //Search Item means Explore Page
 
@@ -436,3 +438,62 @@ exports.getOrderDetails = async (req, res) => {
     });
   }
 };
+
+
+//Add FavouriteItem
+exports.addFavouriteItem =async(req,res)=>{
+  try{
+    const payload=req.user;
+    const {itemid}=req.body;
+
+    //Find the item to get its canteenName
+    const item=await Item.findById({_id:itemid}).populate('shopid');
+    if(!item){
+      return res.status(200).json({
+        success:false,
+        message:"Item Not Found",
+      })
+    }
+    const canteenName=item.shopid.canteenName;
+
+    let existFavourite= await Favourite.findOne({userid:payload.id});
+
+    if(existFavourite){
+      //Favourite already exist
+      // Check if the item is already in the favourites
+      const itemExists = existFavourite.items.some(
+        (favItem) => favItem.item.toString() === itemid
+      );
+       if (itemExists) {
+         return res.status(200).json({
+           success: false,
+           message: "Item already in favourites",
+         });
+       }
+        existFavourite.items.push({ item: itemid, canteenName });
+    }
+    else{
+      // Create a new favourites for the user
+      existFavourite = new Favourite({
+        userid: payload.id,
+        items: [{ item: itemid, canteenName }],
+      });
+    }
+    existFavourite.populate("items.item");
+     await existFavourite.save();
+     res.status(200).json({
+      data:existFavourite,
+      success:true,
+      message:"Succesfully added into favourites",
+     })
+  }
+  catch(error){
+    console.log(error);
+    res.status(400).json({
+      success:false,
+      message:"Something Went Wrong",
+    })
+  }
+}
+
+
