@@ -496,4 +496,37 @@ exports.addFavouriteItem =async(req,res)=>{
   }
 }
 
+//get favouriteItem
+
+exports.getFavouriteItems=async(req,res)=>{
+  try{
+    const payload=req.user;
+
+    let existFavourite=await Favourite.findOne({userid:payload.id}).populate("items.item");
+    
+    if(!existFavourite){
+      return res.status(200).json({
+        success:false,
+        message:"Favourite List is empty",
+      })
+    }
+
+
+    return res.status(200).json({
+      data:existFavourite,
+      success:true,
+      message:"Favourite Items fetched successfully",
+    })
+  }
+  catch(error){
+    console.log(error);
+    res.status(400).json({
+      success:false,
+      message:"Something Went Wrong"
+,    })
+  }
+}
+
+
+
 
