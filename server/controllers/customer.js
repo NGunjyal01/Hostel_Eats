@@ -527,6 +527,58 @@ exports.getFavouriteItems=async(req,res)=>{
   }
 }
 
+//Remove favourite Item
 
+exports.removeFavouriteItem=async(req,res)=>{
+  try{
+      const payload=req.user;
+      const {itemid}=req.body;
+
+      const existFavourite=await Favourite.findOne({userid:payload.id}).populate("items.item");
+
+      if(!existFavourite){
+        return res.status(200).json({
+          success:false,
+          message:"Favourite List is empty",
+        })
+      }
+      
+      const itemIdx=existFavourite.items.findIndex((item)=>item.item._id.toString()===itemid);
+
+          if (itemIdx === -1) {
+            return res.status(200).json({
+              success: false,
+              message: "Item Not found in Favourites",
+            });
+          }
+
+           existFavourite.items.splice(itemIdx, 1);
+           if(existFavourite.items.length===0){
+             await Favourite.deleteOne({ userid: payload.id });
+
+              return res.status(200).json({
+                success: true,
+                message: "Favourite List is now empty and has been deleted",
+              });
+           }
+           //save the updated list
+         existFavourite.save();
+
+           res.status(200).json({
+            data:existFavourite,
+            success:true,
+            message:"Item is successfully remvoed from Favourites",
+           })
+
+
+  }
+  catch(error){
+    console.log(error);
+    res.status(400).json({
+      success:false,
+      message:"Something Went Wrong",
+    })
+  }
+}
 
 
