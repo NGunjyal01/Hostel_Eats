@@ -16,7 +16,11 @@ const CanteenPage = () => {
     const [itemsToDisplay, setItemsToDisplay] = useState([]);
     const [showModal, setShowModal] = useState(null);
     const cartItemMap = !cart ? new Map() : new Map(cart.items.map(item => [item.item._id, item.quantity]));
-    const favorites = useSelector(state => state.favourites) || [];
+    // const favorites = useSelector(state => Array.isArray(state.favourites) ? state.favourites : []);
+
+    const favorites=useSelector(store=>store.favourites)
+    const favouriteItems=favorites.items || []
+
 
     useEffect(() => {
         const fetchCanteenData = async () => {
@@ -90,8 +94,8 @@ const CanteenPage = () => {
 
     const handleToggleFavourite = (e, item) => {
         e.stopPropagation();
-    console.log("handleToggleFavorite called with item:", item);
-    toggleFavouriteItem(item, dispatch);
+        console.log("handleToggleFavorite called with item:", item);
+        toggleFavouriteItem(item, dispatch, favouriteItems);
     };
 
     return (
@@ -132,10 +136,10 @@ const CanteenPage = () => {
                         <div className="relative flex items-center">
                             <img src={item.imageUrl} alt={item.name} className="w-32 h-32 object-cover rounded-lg" />
                             <div className="absolute top-2 right-2">
-                                {favorites.some(fav => fav.itemid === item._id) ? (
-                                    <AiFillHeart className="text-red-500 cursor-pointer" onClick={(e) => handleToggleFavourite(e, { itemid: item._id, name: item.name, canteenName: canteenData?.canteenName, price: item.price , imageUrl:item.imageUrl })} />
+                                {favouriteItems.some(fav => fav.item._id === item._id) ? (
+                                    <AiFillHeart className="text-red-500 cursor-pointer" onClick={(e) => handleToggleFavourite(e, { itemid: item._id, name: item.name, canteenName: canteenData?.canteenName, price: item.price , imageUrl:item.imageUrl, isFavourite: true })} />
                                 ) : (
-                                    <AiOutlineHeart className="text-white cursor-pointer" onClick={(e) => handleToggleFavourite(e, { itemid: item._id, name: item.name, canteenName: canteenData?.canteenName, price: item.price , imageUrl:item.imageUrl })} />
+                                    <AiOutlineHeart className="text-white cursor-pointer" onClick={(e) => handleToggleFavourite(e, { itemid: item._id, name: item.name, canteenName: canteenData?.canteenName, price: item.price , imageUrl:item.imageUrl, isFavourite: false })} />
                                 )}
                             </div>
                             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-full flex justify-center">

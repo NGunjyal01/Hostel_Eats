@@ -2,11 +2,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addCartItem, removeCartItem, resetCartItem } from "../../services/customerAPI";
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { toggleFavouriteItem } from '../../services/favouriteAPI';
 
-const DishCard = ({ dish, setShowModal, cartItemMap, favorites, handleToggleFavourite }) => {
+const DishCard = ({ dish, setShowModal, cartItemMap }) => {
 
     const { itemid, itemName, canteenName, price, shopid, imageUrl } = dish;
     const cart = useSelector(store => store.cart);
+    // const favourites = useSelector(store => Array.isArray(store.favourites) ? store.favourites : []);
+    const favourites=useSelector(store=>store.favourites)
+    const favouriteItems=favourites.items || []
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -48,22 +52,28 @@ const DishCard = ({ dish, setShowModal, cartItemMap, favorites, handleToggleFavo
         removeCartItem({ itemid }, dispatch);
     };
 
+    const handleToggleFavourite = async (e, item) => {
+        e.stopPropagation();
+        await toggleFavouriteItem(item, dispatch,favouriteItems);
+    };
+
     return (
         <div key={itemid} className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between" onClick={() => handleCardClick(shopid)}>
+            
             <div className="relative">
-                <img src={imageUrl} alt={itemName} className="w-full h-36 object-cover rounded-lg mb-4" />
+                <img src={imageUrl} alt={itemName} className="w-full h-36 object-cover rounded-lg mb-4" />               
                 <div className="absolute top-2 right-2">
-                    {favorites.some(fav => fav.itemid === itemid) ? (
-                        <AiFillHeart className="text-red-500 cursor-pointer" onClick={(e) => handleToggleFavourite(e, { itemid, name: itemName, canteenName, price, imageUrl })} />
+                    {favouriteItems.some(fav => fav.item._id === itemid) ? (
+                        <AiFillHeart className="text-red-500 cursor-pointer" onClick={(e) => handleToggleFavourite(e, { itemid, name: itemName, canteenName, price, imageUrl})} />
                     ) : (
-                        <AiOutlineHeart className="text-white cursor-pointer" onClick={(e) => handleToggleFavourite(e, { itemid, name: itemName, canteenName, price, imageUrl })} />
+                        <AiOutlineHeart className="text-white cursor-pointer" onClick={(e) => handleToggleFavourite(e, { itemid, name: itemName, canteenName, price, imageUrl})} />
                     )}
                 </div>
             </div>
             <div>
                 <h3 className="text-xl font-semibold mb-2">{itemName}</h3>
                 <p className="text-gray-400 mb-2">Available at: {canteenName}</p>
-                <p className="text-gray-400 mb-2">Price: {price}</p>
+                <p className="text-gray-400 mb-2">Price: ₹{price}</p>
             </div>
             {cartItemMap.has(itemid) ? (
                 <div className="flex items-center justify-center space-x-4" onClick={(e) => e.stopPropagation()}>
