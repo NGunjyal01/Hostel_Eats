@@ -11,7 +11,7 @@ import { searchItem, getPopularDishes, getCanteenPageDetails, addCartItem, remov
 import { useNavigate } from 'react-router-dom';
 import { setCanteensData } from '../../slices/canteenPageSlice';
 import DishCard from './DishCard';
-import { toggleFavouriteItem } from '../../services/favouriteAPI';
+// import { toggleFavouriteItem } from '../../services/favouriteAPI';
 
 const CustomPrevArrow = (props) => {
     const { onClick } = props;
@@ -41,7 +41,6 @@ const CustomNextArrow = (props) => {
 
 const Explore = () => {
     const cart = useSelector(store => store.cart);
-    const favorites = useSelector(store => store.favourites) || [];
     const cartItemMap = !cart ? new Map() : new Map(cart.items.map(item => [item.item._id, item.quantity]));
 
     const [searchInput, setSearchInput] = useState('');
@@ -145,10 +144,6 @@ const Explore = () => {
         navigate(`/canteen/${canteenId}`);
     };
 
-    const handleToggleFavourite = (e, item) => {
-        e.stopPropagation();
-        toggleFavouriteItem(item, dispatch);
-    };
 
     const settings = {
         dots: true,
@@ -253,7 +248,7 @@ const Explore = () => {
                     <h2 className="text-2xl font-bold mb-4">{searchType === 'dishes' ? 'Search Results for Dishes' : 'Search Results for Canteens'}</h2>
                     {searchType === 'dishes' ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredDishes.map(dish => <DishCard  key={dish.itemid} dish={dish} setShowModal={setShowModal} cartItemMap={cartItemMap} favorites={favorites} handleToggleFavourite={handleToggleFavourite}/>)}
+                            {filteredDishes.map(dish => <DishCard  key={dish.itemid} dish={dish} setShowModal={setShowModal} cartItemMap={cartItemMap} />)}
                         </div>
                     ) : (
                         <div className="space-y-6">
@@ -279,7 +274,7 @@ const Explore = () => {
                     <Slider {...settings} className="mx-4">
                         {popularDishes.map(dish => (
                             <div key={dish._id} className="px-2">
-                                <DishCard  key={dish.itemid} dish={dish} setShowModal={setShowModal} cartItemMap={cartItemMap} favorites={favorites} handleToggleFavourite={handleToggleFavourite}/>
+                                <DishCard  key={dish.itemid} dish={dish} setShowModal={setShowModal} cartItemMap={cartItemMap} />
                             </div>
                         ))}
                     </Slider>

@@ -23,7 +23,9 @@ export const customerEndpoints = {
     GET_ORDER_HISTROY_API: BASE_URL + "/customer/getOrderHistory",
     GET_FAVOURITE_ITEMS_API: BASE_URL + "/customer/getFavouriteItems",
     GET_CANTEEN_PAGE_DETAILS_API: BASE_URL + "/customer/getCanteenDetails",
-    RESET_CART_ITEM_API: BASE_URL + "/customer/resetCartItem"
+    RESET_CART_ITEM_API: BASE_URL + "/customer/resetCartItem",
+    ADD_FAVOURITE_ITEM_API: BASE_URL + "/customer/addFavouriteItem",
+    REMOVE_FAVOURITE_ITEM_API: BASE_URL + "/customer/removeFavouriteItem",
 }
 
 // Owner Endpoints 

@@ -3,6 +3,7 @@ import { customerEndpoints } from './apis';
 import { GET_POPULAR_DISHES_API } from './apis';
 import toast from 'react-hot-toast';
 import { resetCartItems, setCartItem } from '../slices/cartSlice';
+import {setFavouriteItems, resetFavouriteItems} from '../slices/favouritesSlice'
 
 const config = { headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true };
 
@@ -114,3 +115,53 @@ export const searchItemByCanteen = async (formData) => {
         console.log("Error searching for items:", error);
     }
 }
+
+export const addFavouriteItem = async (item, dispatch) => {
+    try {
+        const response = await axios.post(customerEndpoints.ADD_FAVOURITE_ITEM_API, item, config);
+        console.log("ADD FAVOURITE ITEM API RESPONSE:", response);
+        localStorage.setItem('favourites',JSON.stringify(response.data.data))
+        dispatch(setFavouriteItems(response.data.data))
+        toast.success("Successfully Added to Favourites");
+    } catch (error) {
+        console.log("ERROR DURING ADD FAVOURITE ITEM API................", error);
+        toast.error("Error Adding to Favourites");
+    }
+}
+
+export const removeFavouriteItem = async (item, dispatch) => {
+    try {
+        const response = await axios.post(customerEndpoints.REMOVE_FAVOURITE_ITEM_API, item, config);
+        console.log("REMOVE FAVOURITE ITEM API RESPONSE...................", response);
+        if(response.data.success && response.data.message==="Favourite List is now empty and has been deleted"){
+            dispatch(resetFavouriteItems());
+            localStorage.removeItem('favourites');
+        } else {
+            dispatch(setFavouriteItems(response.data.data));
+            localStorage.setItem('favourites', JSON.stringify(response.data.data));
+        } 
+        toast.success("Successfully Removed from Favourites");
+    } catch (error) {
+        console.log("ERROR DURING REMOVE FAVOURITE ITEM API....................", error);
+        toast.error("Error Removing from Favourites");
+    }
+}
+
+
+export const loadFavouriteItems = async (dispatch) => {
+    try {
+        const response = await axios.get(customerEndpoints.GET_FAVOURITE_ITEMS_API, config);
+        console.log("GET FAVOURITE ITEMS API RESPONSE:", response);
+        if (response.data.success) {
+            const favouriteItems = response.data.data;
+            localStorage.setItem('favourites', JSON.stringify(favouriteItems));
+            dispatch(setFavouriteItems(favouriteItems));
+        } else {
+            localStorage.setItem('favourites', JSON.stringify([]));
+            dispatch(setFavouriteItems([]));
+        }
+    } catch (error) {
+        console.error("Error loading favourite items:", error);
+        toast.error("Error loading favourite items");
+    }
+};
