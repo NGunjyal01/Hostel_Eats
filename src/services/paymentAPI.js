@@ -22,7 +22,7 @@ function loadScript(src) {
     })
   }
 
-export async function placeOrder(navigate,dispatch){
+export async function placeOrder(amount,userDetails,navigate,dispatch){
     const toastId = toast.loading("Loading...");
     try{
         const scriptRes = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
@@ -30,7 +30,7 @@ export async function placeOrder(navigate,dispatch){
             toast.error("Razorpay SDK failed to load. Check your Internet Connection.");
         }
         else{
-            const orderRes = await axios.post(ORDER_PAYMENT_API,{amount:"5000",currency:"INR"},config);
+            const orderRes = await axios.post(ORDER_PAYMENT_API,{amount},config);
             console.log("PAYMENT ORDER API RESPOSNE..............",orderRes);
             const options = {
                 key: Razorpay_Key, // Enter the Key ID generated from the Dashboard
@@ -44,9 +44,9 @@ export async function placeOrder(navigate,dispatch){
                     verifyPayment(response,navigate,dispatch)
                 },
                 prefill: { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
-                    name: "Gaurav Kumar", //your customer's name
-                    email: "gaurav.kumar@example.com",
-                    contact: "9000090000" //Provide the customer's phone number for better conversion rates 
+                    name: userDetails.name , //your customer's name
+                    email: userDetails.email,
+                    contact: userDetails.contact //Provide the customer's phone number for better conversion rates 
                 },
                 notes: {
                     address: "Razorpay Corporate Office"

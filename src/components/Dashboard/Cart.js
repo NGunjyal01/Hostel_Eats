@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 const Cart = () => {
 
     const cart = useSelector(store => store.cart);
+    const user = useSelector(store => store.user);
     const [isCash,setIsCash] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -22,11 +23,15 @@ const Cart = () => {
     };
     
     const handleOnlinePayment = ()=>{
-        placeOrder(navigate,dispatch);
+        const userDetails = new FormData;
+        userDetails.append('name',user.firstName + " " + user.lastName);
+        userDetails.append('email',user.email);
+        userDetails.append('contact',user.phone);
+        placeOrder(cart.totalPrice,userDetails,navigate,dispatch);
     }
 
     const handleCashPayment = ()=>{
-
+        
     }
 
     return (
