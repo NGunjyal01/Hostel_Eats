@@ -20,6 +20,7 @@ import View_Canteen from './components/Dashboard/View_Canteen';
 import Edit_Canteen from './components/Dashboard/EditCanteen/Edit_Canteen';
 import Explore from './pages/Explore/Explore';
 import CanteenPage from './pages/CanteenPage'; // Import CanteenPage
+import CanteenDashboard from './components/Dashboard/CanteenDashboard';
 
 function App() {
   const user = useSelector(store => store.user);
@@ -43,6 +44,7 @@ function App() {
             <Route path='dashboard/favourites' element={<Favourite/>}/>
           </>}
           {user?.accountType==="Owner" && <>
+            <Route path='dashboard/canteen/:id' element={<CanteenDashboard/>}/>
             <Route path='dashboard/add_canteeno' element={<Add_CanteenO/>}/>
             <Route path='dashboard/view_canteen' element={<View_Canteen/>}/>
             <Route path='dashboard/edit_canteen/:id' element={<Edit_Canteen/>}/>

@@ -8,6 +8,7 @@ const socket = io.connect(BASE_URL);
 const Orders = () => {
 
     useEffect(()=>{
+        console.log("hello");
         socket.emit('send',{message:"Hello"});
     },[]);
 

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { deleteCanteen, getAllCanteen, getCanteenDetails } from "../../services/ownerAPI";
 import { useEffect, useState } from "react";
 import ConfirmationalModal from "../common/ConfirmationalModal";
+import { IoEye } from "react-icons/io5";
 
 const View_Canteen = () => {
 
@@ -20,6 +21,9 @@ const View_Canteen = () => {
 
   const handleEditClick = (id)=>{
     navigate("/dashboard/edit_canteen/"+id);
+  }
+  const handleViewClick = (id)=>{
+    navigate('/dashboard/canteen/'+id);
   }
   
   const handleDeleteBtn = (id,canteenName)=>{
@@ -49,8 +53,11 @@ const View_Canteen = () => {
             <td className="px-3 py-5 pl-[4%] w-[20%]">{formatTime(openingTime)}</td>
             <td className="px-3 py-5 pl-[4%] w-[20%]">{formatTime(closingTime)}</td>
             <td className="px-3 py-5 lg:pl-[9%] xl:pl-[7%] w-[25%]">{totalRevenue}</td>
-            <td className="w-[15%]"><button className="ml-5 mr-2 sm:mr-4" onClick={()=>{handleEditClick(id)}}><MdEdit size={20}/></button>
-            <button className="text-red-600" onClick={()=>{handleDeleteBtn(id,canteenName)}}><MdDelete size={20}/></button></td>
+            <td className="w-[15%]">
+              <button className="mr-2 sm:mr-4" onClick={()=>{handleViewClick(id)}}><IoEye size={20}/></button>
+              <button className=" mr-2 sm:mr-4" onClick={()=>{handleEditClick(id)}}><MdEdit size={20}/></button>
+              <button className="text-red-600" onClick={()=>{handleDeleteBtn(id,canteenName)}}><MdDelete size={20}/></button>
+            </td>
           </tr>):
           <tr>
             <td className="flex items-center justify-center w-[100%] absolute mt-10 text-xl uppercase font-bold tracking-widest">No Canteen Found</td>  
