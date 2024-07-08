@@ -1,13 +1,24 @@
 const express=require("express");
 const app=express();
 const cookieParser=require("cookie-parser"); //for cookie parsing used for getting JWT Token
-require("dotenv").config();
+var cors = require("cors");
 
-const PORT=process.env.PORT||3000;
+const { Server }= require("socket.io");
+require("dotenv").config();
+const PORT = process.env.PORT || 3000;
+const http=require("http");
+
+const server=http.createServer(app);
+const io= new Server(server , {
+  cors:{
+    origin:"http://localhost:3000",
+  }
+});
+
 
 app.use(express.json()); 
 
-var cors = require("cors");
+
 // //app.use(cors());
 // app.use(
 //   cors({
@@ -65,6 +76,27 @@ app.use("/customer",customerRoutes);
 app.use("/profile",profileRoutes);
 app.use("/payment",paymentRoutes);
 
-app.listen(PORT,'0.0.0.0',()=>{
+
+
+// Add a Socket.IO connection handler
+io.on('connection', (socket) => {
+  console.log('A user connected',socket.id);
+
+  //  socket.on("send",(s)=>{
+  //   console.log(s);
+  //  })
+    socket.on("joinRoom", (id) => {
+      socket.join(id);
+      console.log(`User joined room: ${id}`);
+    });
+
+
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  });
+});
+
+app.set('io',io);
+server.listen(PORT,'0.0.0.0',()=>{
 console.log(`App is running at ${PORT}`);
 })
