@@ -106,10 +106,10 @@ exports.orderVerify = async(req,res)=>{
 
       // Emit the order to the owner's room
       const io=req.app.get('io')
-      const ownerId = newOrder.shopid; // Assuming you have ownerId in the order model
+      const ownerId = newOrder.shopid;  
       const customerId=newOrder.userid;
       console.log("SHop ki id",ownerId);
-      console.log("Ab yaha se owner ke page mai jayega");
+      console.log("Ab yaha se owner ke page mai jayega");    
       io.to(ownerId.toString()).emit("newOrder", newOrder);
         console.log("Ab yaha se custoner ke page mai jayega");
       io.to(customerId.toString()).emit("orderUpdate", newOrder);

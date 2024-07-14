@@ -1,6 +1,6 @@
 const express = require("express");
 const ownerRouter = express.Router();
-const { addCanteen,addItem,getAllCanteen,getCanteenDetails, addItems,} = require("../controllers/canteen");
+const { addCanteen,addItem,getAllCanteen,getCanteenDetails, addItems, getOrders,} = require("../controllers/canteen");
 const {editCanteen,editItem,deleteItem,deleteCanteen}=require("../controllers/modifyCanteen")
 //addCanteen
 ownerRouter.post("/addCanteen",addCanteen);
@@ -19,6 +19,7 @@ ownerRouter.post("/editItem",editItem);
 ownerRouter.post("/deleteItem",deleteItem);
 //Routes for Delete canteen
 ownerRouter.post("/deleteCanteen",deleteCanteen);
+ownerRouter.post("/getOrderHistory",getOrders);
 
 
 module.exports=ownerRouter;

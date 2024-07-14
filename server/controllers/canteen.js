@@ -3,6 +3,7 @@ const Merchant = require("../models/merchant");
 const User=require("../models/user");
 const Item = require("../models/item");
 const jwt=require("jsonwebtoken");
+const Order=require("../models/order");
 require("dotenv").config();
 
 // const cloudinary = require("cloudinary").v2;
@@ -400,3 +401,59 @@ exports.addItems = async (req, res) => {
       });
     }
 };
+
+
+//Get Order For specific Canteen
+
+exports.getOrders=async(req,res)=>{
+  try{
+    //taking token from request
+    const { token } = req.cookies;
+       if (!token) {
+         return res.status(400).json({
+           sucess: false,
+           message: "Token is Expired please Login first",
+         });
+       }
+       const payload = jwt.verify(token, process.env.JWT_SECRET);
+       const canteens = await Merchant.find({
+         ownerEmail: payload.email,
+       });
+       if (canteens.length == 0) {
+         return res.status(400).json({
+           success: false,
+           message:
+             "Canteen is not created yet Please create Your canteen first ",
+         });
+       }
+      
+
+       const {shopid}=req.body;
+        const orders = await Order.find({ shopid:shopid})
+          .populate({
+            path: "items.item",
+            select: "_id shopid name description price category imageUrl",
+          })
+          .sort({ createdAt: -1 })
+          .select("_id userid items totalAmount status createdAt");
+
+        if (orders.length === 0) {
+          return res.status(200).json({
+            success: false,
+            message: "No orders found",
+          });
+        }
+        res.status(200).json({
+          success: true,
+          data: orders,
+          message: " Orders Fetched successfully",
+        });
+  }
+  catch(error){
+    console.log(error);
+    res.status(400).json({
+      success:false,
+      message:"Something Went Wrong",
+    })
+  }
+}
