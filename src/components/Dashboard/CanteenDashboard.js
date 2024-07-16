@@ -4,7 +4,10 @@ import { useParams } from "react-router-dom"
 import { getCanteenDetails } from "../../services/ownerAPI";
 import { formatTime } from "../../utils/formatTime";
 import { PieChart } from "react-minimal-pie-chart";
+import {io} from "socket.io-client";
 
+const BASE_URL = process.env.REACT_APP_BASE_URL_LOCAL;
+const socket = io.connect(BASE_URL);
 
 const CanteenDashboard = () => {
 
@@ -13,6 +16,10 @@ const CanteenDashboard = () => {
     const canteenDetails = useSelector(store => store.canteen.canteenDetails);
     useEffect(()=>{
         getCanteenDetails(id,dispatch);
+        socket.emit("joinRoom",canteenDetails._id);
+        socket.on("newOrder", (order) =>{
+            console.log(order);
+        });
     },[id]);
 
     const formInfo = [{name:'canteenName',label:"Canteen Name",value:canteenDetails.canteenName},
@@ -28,7 +35,7 @@ const CanteenDashboard = () => {
 
     return (
         <div className="flex flex-col justify-center items-center">
-            <div className=" w-[90%] sm:w-[80%] lg:w-[70%] h-fit pb-12 mt-14 relative">
+            <div className="w-[90%] sm:w-[80%] lg:w-[70%] h-fit pb-12 mt-14 relative">
                 <h1 className="absolute -mt-[22%] sm:-mt-[17%] md:-mt-[15%] lg:-mt-[17%] xl:-mt-[7%] -ml-4 sm:-ml-3 md:-ml-4 text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold">Canteen Dashboard</h1>
                 <div className="grid grid-cols-12 w-full">
                     <div className="col-span-7 grid grid-cols-2">

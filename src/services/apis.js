@@ -34,6 +34,7 @@ export const ownerEndpoints = {
     GET_ALL_CANTEEN_API: BASE_URL + "/owner/getAllCanteen",
     GET_CANTEEN_DETAILS_API: BASE_URL + "/owner/getCanteenDetails",
     EDIT_CANTEEN_API: BASE_URL + "/owner/editCanteen",
+    GET_ORDER_HISTROY_API: BASE_URL + "/owner/getOrderHistory",
     CREATE_ITEM_API: BASE_URL + "/owner/addItem",
     EDIT_ITEM_API: BASE_URL + "/owner/editItem",
     DELETE_ITEM_API: BASE_URL + "/owner/deleteItem",

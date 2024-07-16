@@ -60,7 +60,7 @@ const AnimatedHamburgerButton = () => {
 
   return (
     <div className="fixed w-full -mt-10">
-      <button onClick={handleToggle} className="absolute right-14 top-9 z-50 ">
+      <button onClick={handleToggle} className="absolute left-8 top-10 z-50 ">
         <RxHamburgerMenu size={30} className={`absolute transition-transform duration-300 ease-in-out ${
           isOpen ? "opacity-0 rotate-180" : "opacity-100 rotate-0"}`}/>
         <RxCross1 size={30} className={`absolute transition-transform duration-300 ease-in-out ${
@@ -68,8 +68,8 @@ const AnimatedHamburgerButton = () => {
       </button>
       <AnimatePresence>
         {isOpen && (
-          <motion.div className="fixed top-0 left-0 right-0 bottom-0 bg-[#31363F] mt-4 mx-2 rounded-xl"
-            initial={{ opacity: 0, scale: 0, transformOrigin: "top right"}}
+          <motion.div className="fixed top-0 left-0 right-0 bottom-0 bg-[#31363F] my-4 mx-2 rounded-xl"
+            initial={{ opacity: 0, scale: 0, transformOrigin: "top left"}}
             animate={{opacity: 1, scale: 1, transition: { duration: 0.3, ease: "easeOut" } }}
             exit={{ opacity: 0, scale: 0, transition: { duration: 0.3, ease: "easeIn" } }}>
               <div className="mt-[22%] ml-[20%] flex flex-col space-y-5">

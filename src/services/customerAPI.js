@@ -4,10 +4,11 @@ import { GET_POPULAR_DISHES_API } from './apis';
 import toast from 'react-hot-toast';
 import { resetCartItems, setCartItem } from '../slices/cartSlice';
 import {setFavouriteItems, resetFavouriteItems} from '../slices/favouritesSlice'
+import { setCustomerOrderHistory } from '../slices/orderHistorySlice';
 
 const config = { headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true };
 
-const { GET_CART_ITEMS_API, ADD_CART_ITEM_API, REMOVE_CART_ITEM_API } = customerEndpoints;
+const { GET_CART_ITEMS_API, ADD_CART_ITEM_API, REMOVE_CART_ITEM_API,GET_ORDER_HISTROY_API } = customerEndpoints;
 
 export const searchItem = async (formData) => {
     try {
@@ -165,3 +166,14 @@ export const loadFavouriteItems = async (dispatch) => {
         toast.error("Error loading favourite items");
     }
 };
+
+export async function getOrderHistory(dispatch){
+    try{
+        const response = await axios.get(GET_ORDER_HISTROY_API,config);
+        console.log("GET ORDER HISTORY API RESPONSE.......................",response);
+        dispatch(setCustomerOrderHistory(response.data.data));
+    }
+    catch(error){
+        console.log("ERROR DURING GET ORDEER HISTORY API.....................",error);
+    }
+}

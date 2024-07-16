@@ -76,6 +76,7 @@ export async function verifyPayment(response,navigate,dispatch){
         toast.success("Order Placed.");
         dispatch(resetCartItems());
         localStorage.removeItem('cart');
+        navigate('/dashboard/orders');
     }
     catch(error){
         console.log("PAYMENT VERIFY ERROR............", error);

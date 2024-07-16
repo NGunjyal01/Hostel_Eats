@@ -51,7 +51,7 @@ const Header = () => {
 
     return (
         <div className="fixed w-full z-40 flex bg-gradient-to-r from-black to-[#222831] text-white pt-10 pb-4">
-            <h1 className="ml-[8%] sm:ml-[8%] md:ml-[10%] text-xl sm:text-xl lg:text-3xl">Hostel Eats</h1>
+            <h1 className="ml-[36%] sm:ml-[8%] md:ml-[10%] text-xl sm:text-xl lg:text-3xl">Hostel Eats</h1>
             <div className={`hidden sm:flex  sm:gap-4 lg:gap-7 sm:text-sm lg:text-base mt-1 ${user ? (user.accountType==="Owner" 
             ? 'sm:ml-[15%] md:ml-[20%] lg:ml-[25%]' : 'sm:ml-[18%] md:ml-[20%] lg:ml-[22%] xl:ml-[24%]' ) :'sm:ml-[10%] md:ml-[14%] lg:ml-[18%]'}`}>
                 {tabs.map(tab => <span key={tab.name}><Tab><NavLink to={tab.to} className={({isActive}) => ` ${isActive?"text-[#76ABAE]":""}`}>{tab.name}</NavLink></Tab></span>)}
@@ -85,6 +85,7 @@ const Header = () => {
             {confirmationalModal && <ConfirmationalModal modalData={confirmationalModal}/>}
             <div className="sm:hidden flex absolute w-full">
                 <AnimatedHamburgerButton />
+
             </div>
         </div>
     )
