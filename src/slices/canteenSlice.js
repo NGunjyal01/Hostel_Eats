@@ -6,7 +6,7 @@ const canteenSlice = createSlice({
     name: "canteen",
     initialState: {
         allCanteen: canteen ? (JSON.parse(canteen)).allCanteen ? (JSON.parse(canteen)).allCanteen :null: null, 
-        canteenDetails: canteen ? (JSON.parse(canteen).canteenDetails ? (JSON.parse(canteen).canteenDetails) : {}) : {},
+        canteenDetails: canteen ? (JSON.parse(canteen).canteenDetails ? (JSON.parse(canteen).canteenDetails) : null) : null,
     },
     reducers: {
         setAllCanteen: (state,action) =>{

@@ -4,6 +4,8 @@ import { getCanteenDetails } from "../../../services/ownerAPI";
 import CanteenDetails from "./CanteenDetails";
 import { useDispatch, useSelector } from "react-redux";
 import MenuItems from "./MenuItems";
+import Spinner from "../../common/Spinner";
+import { setCanteenDetails } from "../../../slices/canteenSlice";
 
 const Edit_Canteen = () => {
 
@@ -15,6 +17,9 @@ const Edit_Canteen = () => {
   const [btnState,setBtnState] = useState({editCanteen:false,editItem:false,addItem:false});
   useEffect(()=>{
     getCanteenDetails(id,dispatch);
+    return ()=>{
+      dispatch(setCanteenDetails(null));
+    }
   },[id]);
 
   useEffect(()=>{
@@ -28,14 +33,15 @@ const Edit_Canteen = () => {
   },[location])
 
   return (
-    <>
-      {!canteenDetails ? <div className="text-4xl font-bold mt-[20%]">Loading</div> : <div className="flex flex-col justify-center items-center">
-      <CanteenDetails btnState={btnState} setBtnState={setBtnState}/>
-      <div id="menu-items-section" className="w-full">
-        <MenuItems btnState={btnState} setBtnState={setBtnState}/>
-      </div>
-    </div>}
-    </>
+    <div className="flex flex-col justify-center items-center">
+      {!canteenDetails ? <div className="mt-[10%] -ml-[15%]"><Spinner/></div> 
+      : <>
+          <CanteenDetails btnState={btnState} setBtnState={setBtnState}/>
+          <div id="menu-items-section" className="w-full">
+            <MenuItems btnState={btnState} setBtnState={setBtnState}/>
+          </div>
+      </>}
+    </div>
   )
 }
 

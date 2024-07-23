@@ -8,6 +8,7 @@ import Tab from "./Tab";
 import { setCurrTab, setPrevTab } from "../../slices/tabSlice";
 import ConfirmationalModal from "./ConfirmationalModal";
 import { FaCartShopping } from "react-icons/fa6";
+import { MdNotifications, MdNotificationsActive } from "react-icons/md";
 import AnimatedHamburgerButton from "./AnimatedHamburgerButton";
 
 const Header = () => {
@@ -52,8 +53,7 @@ const Header = () => {
     return (
         <div className="fixed w-full z-40 flex bg-gradient-to-r from-black to-[#222831] text-white pt-10 pb-4">
             <h1 className="ml-[36%] sm:ml-[8%] md:ml-[10%] text-xl sm:text-xl lg:text-3xl">Hostel Eats</h1>
-            <div className={`hidden sm:flex  sm:gap-4 lg:gap-7 sm:text-sm lg:text-base mt-1 ${user ? (user.accountType==="Owner" 
-            ? 'sm:ml-[15%] md:ml-[20%] lg:ml-[25%]' : 'sm:ml-[18%] md:ml-[20%] lg:ml-[22%] xl:ml-[24%]' ) :'sm:ml-[10%] md:ml-[14%] lg:ml-[18%]'}`}>
+            <div className={`hidden sm:flex  sm:gap-4 lg:gap-7 sm:text-sm lg:text-base mt-1 ${user ? "sm:ml-[18%] md:ml-[20%] lg:ml-[22%] xl:ml-[24%]":'sm:ml-[10%] md:ml-[14%] lg:ml-[18%]'}`}>
                 {tabs.map(tab => <span key={tab.name}><Tab><NavLink to={tab.to} className={({isActive}) => ` ${isActive?"text-[#76ABAE]":""}`}>{tab.name}</NavLink></Tab></span>)}
             </div>
             {!user && <div className="hidden absolute sm:flex sm:gap-2 lg:gap-4 sm:right-4 lg:right-6 xl:right-20 sm:-mt-1 lg:-mt-2 sm:text-sm lg:text-base">
@@ -61,7 +61,7 @@ const Header = () => {
                 <NavLink to='/signup' className={({isActive}) => `bg-[#31363F] rounded-lg px-4 py-2 hover:text-[#76ABAE] ${isActive?"text-[#76ABAE]":""}`}>SignUp</NavLink>
             </div>}  
             {user && <><div className={`group hidden sm:flex justify-center items-center absolute top-9 cursor-pointer transition-transform ease-out 
-            ${user.accountType==='Owner'?'right-[8%]':'sm:right-[15%] md:right-[14%] lg:right-[13%] xl:right-[12%]'}`} 
+            sm:right-[15%] md:right-[14%] lg:right-[13%] xl:right-[12%]`} 
             onClick={handleUserIconClick}
             onMouseEnter={()=>{setShowDropDownMenu(true)}} onMouseLeave={()=>{setShowDropDownMenu(false)}}>
                 <img src={user.imageUrl} className="sm:size-8 lg:size-10 rounded-md"/>  
@@ -82,10 +82,12 @@ const Header = () => {
                 <FaCartShopping className="cartLogo"/>
                 <span className="absolute text-black sm:top-0.5 md:top-1 lg:top-0 sm:left-3.5 md:left-4 lg:left-[1.1rem] font-semibold sm:text-xs lg:text-base">{!cart ? 0 : cart.totalQuantity}</span>
             </span>}
+            {user?.accountType==="Owner" && <span className="absolute hidden sm:block -mt-1 right-[7%] cursor-pointer" onClick={()=>{navigate('/dashboard/cart')}}>
+                <MdNotifications className="cartLogo"/>
+            </span>}
             {confirmationalModal && <ConfirmationalModal modalData={confirmationalModal}/>}
             <div className="sm:hidden flex absolute w-full">
                 <AnimatedHamburgerButton />
-
             </div>
         </div>
     )
