@@ -35,9 +35,7 @@ exports.userLogin = async (req, res) => {
 
     if (await bcrypt.compare(password, existingUser.password)) {
 
-      let token = jwt.sign(payload,process.env.JWT_SECRET,{
-        expiresIn:"2h",
-      });
+      let token = jwt.sign(payload,process.env.JWT_SECRET);
       
         existingUser= existingUser.toObject();
        existingUser.token=token;
@@ -49,7 +47,7 @@ exports.userLogin = async (req, res) => {
       //name data options
 
       const options={
-    expires:new Date (Date.now()+3*24*60*60*1000),
+   //expires:new Date (Date.now()+3*24*60*60*1000),
     httpOnly:true,  //client side access nahi hoga
     sameSite:'Lax',   //Local host -> None and for network Lax
     //secure:true,    
