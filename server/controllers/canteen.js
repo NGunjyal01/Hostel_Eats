@@ -83,10 +83,10 @@ exports.addItem= async(req,res) =>{
    const fileLength=file.name.split('.');
    const fileType=file.name.split('.')[fileLength.length-1].toLowerCase();
   //Image size must be less than 1mb
- if (file.size > 1 * 1024 * 1024) {
+ if (file.size > 3 * 1024 * 1024) {
    return res.status(200).json({
      success: false,
-     message: "Image File size is more than 1mb",
+     message: "Image File size is more than 3mb",
    });
  }
   
