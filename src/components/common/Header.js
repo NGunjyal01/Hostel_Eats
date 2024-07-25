@@ -71,7 +71,7 @@ const Header = () => {
                         <motion.div initial={{opacity:0,y:15}} animate={{opacity:1,y:0}} exit={{opacity:0,y:15}}
                         className="absolute z-10 top-16 bg-[#EEEEEE]  text-black w-[10rem] flex flex-col items-center space-y-2 px-2 rounded-md" onClick={(e)=>{e.stopPropagation()}}>
                             <div className="bg-[#EEEEEE] w-4 h-4 rotate-45 absolute -top-2"></div>
-                            {sideTabs.map((tab,index) => <NavLink to={tab.to} onClick={()=>{handleSideTabClick(index)}}>{tab.name}</NavLink>)}
+                            {sideTabs.map((tab,index) => <NavLink key={tab.to} to={tab.to} onClick={()=>{handleSideTabClick(index)}}>{tab.name}</NavLink>)}
                             <button onClick={handleLogOut} className="pb-2">log out</button>
                         </motion.div>
                     </>}

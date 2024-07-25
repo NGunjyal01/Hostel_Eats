@@ -88,6 +88,7 @@ const View_Canteen = () => {
             <div className="grid grid-cols-2 gap-4 sm:gap-0 mt-5">
               <h1 className="col-span-1">Actions</h1>
               <div className="col-span-1">
+                <button className="mr-2 sm:mr-4" onClick={()=>{handleViewClick(id)}}><IoEye size={20}/></button>
                 <button className="mr-2 sm:mr-4" onClick={()=>{handleEditClick(id)}}><MdEdit size={20}/></button>
                 <button className="text-red-600" onClick={()=>{handleDeleteBtn(id,canteenName)}}><MdDelete size={20}/></button>
               </div>

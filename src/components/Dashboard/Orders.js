@@ -42,7 +42,7 @@ const Orders = () => {
                             </div>
                         </div>
                         <div className="mt-4 flex flex-row gap-10">
-                            <h1>{"Total Paid: ₹" + order.totalAmount}</h1>
+                            <h1>{"Total Bill: ₹" + order.totalAmount}</h1>
                             <button className="uppercase tracking-wider">Reorder</button>
                         </div>
                     </div>);
