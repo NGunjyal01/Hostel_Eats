@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import { getCanteenDetails, getOrderHistory } from "../../services/ownerAPI";
@@ -8,6 +8,8 @@ import {io} from "socket.io-client";
 import Spinner from "../common/Spinner";
 import { setCanteenDetails } from "../../slices/canteenSlice";
 import { formatDate } from "../../utils/formatDate";
+import { setOwnerOrderHistory } from "../../slices/orderHistorySlice";
+import Pagination from "../common/Pagination";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL_LOCAL;
 const socket = io.connect(BASE_URL);
@@ -18,10 +20,12 @@ const CanteenDashboard = () => {
     const dispatch = useDispatch();
     const canteenDetails = useSelector(store => store.canteen.canteenDetails);
     const orderHistory = useSelector(store => store.orderHistory.owner);
+    const [currentItems,setCurrentItems] = useState(null);
+    
     useEffect(()=>{
+        getOrderHistory({shopid:id},dispatch);
         getCanteenDetails(id,dispatch).then(()=>{
             if (canteenDetails) {
-                getOrderHistory({shopid:canteenDetails._id},dispatch);
                 socket.emit("joinRoom", canteenDetails._id);
                 socket.on("newOrder", (order) => {
                     console.log(order);
@@ -30,6 +34,7 @@ const CanteenDashboard = () => {
         });
         return ()=>{
             dispatch(setCanteenDetails(null));
+            dispatch(setOwnerOrderHistory(null));
             // socket.disconnect();
         }
     },[id]);
@@ -42,8 +47,8 @@ const CanteenDashboard = () => {
 
     return (
     <div className="flex flex-col justify-center items-center">
-        {(!canteenDetails || !orderHistory) ? <div className="mt-[10%] -ml-[15%]"><Spinner/></div> 
-        : <div className="w-[90%] sm:w-[80%]  h-fit pb-12 mt-14 relative">
+        {!canteenDetails ? <div className="mt-[10%] -ml-[15%]"><Spinner/></div> 
+        : <div className="w-[90%] sm:w-[85%]  h-fit pb-12 mt-14 relative">
             <h1 className="absolute -mt-[22%] sm:-mt-[17%] md:-mt-[15%] lg:-mt-[17%] xl:-mt-[7%] -ml-4 sm:-ml-3 md:-ml-4 text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold">Canteen Dashboard</h1>
             <div className="grid grid-cols-12 w-full">
                 <div className="col-span-7 grid grid-cols-2">
@@ -79,30 +84,31 @@ const CanteenDashboard = () => {
                     </div>
                 </div>
             </div>
-            <div className="mt-10">
-                <h1 className="text-2xl">Order History</h1>
+            <div className="flex flex-col items-center mt-10" id="orderHistory">
+                <h1 className="-ml-2 sm:-ml-3 md:-ml-5 lg:-ml-[87%] text-2xl">Order History</h1>
                 <div className="grid grid-cols-2 w-full mt-10">
-                {orderHistory.map( (order) =>{
-                    const date = order.createdAt ? formatDate(order.createdAt.split('T')[0]) : '';
-                    const time = order.createdAt ? formatTime(order.createdAt?.split('T')[1].split(':')[0]+":"+order.createdAt.split('T')[1].split(':')[1]) : '';
-                    // const items = order.items.map(item => item.item.name + " x " + item.quantity).join(', ');
-                    return (
-                    <div key={order._id} className="col-span-1 bg-[#31363F] py-4 px-4 w-[85%] mt-8 rounded-lg">
-                        <div className="flex flex-row gap-7">
-                            <img src={order.items[0].item.imageUrl} alt="dish-img" className="w-40 h-28 object-fill"/>
-                            <div className="space-y-1">
-                                <h1>{order.canteenName}</h1>
-                                <p className="text-xs">{"ORDER#"+order._id}</p>
-                                <p className="text-sm">{date + ", "  + time}</p>
-                                <button>View Details</button>
+                    {currentItems?.map( (order) =>{
+                        const date = order.createdAt ? formatDate(order.createdAt.split('T')[0]) : '';
+                        const time = order.createdAt ? formatTime(order.createdAt?.split('T')[1].split(':')[0]+":"+order.createdAt.split('T')[1].split(':')[1]) : '';
+                        // const items = order.items.map(item => item.item.name + " x " + item.quantity).join(', ');
+                        return (
+                        <div key={order._id} className="col-span-1 bg-[#31363F] py-4 px-4 w-[85%] mt-8 rounded-lg">
+                            <div className="flex flex-row gap-7">
+                                <img src={order.items[0].item.imageUrl} alt="dish-img" className="w-40 h-28 object-fill"/>
+                                <div className="space-y-1">
+                                    <h1>{order.canteenName}</h1>
+                                    <p className="text-xs">{"ORDER#"+order._id}</p>
+                                    <p className="text-sm">{date + ", "  + time}</p>
+                                    <button>View Details</button>
+                                </div>
                             </div>
-                        </div>
-                        <div className="mt-4 flex flex-row gap-10">
-                            <h1>{"Total Bill: ₹" + order.totalAmount}</h1>
-                        </div>
-                    </div>);
-                })}
-            </div>
+                            <div className="mt-4 flex flex-row gap-10">
+                                <h1>{"Total Bill: ₹" + order.totalAmount}</h1>
+                            </div>
+                        </div>);
+                    })}
+                </div>
+                {orderHistory && <span className="-ml-20"><Pagination allItems={orderHistory} itemsPerPage={10} setCurrentItems={setCurrentItems} scrollTo={'orderHistory'}/></span>}
             </div>
         </div>}
     </div>

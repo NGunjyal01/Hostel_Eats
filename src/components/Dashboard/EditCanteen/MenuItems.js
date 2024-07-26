@@ -3,17 +3,15 @@ import { useSelector } from "react-redux";
 import ItemCardOwner from "./ItemCardOwner";
 import EditForm from "./EditForm";
 import AddForm from "./AddForm";
-import { CiCircleChevLeft,CiCircleChevRight } from "react-icons/ci";
+
+import Pagination from "../../common/Pagination";
 
 const MenuItems = ({btnState,setBtnState}) => {
 
     const {canteenDetails} = useSelector(store => store.canteen);
     const menuItems = canteenDetails?.menuitems;
-    const totalItems = menuItems?.length;
-    const totalItemsGroup = Math.ceil(totalItems/10);
-    const numbers = Array.from({ length: totalItemsGroup }, (_, index) => index + 1);
-    const [currentItems,setCurrentItems] = useState(menuItems.slice(0,10));
-    const [currentPageNo,setCurrentPageNo] = useState(1);
+    const totalItems = menuItems.length;
+    const [currentItems,setCurrentItems] = useState(null);
     const [showEditForm,setShowEditForm] = useState(false);
     const [editItemDetails,setEditItemDetails] = useState(null);
 
@@ -23,11 +21,11 @@ const MenuItems = ({btnState,setBtnState}) => {
         }
     },[totalItems]);
 
-    useEffect(()=>{
-        const start = currentPageNo*10 - 10;
-        const end = currentPageNo===totalItemsGroup ? totalItems : currentPageNo*10;
-        setCurrentItems(menuItems?.slice(start,end));
-    },[menuItems]);
+    // useEffect(()=>{
+    //     const start = currentPageNo*10 - 10;
+    //     const end = currentPageNo===totalItemsGroup ? totalItems : currentPageNo*10;
+    //     setCurrentItems(menuItems?.slice(start,end));
+    // },[menuItems]);
 
     const handleEdit = () =>{
         setBtnState({...btnState,editItem:true});
@@ -37,36 +35,6 @@ const MenuItems = ({btnState,setBtnState}) => {
         setBtnState({...btnState,addItem:true})
     }
 
-    const handleArrowClick = (side)=>{
-        let newPageNo;
-        if(side==='left'){
-            newPageNo = currentPageNo - 1;
-        }
-        else{
-            newPageNo = currentPageNo + 1;
-        }
-        setCurrentPageNo(newPageNo);
-        const start = newPageNo*10 - 10;
-        const end = newPageNo===totalItemsGroup ? totalItems : newPageNo*10;
-        console.log("start",start);
-        console.log("end",end);
-        setCurrentItems(menuItems.slice(start,end));
-        const to = document.getElementById('menu-item');
-        to.scrollIntoView({behavior:"smooth"})
-    }
-
-    const handleNumberClick = (no)=>{
-        const newPageNo = no;
-        setCurrentPageNo(newPageNo);
-        const start = newPageNo*10 - 10;
-        const end = newPageNo===totalItemsGroup ? totalItems : newPageNo*10;
-        console.log("start",start);
-        console.log("end",end);
-        setCurrentItems(menuItems.slice(start,end));
-        const to = document.getElementById('menu-item');
-        to.scrollIntoView({behavior:"smooth"})
-    }
-    
     return (
         <div id="menu-item" className="bg-[#222831] w-[90%] sm:w-[80%] lg:w-[70%] h-fit ml-[5%] sm:ml-[10%] lg:ml-[15%] pb-12 px-4 md:px-5 lg:px-10 py-5 sm:py-7 lg:py-10 mt-14 rounded-md sm:rounded-lg md:rounded-xl relative">
             <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold">Menu</h1>
@@ -86,18 +54,7 @@ const MenuItems = ({btnState,setBtnState}) => {
                                 <ItemCardOwner item={item} editBtnState={btnState.editItem} setShowEditForm={setShowEditForm} setEditItemDetails={setEditItemDetails}/>
                             </span>)}
                         </div>
-                        <div className="flex gap-2 mt-10">
-                            {currentPageNo!==1 && <button type="button" onClick={()=>{handleArrowClick('left')}}>
-                                <CiCircleChevLeft size={20}/>
-                            </button>}
-                            {numbers.map(no => <span key={no} className={`cursor-pointer ${currentPageNo===no? 'text-[#76ABAE]' : ''}`}
-                            onClick={()=>{handleNumberClick(no)}}>
-                                {no}
-                            </span>)}
-                            {currentPageNo!==totalItemsGroup && <button type="button" onClick={()=>{handleArrowClick('right')}}>
-                                <CiCircleChevRight size={20}/>
-                            </button>}
-                        </div>
+                        <Pagination allItems={menuItems} itemsPerPage={10} setCurrentItems={setCurrentItems} scrollTo={"menu-item"}/>
                     </div>) 
                 : <AddForm btnState={btnState} setBtnState={setBtnState} shopid={canteenDetails._id}/>}
             </div>
