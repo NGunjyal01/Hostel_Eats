@@ -11,6 +11,7 @@ import { searchItem, getPopularDishes, getCanteenPageDetails, addCartItem, remov
 import { useNavigate } from 'react-router-dom';
 import { setCanteensData } from '../../slices/canteenPageSlice';
 import DishCard from './DishCard';
+import Pagination from '../../components/common/Pagination'
 // import { toggleFavouriteItem } from '../../services/favouriteAPI';
 
 const CustomPrevArrow = (props) => {
@@ -50,6 +51,7 @@ const Explore = () => {
     const [filteredCanteens, setFilteredCanteens] = useState([]);
     const [searchType, setSearchType] = useState('dishes');
     const [showModal, setShowModal] = useState(null);
+    const [currentItems, setCurrentItems] = useState([]);
     
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -62,7 +64,11 @@ const Explore = () => {
         const savedShowSearchOptions = localStorage.getItem('showSearchOptions');
 
         if (savedSearchInput) setSearchInput(savedSearchInput);
-        if (savedFilteredDishes) setFilteredDishes(JSON.parse(savedFilteredDishes));
+        if (savedFilteredDishes) {
+            const dishes = JSON.parse(savedFilteredDishes);
+            setFilteredDishes(dishes);
+            setCurrentItems(dishes.slice(0, 9)); // Initialize currentItems with first page items
+        }
         if (savedFilteredCanteens) setFilteredCanteens(JSON.parse(savedFilteredCanteens));
         if (savedShowSearchOptions) setShowSearchOptions(JSON.parse(savedShowSearchOptions));
     }, []);
@@ -201,7 +207,7 @@ const Explore = () => {
 
     return (
         <div className="bg-gradient-to-r from-black to-[#222831] min-h-screen p-6 text-white relative z-0">
-            <form onSubmit={handleSearchSubmit} className="mb-6 relative z-10 mt-12 pt-10 flex justify-center">
+            <form id="search-input" onSubmit={handleSearchSubmit} className="mb-6 relative z-10 mt-12 pt-10 flex justify-center">
                 <div className="relative w-6/12">
                     <input
                         type="text"
@@ -247,9 +253,14 @@ const Explore = () => {
                 <div className="w-6/12 mx-auto mb-10">
                     <h2 className="text-2xl font-bold mb-4">{searchType === 'dishes' ? 'Search Results for Dishes' : 'Search Results for Canteens'}</h2>
                     {searchType === 'dishes' ? (
+                        <>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredDishes.map(dish => <DishCard  key={dish.itemid} dish={dish} setShowModal={setShowModal} cartItemMap={cartItemMap} />)}
+                            {currentItems.map(dish => <DishCard key={dish.itemid} dish={dish} setShowModal={setShowModal} cartItemMap={cartItemMap} />)}
                         </div>
+                        <div className="flex justify-center mt-6">
+                            <Pagination allItems={filteredDishes} itemsPerPage={9} setCurrentItems={setCurrentItems} scrollTo="search-input" />
+                        </div>
+                        </>
                     ) : (
                         <div className="space-y-6">
                             {filteredCanteens.map(canteen => (
