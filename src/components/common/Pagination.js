@@ -28,7 +28,9 @@ const Pagination = ({allItems,itemsPerPage,setCurrentItems,scrollTo})=>{
         console.log("end",end);
         setCurrentItems(allItems.slice(start,end));
         const to = document.getElementById(scrollTo);
-        to.scrollIntoView({behavior:"smooth"});
+        if(to){
+            to.scrollIntoView({behavior:"smooth"});
+        }    
     }
 
     const handleNumberClick = (no)=>{
@@ -40,19 +42,23 @@ const Pagination = ({allItems,itemsPerPage,setCurrentItems,scrollTo})=>{
         console.log("end",end);
         setCurrentItems(allItems.slice(start,end));
         const to = document.getElementById(scrollTo);
-        to.scrollIntoView({behavior:"smooth"});
+        if(to){
+            to.scrollIntoView({behavior:"smooth"});
+        }  
     }
+
 
     return (                        
     <div className="flex gap-2 mt-10">
         {currentPageNo!==1 && <button type="button" onClick={()=>{handleArrowClick('left')}}>
             <CiCircleChevLeft size={20}/>
         </button>}
-        {numbers.map(no => <span key={no} className={`cursor-pointer ${currentPageNo===no? 'text-[#76ABAE]' : ''}`}
+        {numbers.map(no => <span key={no} className={`cursor-pointer px-2 py-1 rounded ${currentPageNo === no ? 'bg-[#76ABAE] text-white' : 'bg-gray-700 text-white'}`}
+        
         onClick={()=>{handleNumberClick(no)}}>
             {no}
         </span>)}
-        {currentPageNo!==totalPages && <button type="button" onClick={()=>{handleArrowClick('right')}}>
+        {currentPageNo!==totalPages && <button type="button" onClick={()=>{handleArrowClick('right')}} className="p-2">
             <CiCircleChevRight size={20}/>
         </button>}
     </div>);
