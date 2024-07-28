@@ -56,7 +56,7 @@ const UpdatePassword = () => {
     }
 
     return (
-        <div className="bg-[#222831] w-[80%] lg:w-[70%] h-fit px-4 md:px-5 lg:px-10 py-4 sm:py-5 md:py-7 lg:py-10 mt-10 rounded-md sm:rounded-lg md:rounded-xl relative">
+        <div className="bg-[#222831] w-[85%] lg:w-[70%] h-fit px-4 md:px-5 lg:px-10 py-4 sm:py-5 md:py-7 lg:py-10 mt-10 rounded-md sm:rounded-lg md:rounded-xl relative">
             <h1 className="text-lg">Update Password</h1>
             <form onSubmit={handleSubmit(handleOnSubmit)} className="grid grid-cols-12 lg:mt-5 mb-14 text-sm lg:text-base">
                 <div className="col-span-full md:col-span-6 flex flex-col mt-5 sm:mt-8 relative">

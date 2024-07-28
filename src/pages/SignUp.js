@@ -38,16 +38,20 @@ const SignUp = () => {
         setAccountType("Customer");
     }
 
+    const handleLogin = ()=>{
+        navigate('/login');
+    }
+
     const accountTypeInfo = [{id:1,name:"Customer",type:"Customer"},
         {id:2,name:"Owner",type:"Owner"}];
 
     return (
         <div className="bg-gradient-to-r from-black to-[#222831] h-fit text-white pt-[35%] sm:pt-[25%] md:pt-[17%] lg:pt-[14%] xl:pt-[10%] pb-28 pl-[7%] sm:pl-[17%] md:pl-[20%] lg:pl-[38%] xl:pl-[35%]">
-            <div className=" w-[90%] sm:w-[80%] md:w-[80%] lg:w-[75%] xl:w-[60%] flex flex-col sm:space-y-4"> 
-                <h1 className="sm:text-2xl md:text-3xl">Join Hostel Eats to {accountType==="Customer"?"Order Food":"Sell Food"}</h1>
-                <div className="bg-[#31363F] w-[95%] relative top-5 p-1 sm:p-2 rounded-lg sm:rounded-2xl text-sm md:text-base">
+            <div className="w-full px-2 sm:px-0 sm:w-[80%] md:w-[80%] lg:w-[75%] xl:w-[60%] flex flex-col sm:space-y-4"> 
+                <h1 className="text-lg sm:text-2xl md:text-3xl">Join Hostel Eats to {accountType==="Customer"?"Order Food":"Sell Food"}</h1>
+                <div className="bg-[#31363F] w-[95%] relative top-5 p-2 sm:p-2 rounded-lg sm:rounded-2xl text-sm md:text-base">
                     {accountTypeInfo.map(tab=>(
-                    <button key={tab.id} className={`${tab.type===accountType?'bg-[#76ABAE]':''} w-1/2 p-1 sm:p-2 rounded-lg sm:rounded-xl`}
+                    <button key={tab.id} className={`${tab.type===accountType?'bg-[#76ABAE]':''} w-1/2 p-1 sm:p-2 rounded-md sm:rounded-xl`}
                     onClick={()=>{handleTabClick(tab.type)}}>
                     {tab.name}</button>))}
                 </div>
@@ -108,6 +112,11 @@ const SignUp = () => {
                             Create Account
                         </button>
                 </form>
+            </div>
+            <div className="flex relative sm:hidden ml-12 mt-6 items-center">
+                <div className="size-3 border-t-2 border-l-2 -rotate-45"/>
+                <div className="w-14 border-t-2  -ml-3"/>
+                <button className="ml-4 text-sm" onClick={handleLogin}>Back To Login</button>
             </div>
         </div>
     )

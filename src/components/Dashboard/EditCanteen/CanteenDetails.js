@@ -51,7 +51,7 @@ const CanteenDetails = ({btnState,setBtnState}) => {
     }
 
     return (
-        <div className="bg-[#222831] w-[90%] sm:w-[80%] lg:w-[70%] h-fit pb-12 px-4 md:px-5 lg:px-10 py-5 sm:py-7 lg:py-10 mt-14 rounded-md sm:rounded-lg md:rounded-xl relative">
+        <div className="bg-[#222831] w-[85%] sm:w-[80%] lg:w-[70%] h-fit pb-12 px-4 md:px-5 lg:px-10 py-5 sm:py-7 lg:py-10 mt-7 sm:mt-14 rounded-md sm:rounded-lg md:rounded-xl relative">
             <h1 className="absolute -mt-[22%] sm:-mt-[17%] md:-mt-[15%] lg:-mt-[17%] xl:-mt-[12%] -ml-4 sm:-ml-3 md:-ml-4 lg:-ml-9 text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold">Edit Canteen</h1>
             <h1 className="sm:text-lg lg:text-xl font-semibold">Canteen Details</h1>
             <form className="grid grid-cols-12 mt-5 mb-8 sm:mb-16 md:mb-0" onSubmit={handleSubmit(handleOnSubmit)}>

@@ -16,19 +16,10 @@ const AnimatedHamburgerButton = () => {
 
   let options = [{name:'Home',to:'/'},{name:'About Us',to:'/about-us'},{name:'Explore',to:'/explore'},{name:'Add Canteen',to:'/add-canteen'}];
   if(user?.accountType==="Customer"){
-      options.push({name:'Profile',to:'/dashboard/my-profile'});
-      options.push({name:"Orders",to:'/dashboard/orders'});
-      options.push({name:"Cart",to:'/dashboard/cart'});
-      options.push({name:"Favourites",to:'/dashboard/favourites'});
-      options = options.filter(tab => tab.name!=="Add Canteen");
-      options.push({name:"Settings",to:'/dashboard/settings'});
+    options = options.filter(tab => tab.name!=="Add Canteen");
   }
   else if(user?.accountType==="Owner"){
-      options.push({name:'Profile',to:'/dashboard/my-profile'});
-      options.push({name:"Add Canteen",to:'/dashboard/add_canteeno'});
-      options.push({name:"View Canteen",to:'/dashboard/view_canteen'});
-      options = options.filter(tab => tab.name!=="Explore");
-      options.push({name:"Settings",to:'/dashboard/settings'});
+    options = options.filter(tab => tab.name!=="Explore");
   }
   
 
@@ -59,7 +50,7 @@ const AnimatedHamburgerButton = () => {
   };
 
   return (
-    <div className="fixed w-full -mt-10">
+    <div className="fixed w-full -mt-10 z-10">
       <button onClick={handleToggle} className="absolute left-8 top-10 z-50 ">
         <RxHamburgerMenu size={30} className={`absolute transition-transform duration-300 ease-in-out ${
           isOpen ? "opacity-0 rotate-180" : "opacity-100 rotate-0"}`}/>

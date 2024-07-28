@@ -10,6 +10,7 @@ import ConfirmationalModal from "./ConfirmationalModal";
 import { FaCartShopping } from "react-icons/fa6";
 import { MdNotifications, MdNotificationsActive } from "react-icons/md";
 import AnimatedHamburgerButton from "./AnimatedHamburgerButton";
+import UserIcon from "./UserIcon";
 
 const Header = () => {
 
@@ -88,6 +89,7 @@ const Header = () => {
             {confirmationalModal && <ConfirmationalModal modalData={confirmationalModal}/>}
             <div className="sm:hidden flex absolute w-full">
                 <AnimatedHamburgerButton />
+                <UserIcon/>
             </div>
         </div>
     )

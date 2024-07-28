@@ -67,8 +67,8 @@ const View_Canteen = () => {
             </tr>}
           </tbody>
         </table>
-        {showComfirmationalModal && <div className="relative -ml-[135%]"><ConfirmationalModal modalData={showComfirmationalModal}/></div>}
-        <div className="lg:hidden w-[80%] sm:w-[70%] mt-10">
+        {showComfirmationalModal && <div className="absolute w-full sm:-ml-[60%] md:-ml-[50%] lg:-ml-[40%] xl:-ml-[30%] "><ConfirmationalModal modalData={showComfirmationalModal}/></div>}
+        <div className="lg:hidden w-[80%] sm:w-[70%] mt-5 sm:mt-10">
           <h1 className="absolute -mt-[12%] sm:-mt-[8%] md:-mt-[7%] text-lg sm:text-xl md:text-2xl font-semibold">My Canteens</h1>
           {allCanteen ? allCanteen.map(({id,canteenName,openingTime,closingTime,totalRevenue},index) => 
             <div key={id} className={`bg-[#222831] h-fit px-3 sm:px-5 py-4 sm:py-5 relative border-b-2 border-x-2 text-sm md:text-base ${index%2?"bg-[#222831]":"bg-[#31363F]"} ${index===0?'border-t-2':''}`}>

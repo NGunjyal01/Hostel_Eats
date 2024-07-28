@@ -20,8 +20,12 @@ const LogIn = () => {
         login(data,navigate,dispatch);
     }
 
+    const handleSignUp = ()=>{
+        navigate('/signup');
+    }
+
     return (
-        <div className="bg-gradient-to-r from-black to-[#222831] h-screen text-white pt-[45%] sm:pt-[27%] md:pt-[20%] lg:pt-[15%] xl:pt-[12%] w-full">
+        <div className="bg-gradient-to-r from-black to-[#222831] h-screen text-white pt-[40%] sm:pt-[27%] md:pt-[20%] lg:pt-[15%] xl:pt-[12%] w-full">
             <form onSubmit={handleSubmit(handleLoginBtn)} className="w-full pl-[7%] sm:pl-[15%] md:pl-[20%] lg:pl-[42%] xl:pl-[38%] text-sm md:text-base">
                 <h1 className="text-2xl md:text-4xl">Welcome Back</h1>
                 <div className="w-[95%] sm:w-[60%] md:w-[55%] xl:w-[45%] relative pb-6 flex flex-col mt-10">
@@ -43,6 +47,7 @@ const LogIn = () => {
                     </span>)}
                 </div>
                 <button className="bg-[#76ABAE] w-[95%] sm:w-[60%] md:w-[55%] xl:w-[45%] py-3 rounded-lg mt-12" type="submit">LogIn</button>
+                <h1 className="relative sm:hidden ml-12 mt-5">New to Hostel Eats? <span  onClick={handleSignUp}>SignUp Now</span></h1>
             </form>
         </div>
     )   

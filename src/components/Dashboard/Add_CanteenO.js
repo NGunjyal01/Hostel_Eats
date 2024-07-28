@@ -27,7 +27,7 @@ const Add_CanteenO = () => {
   };
 
   return (
-    <form className="bg-[#222831] w-[80%] lg:w-[70%] h-fit ml-[10%] lg:ml-[15%] px-4 md:px-5 lg:px-10 py-4 sm:py-5 md:py-7 lg:py-10 mt-10 rounded-md sm:rounded-lg md:rounded-xl relative" onSubmit={handleSubmit(handleOnSubmit)}>
+    <form className="bg-[#222831] w-[80%] lg:w-[70%] h-fit ml-[10%] lg:ml-[15%] px-4 md:px-5 lg:px-10 py-4 sm:py-5 md:py-7 lg:py-10 mt-7 sm:mt-10 rounded-md sm:rounded-lg md:rounded-xl relative" onSubmit={handleSubmit(handleOnSubmit)}>
       <h1 className="absolute -mt-[22%] sm:-mt-[18%] md:-mt-[16%] lg:-mt-[14%] xl:-mt-[12%] -ml-3 md:-ml-4 lg:-ml-9 text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold">Add Canteen</h1>
       <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold">Canteen Information</h1>
       <div className="grid grid-cols-12 text-sm lg:text-base">

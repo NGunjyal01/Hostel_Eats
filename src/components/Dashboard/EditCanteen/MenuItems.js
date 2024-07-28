@@ -36,7 +36,7 @@ const MenuItems = ({btnState,setBtnState}) => {
     }
 
     return (
-        <div id="menu-item" className="bg-[#222831] w-[90%] sm:w-[80%] lg:w-[70%] h-fit ml-[5%] sm:ml-[10%] lg:ml-[15%] pb-12 px-4 md:px-5 lg:px-10 py-5 sm:py-7 lg:py-10 mt-14 rounded-md sm:rounded-lg md:rounded-xl relative">
+        <div id="menu-item" className="bg-[#222831] w-[85%] sm:w-[80%] lg:w-[70%] h-fit ml-[8%] sm:ml-[10%] lg:ml-[15%] pb-12 px-4 md:px-5 lg:px-10 py-5 sm:py-7 lg:py-10 mt-14 rounded-md sm:rounded-lg md:rounded-xl relative">
             <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold">Menu</h1>
             {!showEditForm && btnState.editItem && <div className="absolute w-full text-center mt-2 sm:mt-0 -ml-5 sm:-ml-10">
                 <h1 className="lg:text-xl font-bold">Select Any Item</h1>

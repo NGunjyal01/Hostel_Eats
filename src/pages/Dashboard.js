@@ -52,7 +52,7 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="relative flex w-full min-h-screen bg-gradient-to-r from-black to-[#222831] text-white pb-20">
+        <div className="relative flex flex-col sm:flex-row w-full min-h-screen bg-gradient-to-r from-black to-[#222831] text-white pb-20">
             <div className="hidden sm:flex flex-col space-y-5 sm:pt-[25%] md:pt-[20%] lg:pt-[17%] xl:pt-[12%] pl-10 sm:w-[35%] md:w-[27%] lg:w-[22%] xl:w-[17%] min-h-screen">
                 {/* Content for the left section */}
                 {sideTabs.map((tab,index)=> <motion.div className="relative" key={tab.name} initial="hidden" animate="visible" exit="exit" variants={linkVariants} onClick={()=>{handleSideTabClick(index)}}>
@@ -68,7 +68,14 @@ const Dashboard = () => {
                    <IoIosLogOut className="dashboardLogo mx-4"/> <span>Logout</span>
                 </button>
             </div>
-            <div className="min-h-screen pt-[40%] sm:pt-[20%] md:pt-[17%] lg:pt-[13%] xl:pt-[10%] w-full">
+            <div className="flex sm:hidden mt-[35%] gap-3 px-5 mx-1 overflow-x-scroll whitespace-nowrap scrollbar-hide">
+                {sideTabs.map((tab,index)=>
+                    <NavLink to={tab.to} className={({isActive})=>`flex items-center text-sm
+                    py-3 ${isActive?'text-black bg-[#76ABAE] rounded-lg':''}`}>  
+                        {tab.icon}<span className="mr-4">{tab.name}</span>
+                    </NavLink>)}
+            </div>
+            <div className="min-h-screen pt-[14%] sm:pt-[20%] md:pt-[17%] lg:pt-[13%] xl:pt-[10%] w-full">
                 {/* Content for the right section */}
                 <Outlet/>
             </div>
