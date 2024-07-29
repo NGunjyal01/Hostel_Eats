@@ -457,3 +457,51 @@ exports.getOrders=async(req,res)=>{
     })
   }
 }
+
+//Accept or Reject Order
+
+exports.acceptRejectOrder=async(req,res) =>{
+  try{
+    const { orderId, status } = req.body;
+    // Validate status
+    const validStatuses = ["preparing", "rejected"];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status",
+      });
+    }
+    // Find and update order
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    order.status = status;
+    await order.save();
+    // Emit status update to customer
+    const io = req.app.get("io");
+    io.to(order.userid.toString()).emit("orderStatusUpdate", {
+      orderId,
+      status,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `Order ${
+        status === "preparing" ? "accepted" : "rejected"
+      } successfully`,
+      order,
+    });
+  }
+  catch(error){
+    console.log(error);
+    res.status(400).json({
+      success:false,
+      message:"Something Went Wrong",
+    })
+  }
+}

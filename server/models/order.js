@@ -6,6 +6,11 @@ const orderSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  merchantid:{
+      type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    required: true,
+  },
   shopid:{
       type: mongoose.Schema.Types.ObjectId,
     ref: "Merchant",
@@ -38,10 +43,14 @@ const orderSchema = new mongoose.Schema({
   razorpaySignature: {
     type: String,
   },
+  paymentstatus:{
+      type:String,
+      enum:["paid","cash"],
+  },
   status: {
     type: String,
-    enum: ["preparing", "paid", "failed"],
-    default: "paid",
+    enum: ["preparing", "pending","prepared","completed", "failed"],
+    default: "pending",
   },
   createdAt: { type: Date },
 });

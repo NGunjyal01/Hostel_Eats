@@ -70,14 +70,22 @@ exports.orderVerify = async(req,res)=>{
       const cart = await Cart.findOne({ userid: payload.id }).populate(
         "items.item"
       );
+      //console.log(cart);
+
+      const merchantId=await Merchant.findById({_id:cart.items[0].item.shopid});
+      const merchant=await User.findOne({email:merchantId.ownerEmail});
+      console.log(merchant);
       console.log(cart.items);
+      
+           
       const newOrder = new Order({
         userid: payload.id,
+        merchantid:merchant._id,
         shopid: cart.items[0].item.shopid,
         items: cart.items,
         totalAmount: cart.totalPrice,
         razorpayOrderId: razorpay_order_id,
-        status: "paid",
+        paymentstatus: "paid",
       });
       //database work and cart empty etc.....
 
@@ -106,7 +114,7 @@ exports.orderVerify = async(req,res)=>{
 
       // Emit the order to the owner's room
       const io=req.app.get('io')
-      const ownerId = newOrder.shopid;  
+      const ownerId = newOrder.merchantid;  
       const customerId=newOrder.userid;
       console.log("SHop ki id",ownerId);
       console.log("Ab yaha se owner ke page mai jayega");    
