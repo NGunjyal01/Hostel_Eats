@@ -405,7 +405,7 @@ exports.getOrderDetails = async (req, res) => {
         select: "_id shopid name description price category imageUrl",
       })
       .sort({ createdAt: -1 })
-      .select("_id userid items totalAmount status createdAt");
+      .select("_id userid items totalAmount paymentstatus status createdAt");
 
     if (orders.length === 0) {
       return res.status(200).json({
