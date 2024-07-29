@@ -74,8 +74,8 @@ exports.orderVerify = async(req,res)=>{
 
       const merchantId=await Merchant.findById({_id:cart.items[0].item.shopid});
       const merchant=await User.findOne({email:merchantId.ownerEmail});
-      console.log(merchant);
-      console.log(cart.items);
+      // console.log(merchant);
+      // console.log(cart.items);
       
            
       const newOrder = new Order({
@@ -116,10 +116,10 @@ exports.orderVerify = async(req,res)=>{
       const io=req.app.get('io')
       const ownerId = newOrder.merchantid;  
       const customerId=newOrder.userid;
-      console.log("SHop ki id",ownerId);
-      console.log("Ab yaha se owner ke page mai jayega");    
+     // console.log("SHop ki id",ownerId);
+      // console.log("Ab yaha se owner ke page mai jayega");    
       io.to(ownerId.toString()).emit("newOrder", newOrder);
-        console.log("Ab yaha se custoner ke page mai jayega");
+        // console.log("Ab yaha se custoner ke page mai jayega");
       io.to(customerId.toString()).emit("orderUpdate", newOrder);
 
       res.status(200).json({
