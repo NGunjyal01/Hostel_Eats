@@ -1,34 +1,25 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { io } from "socket.io-client";
 import { getOrderHistory } from "../../services/customerAPI";
 import { formatDate } from "../../utils/formatDate";
 import { formatTime } from "../../utils/formatTime";
 import Pagination from "../common/Pagination";
 import Spinner from "../common/Spinner";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL_LOCAL;
-
-const socket = io.connect(BASE_URL);
-
 const Orders = () => {
-    const user = useSelector(store => store.user);
-    const orderHistory = useSelector(store => store.orderHistory?.customer);
+    
+    const orderHistory = useSelector(store => store.orderHistory);
     const [currentItems,setCurrentItems] = useState(null);
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        socket.emit('joinRoom',user._id);
-        socket.on('orderUpdate',(order)=>{
-            console.log("socket order ",order);
-        });
         getOrderHistory(dispatch);
     },[]);
 
     return (
         <div className="flex flex-col items-center relative">
             {!orderHistory ? <div className="mt-[12%] -ml-[15%]"><Spinner/></div>
-            :<div className="w-[85%] flex flex-col items-center" id="orderHistory">
+            :<div className="w-full flex flex-col items-center" id="orderHistory">
                 <h1 className="absolute -ml-2 sm:-ml-3 md:-ml-5 lg:-ml-[78%] text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold">Order History</h1>
                 <div className="grid grid-cols-2 w-full mt-20">
                     {currentItems?.map( (order) =>{

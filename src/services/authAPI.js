@@ -72,6 +72,7 @@ export function logout(navigate,dispatch){
     localStorage.removeItem("currTab");
     localStorage.removeItem("prevTab");
     localStorage.removeItem('cart');
+    localStorage.removeItem('orderHistory');
     toast.success("Logged Out");
     navigate('/');
 }

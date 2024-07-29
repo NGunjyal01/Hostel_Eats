@@ -4,7 +4,7 @@ import { GET_POPULAR_DISHES_API } from './apis';
 import toast from 'react-hot-toast';
 import { resetCartItems, setCartItem } from '../slices/cartSlice';
 import {setFavouriteItems, resetFavouriteItems} from '../slices/favouritesSlice'
-import { setCustomerOrderHistory } from '../slices/orderHistorySlice';
+import { setOrderHistory } from '../slices/orderHistorySlice';
 
 const config = { headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true };
 
@@ -171,7 +171,7 @@ export async function getOrderHistory(dispatch){
     try{
         const response = await axios.get(GET_ORDER_HISTROY_API,config);
         console.log("GET ORDER HISTORY API RESPONSE.......................",response);
-        dispatch(setCustomerOrderHistory(response.data.data));
+        dispatch(setOrderHistory(response.data.data));
     }
     catch(error){
         console.log("ERROR DURING GET ORDEER HISTORY API.....................",error);

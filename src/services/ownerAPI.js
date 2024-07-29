@@ -2,9 +2,9 @@ import toast from "react-hot-toast";
 import { ownerEndpoints } from "./apis";
 import axios from "axios";
 import { setAllCanteen, setCanteenDetails } from "../slices/canteenSlice";
-import { setOwnerOrderHistory } from "../slices/orderHistorySlice";
+import { setOrderHistory } from "../slices/orderHistorySlice";
 
-const { CREATE_CANTEEN_API,GET_ALL_CANTEEN_API,GET_CANTEEN_DETAILS_API,CREATE_ITEM_API,EDIT_CANTEEN_API,EDIT_ITEM_API,DELETE_CANTEEN_API,DELETE_ITEM_API,GET_ORDER_HISTROY_API } = ownerEndpoints;
+const { CREATE_CANTEEN_API,GET_ALL_CANTEEN_API,GET_CANTEEN_DETAILS_API,CREATE_ITEM_API,EDIT_CANTEEN_API,EDIT_ITEM_API,DELETE_CANTEEN_API,DELETE_ITEM_API,GET_ORDER_HISTROY_API,ACCEPT_ORDER } = ownerEndpoints;
 const config = {headers:{'Content-Type':'multipart/form-data'},withCredentials:true};
 
 export async function createCanteen(formData,navigate){
@@ -205,9 +205,20 @@ export async function getOrderHistory(shopid,dispatch){
     try{
         const response = await axios.post(GET_ORDER_HISTROY_API,shopid,config);
         console.log("ORDER HISTORY API RESPONSE...................",response);
-        dispatch(setOwnerOrderHistory(response.data.data));
+        dispatch(setOrderHistory(response.data.data));
+        localStorage.setItem('orderHistory',JSON.stringify(response.data.data));
     }
     catch(error){
         console.log("ERROR DURING ORDER HISTORY API RESPONSE................",error);
+    }
+}
+
+export async function acceptOrder(formData){
+    try{
+        const response = await axios.post(ACCEPT_ORDER,formData,config);
+        console.log("ACCEPT ORDER API RESPONSE..................",response);
+    }
+    catch(error){
+        console.log("ACCEPT API ERROR..................",error);
     }
 }

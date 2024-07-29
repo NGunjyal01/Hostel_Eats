@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { logout } from "../../services/authAPI";
 import { AnimatePresence, motion } from "framer-motion";
 import Tab from "./Tab";
@@ -11,17 +11,38 @@ import { FaCartShopping } from "react-icons/fa6";
 import { MdNotifications, MdNotificationsActive } from "react-icons/md";
 import AnimatedHamburgerButton from "./AnimatedHamburgerButton";
 import UserIcon from "./UserIcon";
+import { io } from "socket.io-client";
+import { setOrderHistory } from "../../slices/orderHistorySlice";
+
+const BASE_URL = process.env.REACT_APP_BASE_URL_LOCAL;
+const socket = io.connect(BASE_URL);
 
 const Header = () => {
 
     const user = useSelector(store => store.user);
     const cart = useSelector(store => store.cart);
+    const orderHistory = useSelector(store => store.orderHistory);
     const [confirmationalModal,setConfirmationalModal] = useState(null);
     const {currTab} = useSelector(store => store.tabInfo);
     const [showDropDownMenu,setShowDropDownMenu] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let tabs = [{name:'Home',to:'/'},{name:'About Us',to:'/about-us'},{name:'Explore',to:'/explore'},{name:'Add Canteen',to:'/add-canteen'}]
+
+    useEffect(()=>{
+        if(user){
+            socket.emit('joinRoom',user._id);
+            socket.on("newOrder", (order) => {
+                //for owner
+                dispatch(setOrderHistory(orderHistory?[order,...orderHistory]:null))
+            });
+            socket.on('orderUpdate',(order)=>{
+                //for customer
+                console.log("socket order ",order);
+            });
+        }
+    },[user]);
+    
     const handleUserIconClick = ()=>{
         navigate('/dashboard/my-profile');
     }
