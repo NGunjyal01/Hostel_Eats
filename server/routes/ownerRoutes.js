@@ -23,7 +23,7 @@ ownerRouter.post("/deleteCanteen",deleteCanteen);
 ownerRouter.post("/getOrderHistory",getOrders);
 
 
-//After Order Part
+//After Order process
 ownerRouter.post("/order/status",ownerCheck,acceptRejectOrder);
 
 module.exports=ownerRouter;

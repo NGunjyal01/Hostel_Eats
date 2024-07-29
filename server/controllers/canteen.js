@@ -462,19 +462,19 @@ exports.getOrders=async(req,res)=>{
 
 exports.acceptRejectOrder=async(req,res) =>{
   try{
-    const { orderId, status } = req.body;
+    const { orderid, status } = req.body;
     // Validate status
     const validStatuses = ["preparing", "rejected"];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid status",
+        message: "Invalid status it must be preparing or rejected",
       });
     }
     // Find and update order
-    const order = await Order.findById(orderId);
+    const order = await Order.findById({_id:orderid});
     if (!order) {
-      return res.status(404).json({
+      return res.status(200).json({
         success: false,
         message: "Order not found",
       });
@@ -485,16 +485,18 @@ exports.acceptRejectOrder=async(req,res) =>{
     // Emit status update to customer
     const io = req.app.get("io");
     io.to(order.userid.toString()).emit("orderStatusUpdate", {
-      orderId,
       status,
     });
+   io.to(order.shopid.toString()).emit("orderStatusUpdate", {
+     status,
+   });
 
     res.status(200).json({
       success: true,
       message: `Order ${
         status === "preparing" ? "accepted" : "rejected"
       } successfully`,
-      order,
+      data:order,
     });
   }
   catch(error){
