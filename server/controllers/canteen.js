@@ -485,11 +485,10 @@ exports.acceptRejectOrder=async(req,res) =>{
     // Emit status update to customer
     const io = req.app.get("io");
     io.to(order.userid.toString()).emit("orderStatusUpdate", {
+      orderid,
       status,
     });
-   io.to(order.shopid.toString()).emit("orderStatusUpdate", {
-     status,
-   });
+  
 
     res.status(200).json({
       success: true,
