@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { userSignup } = require("../controllers/signup"); //For both customer and owner
-const {userLogin, getPopularDishes, forgotPassword, verifyOtp}=require("../controllers/login");
+const {userLogin, getPopularDishes, forgotPassword, verifyOtp,passwordReset}=require("../controllers/login");
 const {auth,isCustomer,isOwner}=require("../middlewares/auth");
 
 const {updateDisplayPicture, updateProfile,updateEmail,updatePassword}=require("../controllers/profileSettings");
@@ -18,6 +18,8 @@ router.get("/getPopularDishes",getPopularDishes)
 router.post("/forgetPassword",forgotPassword);
 //Verify OTP
 router.post("/verifyOtp",verifyOtp);
+//password Reset
+router.post("/passwordReset", passwordReset);
 
 
 
