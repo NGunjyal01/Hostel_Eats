@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     email: '',
+    canProceed: false,
 };
 
 const emailSlice = createSlice({
@@ -11,11 +12,14 @@ const emailSlice = createSlice({
         setEmail: (state, action) => {
             state.email = action.payload;
         },
+        setCanProceed: (state, action) => {
+            state.canProceed = action.payload;
+        },
         clearEmail: (state) => {
             state.email = '';
         },
     },
 });
 
-export const { setEmail, clearEmail } = emailSlice.actions;
+export const { setEmail, setCanProceed, clearEmail } = emailSlice.actions;
 export default emailSlice.reducer;

@@ -3,13 +3,15 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { resetPassword } from "../services/authAPI";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { clearEmail } from "../slices/emailSlice";
 
 const ResetPassword = () => {
     const { register, handleSubmit, formState: { errors }, watch } = useForm();
     const email=useSelector((state)=>state.email.email)
     const [showPassword, setShowPassword] = useState({ newPassword: false, confirmPassword: false });
     const navigate = useNavigate();
+    const dispatch=useDispatch();
 
     const handleReset = (data) => {
         console.log("email=====>",email);
@@ -22,6 +24,7 @@ const ResetPassword = () => {
         }
         resetPassword(resetPassData, navigate);
         console.log("object======>",resetPassData);
+        dispatch(clearEmail());
     }
 
     const handleEyeBtnClick = (field) => {
