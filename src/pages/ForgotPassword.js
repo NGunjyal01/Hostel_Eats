@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { forgotPassword } from "../services/authAPI";
 import { useDispatch } from "react-redux";
-import { setEmail } from "../slices/emailSlice";
+import { setEmail,setCanProceed } from "../slices/emailSlice";
 
 const ForgotPassword = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -11,6 +11,7 @@ const ForgotPassword = () => {
 
     const handleNext = (data) => {
         dispatch(setEmail(data.email));
+        dispatch(setCanProceed(true));
         forgotPassword(data.email, navigate);
     }
 

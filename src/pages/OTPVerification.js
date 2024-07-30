@@ -29,6 +29,9 @@ const OTPVerification = () => {
             otp: data.otp
         };
         verifyOtp(otpData, navigate);
+        console.log("email=======>",email);
+        console.log("otp=======>",data.otp);
+        console.log("object=======>",otpData);
     }
 
     const handleResendOTP = () => {
