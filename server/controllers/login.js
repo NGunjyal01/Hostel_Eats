@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("../models/user");
+const Merchant=require("../models/merchant");
 const Item=require("../models/item");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -268,6 +269,46 @@ const reversedDate = `${day}-${month}-${year}`;
           message: "Password reset successfully",
         });
   }catch(error){
+    console.log(error);
+    res.status(400).json({
+      success:false,
+      message:"Something Went Wrong",
+    })
+  }
+}
+
+//popular Canteens
+exports.popularCanteens=async(req,res)=>{
+  try{
+    const topCanteens = await Merchant.find({ totalRevenue: { $gt: 0 } })
+      .sort({ totalRevenue: -1 })
+      .limit(10)
+      .select(
+        "_id canteenName canteenContact address ownerContact ownerName openingTime closingTime"
+      )
+      .populate({ path: "menuitems", select: "imageUrl" });
+
+       const result=topCanteens.map(canteen=>{
+        const firstImageUrl=canteen.menuitems.length>0 ? canteen.menuitems[0].imageUrl : null;
+        return {
+          _id: canteen._id,
+          canteenName: canteen.canteenName,
+          canteenContact: canteen.canteenContact,
+          address: canteen.address,
+          ownerContact: canteen.ownerContact,
+          ownerName: canteen.ownerName,
+          openingTime: canteen.openingTime,
+          closingTime: canteen.closingTime,
+          imageUrl: firstImageUrl,
+        };
+       })
+    // Send the response with the top canteens
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  }
+  catch(error){
     console.log(error);
     res.status(400).json({
       success:false,
