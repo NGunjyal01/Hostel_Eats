@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { userSignup } = require("../controllers/signup"); //For both customer and owner
-const {userLogin, getPopularDishes}=require("../controllers/login");
+const {userLogin, getPopularDishes, forgotPassword, verifyOtp}=require("../controllers/login");
 const {auth,isCustomer,isOwner}=require("../middlewares/auth");
 
 const {updateDisplayPicture, updateProfile,updateEmail,updatePassword}=require("../controllers/profileSettings");
@@ -14,7 +14,10 @@ router.post("/signup", userSignup);
 router.post("/login",userLogin);
 //popular dishes
 router.get("/getPopularDishes",getPopularDishes)
-
+//forget Password
+router.post("/forgetPassword",forgotPassword);
+//Verify OTP
+router.post("/verifyOtp",verifyOtp);
 
 
 
