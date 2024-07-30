@@ -21,6 +21,9 @@ import Edit_Canteen from './components/Dashboard/EditCanteen/Edit_Canteen';
 import Explore from './pages/Explore/Explore';
 import CanteenPage from './pages/CanteenPage'; // Import CanteenPage
 import CanteenDashboard from './components/Dashboard/CanteenDashboard';
+import ForgotPassword from './pages/ForgotPassword';
+import OTPVerification from './pages/OTPVerification';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
   const user = useSelector(store => store.user);
@@ -33,6 +36,9 @@ function App() {
         <Route path='add-canteen' element={<AddCanteen/>}/>
         <Route path='explore' element={<Explore/>}/>
         <Route path='login' element={<OpenRoute><LogIn/></OpenRoute>}/>
+        <Route path='forgot-password' element={<OpenRoute><ForgotPassword/></OpenRoute>}/>
+        <Route path='otp-verification' element={<OpenRoute><OTPVerification/></OpenRoute>}/>
+        <Route path='reset-password' element={<OpenRoute><ResetPassword/></OpenRoute>}/>
         <Route path='signup' element={<OpenRoute><SignUp/></OpenRoute>}/>
         {/* <Route path="/register-canteen" element={<RegisterCanteen />} /> */}
         <Route element={<PrivateRoute><Dashboard/></PrivateRoute>}>

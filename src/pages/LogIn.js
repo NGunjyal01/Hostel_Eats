@@ -24,6 +24,11 @@ const LogIn = () => {
         navigate('/signup');
     }
 
+    const handleForgotPassword = () => {
+        navigate('/forgot-password');
+    }
+    
+
     return (
         <div className="bg-gradient-to-r from-black to-[#222831] h-screen text-white pt-[40%] sm:pt-[27%] md:pt-[20%] lg:pt-[15%] xl:pt-[12%] w-full">
             <form onSubmit={handleSubmit(handleLoginBtn)} className="w-full pl-[7%] sm:pl-[15%] md:pl-[20%] lg:pl-[42%] xl:pl-[38%] text-sm md:text-base">
@@ -41,7 +46,7 @@ const LogIn = () => {
                     <input type={!showPassword?"password":"text"} id="password" name="password" placeholder="Enter Password" className="bg-[#31363F] w-full px-3 py-4 rounded-lg mt-2"
                     {...register('password',{required:{value:true,message:"Please Enter Password"}})}/>
                     <button className="absolute  bottom-11 right-4" type="button" onClick={handleEyeBtnClick}>{!showPassword?<IoEye/>:<IoEyeOff/>}</button>
-                    <button className="absolute -bottom-1 right-1 w-fit text-[0.7rem] sm:text-sm">Forget Password</button>
+                    <button onClick={handleForgotPassword} className="absolute -bottom-1 right-1 w-fit text-[0.7rem] sm:text-sm">Forgot Password?</button>
                     {errors.password && ( <span className="absolute text-xs text-red-500 bottom-0 left-1">
                         {errors.password.message}
                     </span>)}
