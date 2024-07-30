@@ -9,6 +9,7 @@ const crypto=require("crypto");
 require("dotenv").config();
 const path = require("path");
 const fs = require("fs");
+const { reverse } = require("dns");
 
 
 exports.userLogin = async (req, res) => {
@@ -147,7 +148,8 @@ exports.forgotPassword =async(req,res)=>{
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Password Reset OTP",
-      html:html,
+      html: html,
+      replyTo: process.env.NO_REPLY_EMAIL,
     };
     await transporter.sendMail(mailOptions);
 
@@ -199,6 +201,75 @@ exports.verifyOtp= async(req,res) => {
   catch(error){
     console.log(error);
     res.status(200).json({
+      success:false,
+      message:"Something Went Wrong",
+    })
+  }
+}
+
+//Password Change
+exports.passwordReset=async(req,res)=>{
+  try{
+    const { email, password, confirmPassword } = req.body;
+    if (!email || !password || !confirmPassword) {
+      return res.status(200).json({
+        success: false,
+        message: "All Fields are Required",
+      });
+    }
+    if (password !== confirmPassword) {
+      res.status(200).json({
+        success: false,
+        message: "Both Passwords are not matched",
+      });
+    }
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update user's password
+    const existingUser=await User.findOneAndUpdate({ email }, { password: hashedPassword });
+
+    const expressTime = new Date();
+    const currentTime = new Date(
+      expressTime.getTime() - expressTime.getTimezoneOffset() * 60000
+    );
+const currentTimeISO = currentTime.toISOString();
+const [date, time] = currentTimeISO.split("T");
+const [year, month, day] = date.split("-");
+const reversedDate = `${day}-${month}-${year}`;
+    const templatePath = path.join(__dirname, "../templates/passwordResetTemplate.html");
+
+    let html = fs.readFileSync(templatePath, "utf8");
+      html = html.replace(
+       "{{user}}",
+      existingUser.firstName + " " + existingUser.lastName
+      );
+           html = html.replace( "{{date}}",reversedDate );
+
+      //Password Reset Mail
+        const transporter = nodemailer.createTransport({
+          service: "Gmail",
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+          },
+        });
+
+        const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: email,
+          subject: "Password Reset Successfully",
+          html: html,
+          replyTo: process.env.NO_REPLY_EMAIL,
+        };
+        await transporter.sendMail(mailOptions);
+     res.status(200).json({
+          success: true,
+          message: "Password reset successfully",
+        });
+  }catch(error){
+    console.log(error);
+    res.status(400).json({
       success:false,
       message:"Something Went Wrong",
     })
