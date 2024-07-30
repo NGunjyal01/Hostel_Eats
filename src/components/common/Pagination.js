@@ -24,8 +24,6 @@ const Pagination = ({allItems,itemsPerPage,setCurrentItems,scrollTo})=>{
         setCurrentPageNo(newPageNo);
         const start = newPageNo*itemsPerPage - itemsPerPage;
         const end = newPageNo===totalPages ? totalItems : newPageNo*itemsPerPage;
-        console.log("start",start);
-        console.log("end",end);
         setCurrentItems(allItems.slice(start,end));
         const to = document.getElementById(scrollTo);
         if(to){
@@ -38,8 +36,6 @@ const Pagination = ({allItems,itemsPerPage,setCurrentItems,scrollTo})=>{
         setCurrentPageNo(newPageNo);
         const start = newPageNo*itemsPerPage - itemsPerPage;
         const end = newPageNo===totalPages ? totalItems : newPageNo*itemsPerPage;
-        console.log("start",start);
-        console.log("end",end);
         setCurrentItems(allItems.slice(start,end));
         const to = document.getElementById(scrollTo);
         if(to){

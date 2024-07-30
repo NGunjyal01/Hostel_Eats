@@ -34,11 +34,18 @@ const Header = () => {
             socket.emit('joinRoom',user._id);
             socket.on("newOrder", (order) => {
                 //for owner
-                dispatch(setOrderHistory(orderHistory?[order,...orderHistory]:null))
+                dispatch(setOrderHistory([order,...orderHistory]));
+                localStorage.setItem('orderHistory',JSON.stringify([order,...orderHistory]));
             });
             socket.on('orderUpdate',(order)=>{
                 //for customer
-                console.log("socket order ",order);
+                // dispatch(setOrderHistory([order,...orderHistory]));
+                // localStorage.setItem('orderHistory',JSON.stringify([order,...orderHistory]));
+            });
+            socket.on("orderStatusUpdate",(updatedOrder)=>{
+                const updatedOrderHistory = orderHistory.map((order) => order._id===updatedOrder.orderid ? {...order,status:"preparing"}: order);
+                dispatch(setOrderHistory(updatedOrderHistory));
+                localStorage.setItem('orderHistory',JSON.stringify(updatedOrderHistory));
             });
         }
     },[user]);

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const orderHistory = createSlice({
     name: 'orderHistory',
-    initialState: localStorage.getItem('orderHistory') ? JSON.parse(localStorage.getItem('orderHistory')) : null,
+    initialState: localStorage.getItem('orderHistory') ? JSON.parse(localStorage.getItem('orderHistory')) : [],
     reducers:{
         setOrderHistory : (state,action)=>{
             return action.payload;
