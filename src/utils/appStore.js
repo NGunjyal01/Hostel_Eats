@@ -6,6 +6,7 @@ import canteenPageReducer from "../slices/canteenPageSlice"
 import cartReducer from "../slices/cartSlice";
 import favouritesReducer from '../slices/favouritesSlice';
 import orderHistoryReducer from "../slices/orderHistorySlice";
+import emailReducer from '../slices/emailSlice'
 
 const appStore = configureStore({
     reducer:{
@@ -16,6 +17,7 @@ const appStore = configureStore({
         cart: cartReducer,
         favourites: favouritesReducer,
         orderHistory: orderHistoryReducer,
+        email: emailReducer,
     }
 });
 

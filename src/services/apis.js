@@ -11,6 +11,9 @@ console.log(BASE_URL)
 export const endpoints = {
     SIGNUP_API: BASE_URL + "/signup",
     LOGIN_API: BASE_URL + "/login",
+    FORGOT_PASSWORD_API: BASE_URL + "/forgetPassword",
+    VERIFY_OTP_API: BASE_URL + "/verifyotp",
+    RESET_PASSWORD_API: BASE_URL + "/passwordReset"
 }
 
 // Customer Emdpoints

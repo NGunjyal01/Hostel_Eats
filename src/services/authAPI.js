@@ -3,7 +3,7 @@ import toast from "react-hot-toast"
 import { endpoints } from "./apis";
 import { addUser, removeUser } from "../slices/userSlice";
 
-const { SIGNUP_API,LOGIN_API } = endpoints;
+const { SIGNUP_API,LOGIN_API,FORGOT_PASSWORD_API, VERIFY_OTP_API, RESET_PASSWORD_API } = endpoints;
 
 export async function signup (signUpData,navigate,dispatch){
     const toastId = toast.loading("Loading...");
@@ -63,6 +63,66 @@ export async function login(formData,navigate,dispatch){
         }
     }
     toast.dismiss(toastId);
+}
+
+export async function forgotPassword(email, navigate) {
+    const toastId = toast.loading("Loading...");
+    try {
+        const response = await axios.post(FORGOT_PASSWORD_API, { email });
+        console.log("FORGOT PASSWORD API RESPONSE............", response);
+        if (!response.data.success) {
+            toast.error(response.data.message);
+            throw new Error(response.data.message);
+        } else {
+            toast.success("OTP Sent to Email");
+            navigate('/otp-verification');
+        }
+    } catch (error) {
+        console.error("Error during forgot password: ", error);
+        toast.error(error.message || "Error requesting password reset");
+    } finally {
+        toast.dismiss(toastId);
+    }
+}
+
+export async function verifyOtp(otpData, navigate) {
+    const toastId = toast.loading("Verifying OTP...");
+    try {
+        const response = await axios.post(VERIFY_OTP_API, otpData);
+        console.log("VERIFY OTP API RESPONSE............", response);
+        if (!response.data.success) {
+            toast.error(response.data.message);
+            throw new Error(response.data.message);
+        } else {
+            toast.success("OTP Verified");
+            navigate('/reset-password');
+        }
+    } catch (error) {
+        console.error("Error during OTP verification: ", error);
+        toast.error(error.message || "OTP Verification Failed");
+    } finally {
+        toast.dismiss(toastId);
+    }
+}
+
+export async function resetPassword(resetData, navigate) {
+    const toastId = toast.loading("Resetting Password...");
+    try {
+        const response = await axios.post(RESET_PASSWORD_API, resetData);
+        console.log("PASSWORD RESET API RESPONSE............", response);
+        if (!response.data.success) {
+            toast.error(response.data.message);
+            throw new Error(response.data.message);
+        } else {
+            toast.success("Password reset successfully");
+            navigate('/login');
+        }
+    } catch (error) {
+        console.error("Error during password reset: ", error);
+        toast.error(error.message || "Password reset failed");
+    } finally {
+        toast.dismiss(toastId);
+    }
 }
 
 export function logout(navigate,dispatch){
