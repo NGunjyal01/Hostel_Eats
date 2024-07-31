@@ -11,7 +11,6 @@ import ScrollRestoration from './components/common/ScrollRestoration';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
     <Provider store={appStore}>
       <BrowserRouter>
         <App/>
@@ -19,7 +18,6 @@ root.render(
         <ScrollRestoration/>
       </BrowserRouter>
     </Provider>
-  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

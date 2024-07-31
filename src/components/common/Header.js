@@ -12,7 +12,7 @@ import { MdNotifications, MdNotificationsActive } from "react-icons/md";
 import AnimatedHamburgerButton from "./AnimatedHamburgerButton";
 import UserIcon from "./UserIcon";
 import { io } from "socket.io-client";
-import { setOrderHistory } from "../../slices/orderHistorySlice";
+import { addOrder, setOrderHistory, setOrderStatus } from "../../slices/orderHistorySlice";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL_LOCAL;
 const socket = io.connect(BASE_URL);
@@ -28,25 +28,25 @@ const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let tabs = [{name:'Home',to:'/'},{name:'About Us',to:'/about-us'},{name:'Explore',to:'/explore'},{name:'Add Canteen',to:'/add-canteen'}]
-
     useEffect(()=>{
         if(user){
             socket.emit('joinRoom',user._id);
-            socket.on("newOrder", (order) => {
+            const handleNewOrder = (order)=>{
                 //for owner
-                dispatch(setOrderHistory([order,...orderHistory]));
-                localStorage.setItem('orderHistory',JSON.stringify([order,...orderHistory]));
-            });
-            socket.on('orderUpdate',(order)=>{
-                //for customer
-                // dispatch(setOrderHistory([order,...orderHistory]));
-                // localStorage.setItem('orderHistory',JSON.stringify([order,...orderHistory]));
-            });
-            socket.on("orderStatusUpdate",(updatedOrder)=>{
-                const updatedOrderHistory = orderHistory.map((order) => order._id===updatedOrder.orderid ? {...order,status:"preparing"}: order);
-                dispatch(setOrderHistory(updatedOrderHistory));
-                localStorage.setItem('orderHistory',JSON.stringify(updatedOrderHistory));
-            });
+                console.log('owner order',order);
+                console.log('updated owner order',[order,...orderHistory]);
+                dispatch(addOrder(order));
+            }
+            const handleOrderStatusUpdate = (orderStatus)=>{
+                dispatch(setOrderStatus(orderStatus));
+            }
+            socket.on("newOrder", handleNewOrder);
+            socket.on("orderStatusUpdate", handleOrderStatusUpdate);
+            return ()=>{
+                console.log('dismount')
+                socket.off("newOrder", handleNewOrder);
+                socket.off("orderStatusUpdate", handleOrderStatusUpdate);
+            }
         }
     },[user]);
     

@@ -108,7 +108,6 @@ const CanteenDashboard = () => {
                                 <div className="flex flex-row gap-7">
                                     <img src={order.items[0].item.imageUrl} alt="dish-img" className="hidden sm:block w-40 h-28 object-fill"/>
                                     <div className="space-y-1">
-                                        <h1>{order.canteenName}</h1>
                                         <p className="text-xs">{"ORDER#"+order._id}</p>
                                         <p className="text-xs sm:text-sm">{date + ", "  + time}</p>
                                         <p className="text-sm">{"status: " + order.status}</p>
