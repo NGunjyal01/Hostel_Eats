@@ -464,11 +464,11 @@ exports.acceptRejectOrder=async(req,res) =>{
   try{
     const { orderid, status } = req.body;
     // Validate status
-    const validStatuses = ["preparing", "rejected"];
+    const validStatuses = ["preparing", "rejected","prepared","completed"];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid status it must be preparing or rejected",
+        message: "Invalid status it must be preparing , rejected, prepared , completed",
       });
     }
     // Find and update order
@@ -492,9 +492,7 @@ exports.acceptRejectOrder=async(req,res) =>{
 
     res.status(200).json({
       success: true,
-      message: `Order ${
-        status === "preparing" ? "accepted" : "rejected"
-      } successfully`,
+      message: `Order ${status} successfully`,
       data:order,
     });
   }

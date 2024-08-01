@@ -6,13 +6,13 @@ const orderSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  merchantid:{
-      type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+  merchantid: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
-  shopid:{
-      type: mongoose.Schema.Types.ObjectId,
+  shopid: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Merchant",
     required: true,
   },
@@ -25,7 +25,7 @@ const orderSchema = new mongoose.Schema({
       },
       quantity: {
         type: Number,
-    required:true,
+        required: true,
       },
     },
   ],
@@ -35,7 +35,9 @@ const orderSchema = new mongoose.Schema({
   },
   razorpayOrderId: {
     type: String,
-    required: true,
+    required: function () {
+      return this.paymentstatus === "paid";
+    },
   },
   razorpayPaymentId: {
     type: String,
@@ -43,13 +45,13 @@ const orderSchema = new mongoose.Schema({
   razorpaySignature: {
     type: String,
   },
-  paymentstatus:{
-      type:String,
-      enum:["paid","cash"],
+  paymentstatus: {
+    type: String,
+    enum: ["paid", "cash"],
   },
   status: {
     type: String,
-    enum: ["preparing", "pending","prepared","completed", "failed"],
+    enum: ["preparing", "pending", "prepared", "completed", "failed"],
     default: "pending",
   },
   createdAt: { type: Date },
