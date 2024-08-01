@@ -504,3 +504,30 @@ exports.acceptRejectOrder=async(req,res) =>{
     })
   }
 }
+
+//Live orders
+
+exports.liveOrders=async(req,res)=>{
+  try{
+      const payload=req.user;
+
+      const orders = await Order.find({
+        merchantid: payload.id,
+        status: { $ne: "completed" },
+      }).populate("items.item");
+
+
+      res.status(200).json({
+        success:true,
+        data:orders,
+        message:"Succes Ho gya",
+      })
+  }
+  catch(error){
+    console.log(error);
+    return res.status(200).json({
+      message:"Something Went Wrong",
+      success:false,
+    })
+  }
+} 
