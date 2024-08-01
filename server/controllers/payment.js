@@ -155,7 +155,7 @@ exports.cashPayment=async(req,res)=>{
       );
     }
   
-    if (cart.totalPrice!== amount) {
+    if (cart.totalPrice!= amount) {
       return res.status(400).json({
         success: false,
         message: "Amount Does not match cart total",
