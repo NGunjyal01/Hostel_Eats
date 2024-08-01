@@ -42,7 +42,7 @@ export const ownerEndpoints = {
     EDIT_ITEM_API: BASE_URL + "/owner/editItem",
     DELETE_ITEM_API: BASE_URL + "/owner/deleteItem",
     DELETE_CANTEEN_API: BASE_URL + "/owner/deleteCanteen",
-    ACCEPT_ORDER: BASE_URL + "/owner/order/status",
+    UPDATE_ORDER_STATUS: BASE_URL + "/owner/order/status",
 }
 
 // SETTINGS PAGE API
@@ -59,6 +59,7 @@ export const paymentEndpoints = {
     ORDER_PAYMENT_API: BASE_URL + "/payment/order",
     ORDER_VERIFY_API: BASE_URL + "/payment/verify",
     SEND_PAYMENT_SUCCESS_EMAIL_API: BASE_URL + "/payment/sendPaymentSuccessEmail",
+    CASH_ORDER_API: BASE_URL + "/payment/cash",
 }
 
 export const GET_POPULAR_DISHES_API = BASE_URL + "/getPopularDishes";

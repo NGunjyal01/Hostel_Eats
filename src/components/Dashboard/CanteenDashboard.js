@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import { acceptOrder, getCanteenDetails, getOrderHistory } from "../../services/ownerAPI";
+import { updateOrderStatus, getCanteenDetails, getOrderHistory } from "../../services/ownerAPI";
 import { formatTime } from "../../utils/formatTime";
 import { PieChart } from "react-minimal-pie-chart";
 import Spinner from "../common/Spinner";
@@ -35,18 +35,35 @@ const CanteenDashboard = () => {
         { title: 'Cash', value: 15, color: '#C13C37' },
     ];
 
-    const handleAccept = (id)=>{
+    const handleAccept = (e,id)=>{
+        e.stopPropagation();
         const formData = new FormData();
         formData.append("orderid",id);
         formData.append("status","preparing");
-        acceptOrder(formData).then(()=>{
+        updateOrderStatus(formData).then(()=>{
             const updatedOrderHistory = orderHistory.map((order)=> order._id===id ? {...order,status:"preparing"}: order);
             dispatch(setOrderHistory(updatedOrderHistory));
         });
     }
 
     const handlePrepared = (id)=>{
+        const formData = new FormData();
+        formData.append("orderid",id);
+        formData.append("status","prepared");
+        updateOrderStatus(formData).then(()=>{
+            const updatedOrderHistory = orderHistory.map((order)=> order._id===id ? {...order,status:"prepared"}: order);
+            dispatch(setOrderHistory(updatedOrderHistory));
+        });
+    }
 
+    const handlePickedUp = (id)=>{
+        const formData = new FormData();
+        formData.append("orderid",id);
+        formData.append("status","completed");
+        updateOrderStatus(formData).then(()=>{
+            const updatedOrderHistory = orderHistory.map((order)=> order._id===id ? {...order,status:"completed"}: order);
+            dispatch(setOrderHistory(updatedOrderHistory));
+        });
     }
 
     return (
@@ -117,10 +134,11 @@ const CanteenDashboard = () => {
                                 <div className="mt-4 flex flex-row gap-4 sm:gap-7 items-center">
                                     <h1 className="whitespace-nowrap text-xs sm:text-base">{"Total Bill: ₹" + order.totalAmount}</h1>
                                     {order.status==='pending' && <>
-                                        <button className="bg-[#76ABAE] w-16 sm:w-24 py-1 rounded-md sm:rounded-lg sm:ml-12 text-xs sm:text-base" onClick={()=>handleAccept(order._id)}>Accept</button>
+                                        <button className="bg-[#76ABAE] w-16 sm:w-24 py-1 rounded-md sm:rounded-lg sm:ml-12 text-xs sm:text-base" onClick={(e)=>handleAccept(e,order._id)}>Accept</button>
                                         <button className="bg-red-600 w-16 sm:w-24 py-1 rounded-md sm:rounded-lg text-xs sm:text-base">Reject</button>
                                     </>}
                                     {order.status==='preparing' && <button className="bg-[#76ABAE] w-16 sm:w-24 py-1 rounded-md sm:rounded-lg sm:ml-12 text-xs sm:text-base" onClick={()=>handlePrepared(order._id)}>Prepared</button>}
+                                    {order.status==='prepared' && <button className="bg-[#76ABAE] w-16 sm:w-24 py-1 rounded-md sm:rounded-lg sm:ml-12 text-xs sm:text-base" onClick={()=>handlePickedUp(order._id)}>Picked Up</button>}
                                 </div>
                             </div>);
                         })}

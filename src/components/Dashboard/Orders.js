@@ -6,18 +6,26 @@ import { formatTime } from "../../utils/formatTime";
 import Pagination from "../common/Pagination";
 import Spinner from "../common/Spinner";
 import { SiTicktick } from "react-icons/si";
+import ViewDetailsModal from "../common/ViewDetailsModal";
 
 const Orders = () => {
     
     const orderHistory = useSelector(store => store.orderHistory);
     const [currentItems,setCurrentItems] = useState(null);
     const [loading,setLoading] = useState(false);
+    const [isOpen,setIsOpen] = useState(false);
+    const [showOrder,setShowOrder] = useState(null);
     const dispatch = useDispatch();
 
     useEffect(()=>{
         setLoading(true);
         getOrderHistory(dispatch).then(()=>setLoading(false));
     },[]);
+
+    const handleToggleViewDetails = (order)=>{
+        setShowOrder(order);
+        setIsOpen(!isOpen);
+    }
 
     return (
         <div className="flex flex-col items-center relative">
@@ -45,10 +53,10 @@ const Orders = () => {
                                         <h1>{order.canteenName}</h1>
                                         <p className="text-xs">{"ORDER#"+order._id}</p>
                                         <p className="text-sm">{date + ", "  + time}</p>
-                                        <button>View Details</button>
+                                        <button onClick={()=>{ handleToggleViewDetails(order)}}>View Details</button>
                                     </div>
                                 </div>
-                                {order.status!=='completed' && <div className="flex flex-row gap-10 mt-4 ml-20 whitespace-nowrap">
+                                <div className="flex flex-row gap-10 mt-4 ml-10 whitespace-nowrap">
                                     <div className="flex flex-col items-center space-y-2">
                                         <h1>Order Received</h1>
                                         <SiTicktick className='text-green-600'/>
@@ -58,10 +66,14 @@ const Orders = () => {
                                         <SiTicktick className={`${order.status!=='pending'?'text-green-600':''}`}/>
                                     </div>
                                     <div className="flex flex-col items-center space-y-2">
-                                        <h1>Completed</h1>
-                                        <SiTicktick className={`${order.status==='prepared'?'text-green-600':''}`}/>
+                                        <h1>Pick Up</h1>
+                                        <SiTicktick className={`${(order.status!=='pending' && order.status!=='preparing')?'text-green-600':''}`}/>
                                     </div>
-                                </div>}
+                                    <div className="flex flex-col items-center space-y-2">
+                                        <h1>Completed</h1>
+                                        <SiTicktick className={`${(order.status==='completed')?'text-green-600':''}`}/>
+                                    </div>
+                                </div>
                                 <div className="mt-6 flex flex-row gap-10">
                                     <h1>{"Total Bill: ₹" + order.totalAmount}</h1>
                                     <h1>{"Payment Method: " + order.paymentstatus}</h1>
@@ -70,6 +82,7 @@ const Orders = () => {
                             </div>);
                         })}
                     </div>
+                    {isOpen && <ViewDetailsModal close={handleToggleViewDetails} order={showOrder}/>}
                     <Pagination allItems={orderHistory} itemsPerPage={10} setCurrentItems={setCurrentItems} scrollTo={"orderHistory"}/>
                 </>}
             </div>}

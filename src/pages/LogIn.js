@@ -46,7 +46,7 @@ const LogIn = () => {
                     <input type={!showPassword?"password":"text"} id="password" name="password" placeholder="Enter Password" className="bg-[#31363F] w-full px-3 py-4 rounded-lg mt-2"
                     {...register('password',{required:{value:true,message:"Please Enter Password"}})}/>
                     <button className="absolute  bottom-11 right-4" type="button" onClick={handleEyeBtnClick}>{!showPassword?<IoEye/>:<IoEyeOff/>}</button>
-                    <button onClick={handleForgotPassword} className="absolute -bottom-1 right-1 w-fit text-[0.7rem] sm:text-sm">Forgot Password?</button>
+                    <button onClick={handleForgotPassword} type="button" className="absolute -bottom-1 right-1 w-fit text-[0.7rem] sm:text-sm">Forgot Password?</button>
                     {errors.password && ( <span className="absolute text-xs text-red-500 bottom-0 left-1">
                         {errors.password.message}
                     </span>)}

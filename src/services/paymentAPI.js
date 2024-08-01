@@ -4,7 +4,7 @@ import axios from "axios";
 import { Razorpay_Key } from "../utils/constants";
 import { resetCartItems } from "../slices/cartSlice";
 
-const { ORDER_PAYMENT_API,ORDER_VERIFY_API } = paymentEndpoints;
+const { ORDER_PAYMENT_API,ORDER_VERIFY_API,CASH_ORDER_API } = paymentEndpoints;
 const config = { headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true };
 
 // Load the Razorpay SDK from the CDN
@@ -81,6 +81,23 @@ export async function verifyPayment(response,navigate,dispatch){
     catch(error){
         console.log("PAYMENT VERIFY ERROR............", error);
         toast.error("Could Not Verify Payment.");
+    }
+    toast.dismiss(toastId);
+}
+
+export async function cashOrder(amount,navigate,dispatch){
+    const toastId = toast.loading("Loading...");
+    try{
+        const response = await axios.post(CASH_ORDER_API,amount,config);
+        console.log("CASH ORDER API RESPONSE............",response);
+        toast.success("Order Placed");
+        dispatch(resetCartItems());
+        localStorage.removeItem('cart');
+        navigate('/dashboard/orders');
+    }
+    catch(error){
+        console.log("CASH ORDER API ERROR................",error);
+        toast.error("Error");
     }
     toast.dismiss(toastId);
 }

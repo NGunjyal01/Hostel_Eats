@@ -4,7 +4,8 @@ import axios from "axios";
 import { setAllCanteen, setCanteenDetails } from "../slices/canteenSlice";
 import { setOrderHistory } from "../slices/orderHistorySlice";
 
-const { CREATE_CANTEEN_API,GET_ALL_CANTEEN_API,GET_CANTEEN_DETAILS_API,CREATE_ITEM_API,EDIT_CANTEEN_API,EDIT_ITEM_API,DELETE_CANTEEN_API,DELETE_ITEM_API,GET_ORDER_HISTROY_API,ACCEPT_ORDER } = ownerEndpoints;
+const { CREATE_CANTEEN_API,GET_ALL_CANTEEN_API,GET_CANTEEN_DETAILS_API,CREATE_ITEM_API,EDIT_CANTEEN_API,
+EDIT_ITEM_API,DELETE_CANTEEN_API,DELETE_ITEM_API,GET_ORDER_HISTROY_API,UPDATE_ORDER_STATUS } = ownerEndpoints;
 const config = {headers:{'Content-Type':'multipart/form-data'},withCredentials:true};
 
 export async function createCanteen(formData,navigate){
@@ -213,12 +214,12 @@ export async function getOrderHistory(shopid,dispatch){
     }
 }
 
-export async function acceptOrder(formData){
+export async function updateOrderStatus(formData){
     try{
-        const response = await axios.post(ACCEPT_ORDER,formData,config);
-        console.log("ACCEPT ORDER API RESPONSE..................",response);
+        const response = await axios.post(UPDATE_ORDER_STATUS,formData,config);
+        console.log("UPDATE ORDER STATUS API RESPONSE..................",response);
     }
     catch(error){
-        console.log("ACCEPT API ERROR..................",error);
+        console.log("UPDATE ORDER STATUS API ERROR..................",error);
     }
 }

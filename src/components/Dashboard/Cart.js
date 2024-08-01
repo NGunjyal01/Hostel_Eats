@@ -2,7 +2,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { addCartItem, removeCartItem } from "../../services/customerAPI";
 import { useState } from "react";
-import { placeOrder } from "../../services/paymentAPI";
+import { cashOrder, placeOrder } from "../../services/paymentAPI";
 import { useNavigate } from "react-router-dom";
 
 
@@ -31,7 +31,7 @@ const Cart = () => {
     }
 
     const handleCashPayment = ()=>{
-        
+        cashOrder({amount:cart.totalPrice},navigate,dispatch);
     }
 
     return (
