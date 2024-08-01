@@ -9,6 +9,7 @@ require("dotenv").config();
 
 const Razorpay=require("razorpay");
 const crypto=require("crypto");
+const { faListNumeric } = require("@fortawesome/free-solid-svg-icons");
 
 exports.orderPayment = async(req,res) =>{
   
@@ -119,8 +120,7 @@ exports.orderVerify = async(req,res)=>{
      // console.log("SHop ki id",ownerId);
       // console.log("Ab yaha se owner ke page mai jayega");    
       io.to(ownerId.toString()).emit("newOrder", newOrder);
-        // console.log("Ab yaha se custoner ke page mai jayega");
-      io.to(customerId.toString()).emit("orderUpdate", newOrder);
+    
 
       res.status(200).json({
         success: true,
@@ -137,3 +137,83 @@ exports.orderVerify = async(req,res)=>{
 }
 
 
+//cash on Delivery
+exports.cashPayment=async(req,res)=>{
+  try{
+    const payload = req.user;
+    const { amount } = req.body;
+    const cart = await Cart.findOne({ userid: payload.id }).populate(
+      "items.item"
+    );
+
+    if (!cart) {
+      return (
+        res.status(200).json({
+          success: false,
+          message: "Cart Not Found",
+        })
+      );
+    }
+  
+    if (cart.totalPrice!== amount) {
+      return res.status(400).json({
+        success: false,
+        message: "Amount Does not match cart total",
+      });
+    }
+
+        const merchantId = await Merchant.findById({
+          _id: cart.items[0].item.shopid,
+        });
+        const merchant = await User.findOne({ email: merchantId.ownerEmail });
+
+    const newOrder = new Order({
+      userid: payload.id,
+      merchantid: merchant._id,
+      shopid: cart.items[0].item.shopid,
+      items: cart.items,
+      totalAmount: amount,
+      razorpayOrderId: null,
+      paymentstatus: "cash",
+    });
+
+    const expressTime = new Date();
+    const currentTime = new Date(
+      expressTime.getTime() - expressTime.getTimezoneOffset() * 60000
+    );
+
+    newOrder.createdAt = currentTime;
+    newOrder.razorpayPaymentId = null;
+    newOrder.razorpaySignature = null;
+
+    await newOrder.save();
+    // Update the merchant's total revenue
+    const canteen = await Merchant.findOne({ _id: cart.items[0].item.shopid });
+
+    if (canteen) {
+      canteen.totalRevenue += amount;
+      await canteen.save();
+    }
+
+    // Clearing the user's cart
+    await Cart.deleteOne({ userid: payload.id });
+    // Emit the order to the owner's room
+    const io = req.app.get("io");
+    const ownerId = newOrder.merchantid;
+    const customerId = newOrder.userid;
+      io.to(ownerId.toString()).emit("newOrder", newOrder);
+
+         res.status(200).json({
+           success: true,
+         data:newOrder,
+         message:"Order Placed Successfully"
+         });
+  }
+  catch(error){
+    console.log(error);
+    res.status(400).json({
+      success:false,
+      message:"Something Went Wrong"
+    })
+  }
+}

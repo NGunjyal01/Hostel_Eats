@@ -17,7 +17,7 @@ try{
 
 try {
   const payload = jwt.verify(token, process.env.JWT_SECRET);
-  console.log(payload);
+ // console.log(payload);
      if (payload.role == "Owner") {
        return res.status(200).json({
          success: false,
