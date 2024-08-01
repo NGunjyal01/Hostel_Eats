@@ -1,6 +1,6 @@
 const express = require("express");
 const ownerRouter = express.Router();
-const { addCanteen,addItem,getAllCanteen,getCanteenDetails, addItems, getOrders,acceptRejectOrder} = require("../controllers/canteen");
+const { addCanteen,addItem,getAllCanteen,getCanteenDetails, addItems, getOrders,acceptRejectOrder,liveOrders} = require("../controllers/canteen");
 const {editCanteen,editItem,deleteItem,deleteCanteen}=require("../controllers/modifyCanteen")
 const {ownerCheck}=require("../middlewares/owner");
 //addCanteen
@@ -25,5 +25,6 @@ ownerRouter.post("/getOrderHistory",getOrders);
 
 //After Order process
 ownerRouter.post("/order/status",ownerCheck,acceptRejectOrder);
+ownerRouter.get("/liveOrders", ownerCheck, liveOrders);
 
 module.exports=ownerRouter;
