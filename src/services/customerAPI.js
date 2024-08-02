@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { resetCartItems, setCartItem } from '../slices/cartSlice';
 import {setFavouriteItems, resetFavouriteItems} from '../slices/favouritesSlice'
 import { setOrderHistory } from '../slices/orderHistorySlice';
+import { setPopularDishes } from '../slices/popularDishesSlice';
 
 const config = { headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true };
 
@@ -20,11 +21,12 @@ export const searchItem = async (formData) => {
     }
 };
 
-export const getPopularDishes = async () => {
+export const getPopularDishes = async (dispatch) => {
     try {
         const response = await axios.get(GET_POPULAR_DISHES_API, config);
-        
-        return response.data;
+        console.log("pop dishes=>",response.data.data);
+        dispatch(setPopularDishes(response.data.data)); // Dispatch action to store in Redux
+        return response.data.data;
     } catch (error) {
         console.error("Error fetching popular dishes:", error);
     }

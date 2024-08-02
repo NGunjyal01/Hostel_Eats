@@ -7,6 +7,7 @@ import cartReducer from "../slices/cartSlice";
 import favouritesReducer from '../slices/favouritesSlice';
 import orderHistoryReducer from "../slices/orderHistorySlice";
 import emailReducer from '../slices/emailSlice'
+import popularDishesReducer from "../slices/popularDishesSlice";
 
 const appStore = configureStore({
     reducer:{
@@ -18,6 +19,7 @@ const appStore = configureStore({
         favourites: favouritesReducer,
         orderHistory: orderHistoryReducer,
         email: emailReducer,
+        popularDishes: popularDishesReducer,
     }
 });
 
