@@ -90,11 +90,9 @@ const Explore = () => {
             localStorage.setItem('filteredDishes', JSON.stringify([]));
         }
 
-        try {
-            if (Array.isArray(dishResult.canteens)) {
-                dispatch(setCanteensData(dishResult.canteens));
-            }
-            setFilteredCanteens(Array.isArray(dishResult.canteens) ? dishResult.canteens : []);
+        try {            
+            dispatch(setCanteensData(dishResult.canteens));
+            setFilteredCanteens(dishResult.canteens ? dishResult.canteens : []);
             localStorage.setItem('filteredCanteens', JSON.stringify(Array.isArray(dishResult.canteens) ? dishResult.canteens : []));
         } catch (error) {
             console.error("Error searching for canteens:", error);
@@ -143,6 +141,8 @@ const Explore = () => {
         slidesToScroll: 1,
         nextArrow: <CustomNextArrow />,
         prevArrow: <CustomPrevArrow />,
+        autoplay: true,
+        autoplaySpeed: 2000,
         appendDots: dots => (
             <div
                 style={{
@@ -264,7 +264,7 @@ const Explore = () => {
             )}
 
             {!searchInput && (
-                <div className="mb-10 px-8">
+                <div className="mb-10 px-8 slider-container">
                     <h2 className="text-2xl font-bold ml-6 mb-20 mt-16">Popular Dishes</h2>
                     <Slider {...settings} className="mx-4">
                     {popularDishes.map(dish => (
