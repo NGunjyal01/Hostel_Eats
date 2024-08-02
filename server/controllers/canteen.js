@@ -514,12 +514,30 @@ exports.liveOrders=async(req,res)=>{
       const orders = await Order.find({
         merchantid: payload.id,
         status: { $ne: "completed" },
-      }).populate("items.item").sort({ createdAt: -1 });
+      })
+        .populate({ path: "items.item", select: "name imageUrl shopid" })
+        .sort({ createdAt: -1 })
+        .select(
+          "_id userid merchantid shopid items totalAmount paymentStatus satatus createdAt"
+        );
+    const updatedOrder=await Promise.all(
+      orders.map(async(order)=>{
+        const canteen=await Merchant.findById(order.shopid).select("canteenName");
+
+        //First Item Image URL
+        const firstImageUrl=order.items.length>0 ? order.items[0].item.imageUrl:null;
+        return {
+          ...order.toObject(),
+          canteenName:canteen?canteen.canteenName :"Unknown",
+          imageUrl:firstImageUrl,
+        }
+      })
+    )
 
 
       res.status(200).json({
         success:true,
-        data:orders,
+        data:updatedOrder,
         message:"Succes Ho gya",
       })
   }
