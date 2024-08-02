@@ -57,6 +57,8 @@ const Home = () => {
         speed: 500,
         slidesToShow: 5,
         slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 2000,
         nextArrow: <CustomNextArrow />,
         prevArrow: <CustomPrevArrow />,
         appendDots: dots => (

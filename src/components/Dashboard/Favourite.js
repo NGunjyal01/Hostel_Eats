@@ -3,9 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { AiFillHeart } from 'react-icons/ai';
 import { toggleFavouriteItem } from '../../services/favouriteAPI';
 import { loadFavouriteItems } from '../../services/customerAPI';
+import { useNavigate } from 'react-router-dom';
 
 const Favourite = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const favourites = useSelector(store => store.favourites);
     const favouriteItems=favourites.items || []
 
@@ -18,6 +20,10 @@ const Favourite = () => {
         await toggleFavouriteItem(item, dispatch, favouriteItems);
     };
 
+    const handleCardClick = (canteenId) => {
+        navigate(`/canteen/${canteenId}`);
+    };
+
     return (
         <div className="flex flex-col items-center relative min-h-screen p-6 text-white pt-24">
             {favourites.length === 0 ? (
@@ -28,7 +34,7 @@ const Favourite = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {favouriteItems.map(dish => (
                         dish.item && (
-                            <div key={dish.item.itemid} className="bg-[#31363F] p-4 rounded-lg shadow-lg w-full flex justify-between items-center relative">
+                            <div key={dish.item.itemid} className="bg-[#31363F] p-4 rounded-lg shadow-lg w-full flex justify-between items-center relative cursor-pointer" onClick={() => handleCardClick(dish.item.shopid)}>
                                 <div>
                                     <h3 className="text-xl font-semibold mb-2 truncate text-ellipsis overflow-hidden max-w-xs">{dish.item.name}</h3>
                                     <p className="text-gray-400 mb-2 truncate text-ellipsis overflow-hidden max-w-xs">{dish.canteenName}</p>
