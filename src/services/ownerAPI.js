@@ -3,9 +3,10 @@ import { ownerEndpoints } from "./apis";
 import axios from "axios";
 import { setAllCanteen, setCanteenDetails } from "../slices/canteenSlice";
 import { setOrderHistory } from "../slices/orderHistorySlice";
+import { setLiveOrders } from "../slices/notificationSlice";
 
 const { CREATE_CANTEEN_API,GET_ALL_CANTEEN_API,GET_CANTEEN_DETAILS_API,CREATE_ITEM_API,EDIT_CANTEEN_API,
-EDIT_ITEM_API,DELETE_CANTEEN_API,DELETE_ITEM_API,GET_ORDER_HISTROY_API,UPDATE_ORDER_STATUS } = ownerEndpoints;
+EDIT_ITEM_API,DELETE_CANTEEN_API,DELETE_ITEM_API,GET_ORDER_HISTROY_API,UPDATE_ORDER_STATUS,GET_LIVE_ORDERS_API } = ownerEndpoints;
 const config = {headers:{'Content-Type':'multipart/form-data'},withCredentials:true};
 
 export async function createCanteen(formData,navigate){
@@ -221,5 +222,16 @@ export async function updateOrderStatus(formData){
     }
     catch(error){
         console.log("UPDATE ORDER STATUS API ERROR..................",error);
+    }
+}
+
+export async function getLiveOrders(dispatch){
+    try{
+        const response = await axios.get(GET_LIVE_ORDERS_API,config);
+        console.log("GET LIVE ORDERS API RESPONSE................",response);
+        dispatch(setLiveOrders(response.data.data));
+    }
+    catch(error){
+        console.log("LIVE ORDER API ERROR",error);
     }
 }

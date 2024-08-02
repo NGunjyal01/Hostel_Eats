@@ -43,6 +43,7 @@ export const ownerEndpoints = {
     DELETE_ITEM_API: BASE_URL + "/owner/deleteItem",
     DELETE_CANTEEN_API: BASE_URL + "/owner/deleteCanteen",
     UPDATE_ORDER_STATUS: BASE_URL + "/owner/order/status",
+    GET_LIVE_ORDERS_API: BASE_URL +'/owner/liveOrders',
 }
 
 // SETTINGS PAGE API

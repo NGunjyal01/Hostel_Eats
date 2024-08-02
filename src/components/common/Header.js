@@ -12,7 +12,10 @@ import { MdNotifications, MdNotificationsActive } from "react-icons/md";
 import AnimatedHamburgerButton from "./AnimatedHamburgerButton";
 import UserIcon from "./UserIcon";
 import { io } from "socket.io-client";
-import { addOrder, setOrderHistory, setOrderStatus } from "../../slices/orderHistorySlice";
+import { addOrder, setOrderStatus } from "../../slices/orderHistorySlice";
+import { getLiveOrders } from "../../services/ownerAPI";
+import { formatDate } from "../../utils/formatDate";
+import { formatTime } from "../../utils/formatTime";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL_LOCAL;
 const socket = io.connect(BASE_URL);
@@ -22,14 +25,21 @@ const Header = () => {
     const user = useSelector(store => store.user);
     const cart = useSelector(store => store.cart);
     const orderHistory = useSelector(store => store.orderHistory);
+    const liveOrders = useSelector(store => store.liveOrders);
     const [confirmationalModal,setConfirmationalModal] = useState(null);
     const {currTab} = useSelector(store => store.tabInfo);
     const [showDropDownMenu,setShowDropDownMenu] = useState(false);
+    const [showNotification,setShowNotification] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    let tabs = [{name:'Home',to:'/'},{name:'About Us',to:'/about-us'},{name:'Explore',to:'/explore'},{name:'Add Canteen',to:'/add-canteen'}]
+    let tabs = [{name:'Home',to:'/'},{name:'About Us',to:'/about-us'},{name:'Explore',to:'/explore'}
+    ,{name:'Add Canteen',to:'/add-canteen'}]
+    
     useEffect(()=>{
         if(user){
+            if(user.accountType==='Owner'){
+                getLiveOrders(dispatch);
+            }
             socket.emit('joinRoom',user._id);
             const handleNewOrder = (order)=>{
                 //for owner
@@ -78,6 +88,9 @@ const Header = () => {
         localStorage.setItem("currTab",JSON.stringify(index));
         dispatch(setCurrTab(index));
     }
+    const handleToggleNotification = ()=>{
+        setShowNotification(!showNotification);
+    }
 
     return (
         <div className="fixed w-full z-10 flex bg-gradient-to-r from-black to-[#222831] text-white pt-10 pb-4">
@@ -89,7 +102,7 @@ const Header = () => {
                 <NavLink to='/login' className={({isActive}) => `bg-[#31363F] rounded-lg px-4 py-2 hover:text-[#76ABAE] ${isActive?"text-[#76ABAE]":""}`}>LogIn</NavLink>
                 <NavLink to='/signup' className={({isActive}) => `bg-[#31363F] rounded-lg px-4 py-2 hover:text-[#76ABAE] ${isActive?"text-[#76ABAE]":""}`}>SignUp</NavLink>
             </div>}  
-            {user && <><div className={`group hidden sm:flex justify-center items-center absolute top-9 cursor-pointer transition-transform ease-out 
+            {user && <><div className={`group hidden sm:flex justify-center items-center absolute top-9 cursor-pointer
             sm:right-[15%] md:right-[14%] lg:right-[13%] xl:right-[12%]`} 
             onClick={handleUserIconClick}
             onMouseEnter={()=>{setShowDropDownMenu(true)}} onMouseLeave={()=>{setShowDropDownMenu(false)}}>
@@ -111,9 +124,39 @@ const Header = () => {
                 <FaCartShopping className="cartLogo"/>
                 <span className="absolute text-black sm:top-0.5 md:top-1 lg:top-0 sm:left-3.5 md:left-4 lg:left-[1.1rem] font-semibold sm:text-xs lg:text-base">{!cart ? 0 : cart.totalQuantity}</span>
             </span>}
-            {user?.accountType==="Owner" && <span className="absolute hidden sm:block -mt-1 right-[7%] cursor-pointer" onClick={()=>{navigate('/dashboard/cart')}}>
-                <MdNotifications className="cartLogo"/>
-            </span>}
+            {user?.accountType==="Owner" && <div className="absolute hidden sm:block -mt-1 right-[7%] cursor-pointer" onClick={handleToggleNotification}>
+                {liveOrders.length ? <MdNotificationsActive className={`cartLogo ${showNotification?'':'animate-shake'}`}/> :<MdNotifications className="cartLogo"/>}
+                <AnimatePresence>
+                    {showNotification && <div className="fixed z-20 inset-0">
+                        <motion.div initial={{opacity:0,y:15}} animate={{opacity:1,y:0}} exit={{opacity:0,y:15}}>
+                            <div className="bg-gray-200 w-4 h-4 rotate-45 absolute top-[5.5rem] right-[7.5rem]"></div>
+                        </motion.div>
+                        <motion.div initial={{opacity:0,y:15}} animate={{opacity:1,y:0}} exit={{opacity:0,y:15}}
+                        className="absolute z-10 right-20 top-24 bg-gray-200  text-black w-[24rem] py-2 px-4 rounded-md h-96 overflow-y-visible overflow-scroll scrollbar-hide" onClick={(e)=>{e.stopPropagation()}}> 
+                            <h1>Notification</h1>
+                            <div className="w-full h-[0.05rem] bg-black mt-2"/>
+                            <div>
+                                {liveOrders.map((order) => {
+                                    const date = order.createdAt ? formatDate(order.createdAt.split('T')[0]) : '';
+                                    const time = order.createdAt ? formatTime(order.createdAt?.split('T')[1].split(':')[0]+":"+order.createdAt.split('T')[1].split(':')[1]) : '';
+
+                                    return(
+                                    <div key={order._id} className="my-5 flex justify-between" onClick={()=>{setShowNotification(false); navigate('/dashboard/canteen/'+order.shopid);}}>
+                                        <div>
+                                            <p className="text-xs">{"ORDER#"+order._id}</p>
+                                            <h1 className="text-lg">{order.canteenName}</h1>
+                                            <p className="text-xs">{date + ", "  + time}</p>
+                                            <p className="text-sm">{"status: " + order.status}</p>
+                                            <h1></h1>
+                                        </div>
+                                        <img src={order.imageUrl} alt="image" className="w-32 rounded-lg"/>
+                                    </div>);
+                                })}
+                            </div>
+                        </motion.div>
+                    </div>}
+                </AnimatePresence> 
+            </div>}
             {confirmationalModal && <ConfirmationalModal modalData={confirmationalModal}/>}
             <div className="sm:hidden flex absolute w-full">
                 <AnimatedHamburgerButton />
