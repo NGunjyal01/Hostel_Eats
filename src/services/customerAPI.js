@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { customerEndpoints } from './apis';
-import { GET_POPULAR_DISHES_API } from './apis';
+import { GET_POPULAR_DISHES_API , GET_POPULAR_CANTEENS_API } from './apis';
 import toast from 'react-hot-toast';
 import { resetCartItems, setCartItem } from '../slices/cartSlice';
 import {setFavouriteItems, resetFavouriteItems} from '../slices/favouritesSlice'
@@ -25,10 +25,20 @@ export const getPopularDishes = async (dispatch) => {
     try {
         const response = await axios.get(GET_POPULAR_DISHES_API, config);
         console.log("pop dishes=>",response.data.data);
-        dispatch(setPopularDishes(response.data.data)); // Dispatch action to store in Redux
+        dispatch(setPopularDishes(response.data.data)); 
         return response.data.data;
     } catch (error) {
         console.error("Error fetching popular dishes:", error);
+    }
+};
+
+export const getPopularCanteens = async () => {
+    try {
+        const response = await axios.get(GET_POPULAR_CANTEENS_API, config);
+        console.log("pop cans=>",response.data.data); 
+        return response.data.data;
+    } catch (error) {
+        console.error("Error fetching popular canteens:", error);
     }
 };
 

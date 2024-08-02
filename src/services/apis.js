@@ -64,3 +64,4 @@ export const paymentEndpoints = {
 }
 
 export const GET_POPULAR_DISHES_API = BASE_URL + "/getPopularDishes";
+export const GET_POPULAR_CANTEENS_API= BASE_URL + "/getPopularCanteens";
