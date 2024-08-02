@@ -518,7 +518,7 @@ exports.liveOrders=async(req,res)=>{
         .populate({ path: "items.item", select: "name imageUrl shopid" })
         .sort({ createdAt: -1 })
         .select(
-          "_id userid merchantid shopid items totalAmount paymentStatus satatus createdAt"
+          "_id userid merchantid shopid items totalAmount paymentStatus status createdAt"
         );
     const updatedOrder=await Promise.all(
       orders.map(async(order)=>{
