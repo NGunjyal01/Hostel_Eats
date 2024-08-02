@@ -8,8 +8,6 @@ const UserIcon = ()=>{
     const user = useSelector(store => store.user);
     const navigate = useNavigate();
 
-    const [isOpen,setIsOpen] = useState(false);
-
     const handleIconClick = ()=>{
         if(!user){
             navigate('/login');
@@ -20,10 +18,11 @@ const UserIcon = ()=>{
     }
 
     return(
-        <div className="absolute right-7">
-            <button onClick={handleIconClick}>
+        <div className={`absolute ${user?'right-16':'right-7'}`}>
+            {!user ? <button onClick={handleIconClick}>
                 <FaUserCircle className="cartLogo"/>
             </button>
+            :<img src={user.imageUrl} className="size-8 rounded-md border-[1px]" onClick={handleIconClick}/>}
         </div>
     );
 }

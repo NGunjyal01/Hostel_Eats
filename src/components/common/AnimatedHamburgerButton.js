@@ -65,10 +65,6 @@ const AnimatedHamburgerButton = () => {
             exit={{ opacity: 0, scale: 0, transition: { duration: 0.3, ease: "easeIn" } }}>
               <div className="mt-[22%] ml-[20%] flex flex-col space-y-5">
                 {options.map(option => <button key={option.name} className="text-left" onClick={()=>handleNavigation(option.to)}>{option.name}</button>)}
-                {!user && <>
-                  <button className="text-left" onClick={()=>{handleNavigation('/login')}}>Login</button>
-                  <button className="text-left" onClick={()=>{handleNavigation('/signup')}}>SignUp</button>
-                </>}
                 {user && <button className="text-left" onClick={handleLogOut}>Logout</button>}
               </div>
           </motion.div>

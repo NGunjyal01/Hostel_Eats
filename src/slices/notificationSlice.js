@@ -6,9 +6,12 @@ const notificationSlice = createSlice({
     reducers: {
         setLiveOrders: (state,action)=>{
             return action.payload;
-        }
+        },
+        addLiveOrder: (state,action)=>{
+            return [action.payload,...state];
+        },
     }
 });
 
-export const { setLiveOrders } = notificationSlice.actions;
+export const { setLiveOrders,addLiveOrder } = notificationSlice.actions;
 export default notificationSlice.reducer;

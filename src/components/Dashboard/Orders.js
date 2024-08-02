@@ -19,7 +19,7 @@ const Orders = () => {
 
     useEffect(()=>{
         setLoading(true);
-        getOrderHistory(dispatch).then(()=>setLoading(false));
+        getOrderHistory(dispatch).then(()=> setLoading(false));
     },[]);
 
     const handleToggleViewDetails = (order)=>{
@@ -29,34 +29,34 @@ const Orders = () => {
 
     return (
         <div className="flex flex-col items-center relative">
-            {loading ? <div className="mt-[12%] -ml-[15%]"><Spinner/></div>
-            :<div className="w-full flex flex-col items-center" id="orderHistory">
+            {loading ? <div className="mt-[35%] sm:mt-[12%] sm:-ml-[15%]"><Spinner/></div>
+            :<div className="w-[95%] xl:w-[90%] flex flex-col items-center -mt-5 sm:mt-0" id="orderHistory">
+                <h1 className="-ml-[52%] sm:-ml-[64%] md:-ml-[72%] lg:-ml-[65%] xl:-ml-[77%] text-xl md:text-2xl lg:text-3xl font-semibold">Order History</h1>
                 {!orderHistory.length ? <div className="mt-[30%] sm:mt-[15%]">No Orders Found</div>
-                :<>
-                    <h1 className="absolute -ml-2 sm:-ml-3 md:-ml-5 lg:-ml-[78%] text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold">Order History</h1>
-                    <div className="grid grid-cols-2 w-full mt-14">
+                :<> 
+                    <div className="grid grid-cols-2 w-full mt-5">
                         {currentItems?.map( (order) =>{
                             const date = formatDate(order.createdAt.split('T')[0]);
                             const time = formatTime(order.createdAt.split('T')[1].split(':')[0]+":"+order.createdAt.split('T')[1].split(':')[1]);
                             // const items = order.items.map(item => item.item.name + " x " + item.quantity).join(', ');
                             return (
-                            <div key={order._id} className="col-span-1 bg-[#31363F] py-4 px-4 w-[85%] mx-10 mt-12 rounded-lg">
+                            <div key={order._id} className="col-span-full md:col-span-1 bg-[#31363F] py-4 px-4 w-[90%] mx-4 md:mx-0 lg:mx-10 mt-12 rounded-lg">
                                 {order.status!=='completed' && <div className="absolute -mt-12 -ml-3 flex items-center gap-2">
-                                    <div className="size-4 sm:size-5 border-2 border-orange-700 rounded-full flex items-center justify-center animate-pulse">
-                                        <div className="size-2 sm:size-3 bg-orange-700 rounded-full"/>    
+                                    <div className="size-5 border-2 border-orange-700 rounded-full flex items-center justify-center animate-pulse">
+                                        <div className="size-3 bg-orange-700 rounded-full"/>    
                                     </div>
-                                    <h1 className="text-sm sm:text-base">Live Order</h1>
+                                    <h1 className="text-base">Live Order</h1>
                                 </div>}
-                                <div className="flex flex-row gap-7">
-                                    <img src={order.items[0].item.imageUrl} alt="dish-img" className="w-40 h-28 object-fill"/>
-                                    <div className="space-y-1">
-                                        <h1>{order.canteenName}</h1>
-                                        <p className="text-xs">{"ORDER#"+order._id}</p>
-                                        <p className="text-sm">{date + ", "  + time}</p>
+                                <div className="flex flex-col lg:flex-row lg:gap-4 xl:gap-7 md:items-center">
+                                    <img src={order.items[0].item.imageUrl} alt="dish-img" className="lg:w-40 xl:w-52 w-full sm:w-[95%] h-40 sm:h-56 md:h-[50%] lg:h-28 xl:h-32 object-fill rounded-lg"/>
+                                    <div className="space-y-1 mt-3 lg:mt-0 md:-ml-10 lg:ml-0">
+                                        <h1 className="text-lg">{order.canteenName}</h1>
+                                        <p className="text-sm md:text-xs lg:text-[.65rem] xl:text-xs">{"ORDER#"+order._id}</p>
+                                        <p className="text-sm lg:text-xs xl:text-sm">{date + ", "  + time}</p>
                                         <button onClick={()=>{ handleToggleViewDetails(order)}}>View Details</button>
                                     </div>
                                 </div>
-                                <div className="flex flex-row gap-10 mt-4 ml-10 whitespace-nowrap">
+                                <div className="relative flex flex-row gap-4 lg:gap-5 xl:gap-10 mt-4 md:-left-1 lg:left-2 xl:left-4 whitespace-nowrap text-xs sm:text-base md:text-xs  lg:text-sm xl:text-base">
                                     <div className="flex flex-col items-center space-y-2">
                                         <h1>Order Received</h1>
                                         <SiTicktick className='text-green-600'/>
@@ -74,10 +74,10 @@ const Orders = () => {
                                         <SiTicktick className={`${(order.status==='completed')?'text-green-600':''}`}/>
                                     </div>
                                 </div>
-                                <div className="mt-6 flex flex-row gap-10">
+                                <div className="mt-6 flex flex-row gap-6 lg:gap-10 whitespace-nowrap text-sm lg:text-base">
                                     <h1>{"Total Bill: ₹" + order.totalAmount}</h1>
                                     <h1>{"Payment Method: " + order.paymentstatus}</h1>
-                                    {order.status==='completed' && <button className="uppercase tracking-wider">Reorder</button>}
+                                    {/* {order.status==='completed' && <button className="uppercase tracking-wider">Reorder</button>} */}
                                 </div>
                             </div>);
                         })}
