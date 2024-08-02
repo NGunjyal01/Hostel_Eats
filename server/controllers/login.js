@@ -94,8 +94,18 @@ exports.getPopularDishes= async(req,res)=>{
         message:"No items present",
       })
     }
+    const updateItems=await Promise.all(
+      items.map(async(item)=>{
+        const canteen=await Merchant.findOne({_id:item.shopid}).select("canteenName");;
+        return {
+          ...item,
+          canteenName:canteen ?canteen.canteenName:"Unknown"
+        }
+      })
+
+    )
     res.status(200).json({
-      data:items,
+      data:updateItems,
       success:true,
       message:"Items fetched Successfully",
     })
