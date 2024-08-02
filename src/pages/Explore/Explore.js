@@ -12,7 +12,6 @@ import { useNavigate } from 'react-router-dom';
 import { setCanteensData } from '../../slices/canteenPageSlice';
 import DishCard from './DishCard';
 import Pagination from '../../components/common/Pagination'
-// import { toggleFavouriteItem } from '../../services/favouriteAPI';
 
 const CustomPrevArrow = (props) => {
     const { onClick } = props;
@@ -46,7 +45,6 @@ const Explore = () => {
 
     const [searchInput, setSearchInput] = useState('');
     const [showSearchOptions, setShowSearchOptions] = useState(false);
-    const [popularDishes, setPopularDishes] = useState([]);
     const [filteredDishes, setFilteredDishes] = useState([]);
     const [filteredCanteens, setFilteredCanteens] = useState([]);
     const [searchType, setSearchType] = useState('dishes');
@@ -55,9 +53,9 @@ const Explore = () => {
     
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const popularDishes = useSelector((state) => state.popularDishes);
 
     useEffect(() => {
-        fetchPopularDishes();
         const savedSearchInput = localStorage.getItem('searchInput');
         const savedFilteredDishes = localStorage.getItem('filteredDishes');
         const savedFilteredCanteens = localStorage.getItem('filteredCanteens');
@@ -73,20 +71,6 @@ const Explore = () => {
         if (savedShowSearchOptions) setShowSearchOptions(JSON.parse(savedShowSearchOptions));
     }, []);
 
-    const fetchPopularDishes = async () => {
-        try {
-            const dishes = await getPopularDishes();
-            if (Array.isArray(dishes.data)) {
-                const dishesWithCanteenNames = await Promise.all(dishes.data.slice(0, 4).map(async (dish) => {
-                    const canteenDetails = await getCanteenPageDetails(dish.shopid);
-                    return { ...dish, canteenName: canteenDetails?.canteenName || 'Unknown Canteen' };
-                }));
-                setPopularDishes(dishesWithCanteenNames);
-            }
-        } catch (error) {
-            console.error("Error fetching popular dishes:", error);
-        }
-    };
 
     const filterResults = async (input) => {
         const lowerCaseInput = input.toLowerCase();
@@ -283,11 +267,20 @@ const Explore = () => {
                 <div className="mb-10 px-8">
                     <h2 className="text-2xl font-bold ml-6 mb-20 mt-16">Popular Dishes</h2>
                     <Slider {...settings} className="mx-4">
-                        {popularDishes.map(dish => (
-                            <div key={dish._id} className="px-2">
-                                <DishCard  key={dish.itemid} dish={dish} setShowModal={setShowModal} cartItemMap={cartItemMap} />
-                            </div>
-                        ))}
+                    {popularDishes.map(dish => (
+                <div key={dish._id} className="px-2 h-fit">
+                    <div className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-65 flex flex-col justify-between" onClick={() => handleCardClick(dish.shopid)}>
+                        <div className="relative">
+                            <img src={dish.imageUrl} alt={dish.name} className="w-full h-36 object-cover rounded-lg mb-4" />
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-semibold mb-2">{dish.name}</h3>
+                            <p className="text-gray-400 mb-2">Available at: {dish.canteenName}</p>
+                            <p className="text-gray-400 mb-2">Price: ₹{dish.price}</p>
+                        </div>
+                    </div>
+                </div>
+            ))}
                     </Slider>
                 </div>
             )}
