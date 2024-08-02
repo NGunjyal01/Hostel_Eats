@@ -104,6 +104,7 @@ exports.orderVerify = async (req, res) => {
     });
         const orderObject = newOrder.toObject();
         orderObject.canteenName = canteen.canteenName;
+            orderObject.imageUrl = cart.items[0].item.imageUrl;
     if (canteen) {
       canteen.totalRevenue = canteen.totalRevenue + cart.totalPrice;
       await canteen.save();
@@ -187,6 +188,7 @@ exports.cashPayment = async (req, res) => {
 
     const orderObject = newOrder.toObject();
     orderObject.canteenName = canteen.canteenName;
+    orderObject.imageUrl=cart.items[0].item.imageUrl;
 
     if (canteen) {
       canteen.totalRevenue += amount;
