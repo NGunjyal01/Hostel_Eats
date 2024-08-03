@@ -9,6 +9,7 @@ import { setCanteenDetails } from "../../slices/canteenSlice";
 import { formatDate } from "../../utils/formatDate";
 import { setOrderHistory } from "../../slices/orderHistorySlice";
 import Pagination from "../common/Pagination";
+import ViewDetailsModal from "../common/ViewDetailsModal";
 
 const CanteenDashboard = () => {
 
@@ -17,6 +18,8 @@ const CanteenDashboard = () => {
     const canteenDetails = useSelector(store => store.canteen.canteenDetails);
     const orderHistory = useSelector(store => store.orderHistory);
     const [currentItems,setCurrentItems] = useState(null);
+    const [isOpen,setIsOpen] = useState(false);
+    const [showOrder,setShowOrder] = useState(null);
     
     useEffect(()=>{
         getOrderHistory({shopid:id},dispatch);
@@ -34,6 +37,11 @@ const CanteenDashboard = () => {
         { title: 'Online', value: 10, color: '#E38627' },
         { title: 'Cash', value: 15, color: '#C13C37' },
     ];
+
+    const handleToggleViewDetails = (order)=>{
+        setShowOrder(order);
+        setIsOpen(!isOpen);
+    }
 
     const handleAccept = (e,id)=>{
         e.stopPropagation();
@@ -128,7 +136,7 @@ const CanteenDashboard = () => {
                                         <p className="text-xs">{"ORDER#"+order._id}</p>
                                         <p className="text-xs sm:text-sm">{date + ", "  + time}</p>
                                         <p className="text-sm">{"status: " + order.status}</p>
-                                        <button className="">View Details</button>
+                                        <button onClick={()=>{ handleToggleViewDetails(order)}}>View Details</button>
                                     </div>
                                 </div>
                                 <div className="mt-4 flex flex-row gap-4 sm:gap-7 items-center">
@@ -143,6 +151,7 @@ const CanteenDashboard = () => {
                             </div>);
                         })}
                     </div>
+                    {isOpen && <ViewDetailsModal close={handleToggleViewDetails} order={showOrder}/>}
                     {orderHistory && <span className="-ml-20"><Pagination allItems={orderHistory} itemsPerPage={10} setCurrentItems={setCurrentItems} scrollTo={'orderHistory'}/></span>}
                 </>}
             </div>
