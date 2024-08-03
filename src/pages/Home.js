@@ -76,6 +76,11 @@ const Home = () => {
         style={{
           position: "relative",
           top: "30px",
+          width: "100%", // Ensure container width is 100%
+          overflow: "hidden", // Hide overflow to avoid extra lines
+          whiteSpace: "nowrap", // Ensure the dots stay in one line
+          display: "flex",
+          justifyContent: "center", // Center dots
         }}
       >
         <ul style={{ margin: "0px", padding: "0" }}> {dots} </ul>
@@ -130,6 +135,11 @@ const Home = () => {
         style={{
           position: "relative",
           top: "30px",
+          width: "100%", // Ensure container width is 100%
+          overflow: "hidden", // Hide overflow to avoid extra lines
+          whiteSpace: "nowrap", // Ensure the dots stay in one line
+          display: "flex",
+          justifyContent: "center", // Center dots
         }}
       >
         <ul style={{ margin: "0px", padding: "0" }}> {dots} </ul>

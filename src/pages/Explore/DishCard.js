@@ -58,22 +58,22 @@ const DishCard = ({ dish, setShowModal, cartItemMap }) => {
     };
 
     return (
-        <div key={itemid} className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between" onClick={() => handleCardClick(shopid)}>
+        <div key={itemid} className=" bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-auto sm:h-96 flex flex-col justify-between sm:w-auto w-full" onClick={() => handleCardClick(shopid)}>
             
             <div className="relative">
                 <img src={imageUrl} alt={itemName} className="w-full h-36 object-cover rounded-lg mb-4" />               
                 <div className="absolute top-2 right-2">
                     {favouriteItems.some(fav => fav.item._id === itemid) ? (
-                        <AiFillHeart className="text-red-500 cursor-pointer" onClick={(e) => handleToggleFavourite(e, { itemid, name: itemName, canteenName, price, imageUrl})} />
+                        <AiFillHeart className="text-red-500 text-2xl sm:text-xl cursor-pointer" onClick={(e) => handleToggleFavourite(e, { itemid, name: itemName, canteenName, price, imageUrl})} />
                     ) : (
-                        <AiOutlineHeart className="text-white cursor-pointer" onClick={(e) => handleToggleFavourite(e, { itemid, name: itemName, canteenName, price, imageUrl})} />
+                        <AiOutlineHeart className="text-white text-2xl sm:text-xl cursor-pointer" onClick={(e) => handleToggleFavourite(e, { itemid, name: itemName, canteenName, price, imageUrl})} />
                     )}
                 </div>
             </div>
-            <div>
-                <h3 className="text-xl font-semibold mb-2 break-words">{itemName}</h3>
-                <p className="text-gray-400 mb-2">Available at: {canteenName}</p>
-                <p className="text-gray-400 mb-2">Price: ₹{price}</p>
+            <div className="overflow-hidden flex-grow">
+                <h3 className="sm:text-2xl text-xl font-semibold mb-2 break-words">{itemName}</h3>
+                <p className="sm:text-lg text-md text-gray-400 mb-1 break-words">Available at: {canteenName}</p>
+                <p className="sm:text-lg text-md text-gray-400 mb-2">Price: ₹{price}</p>
             </div>
             {cartItemMap.has(itemid) ? (
                 <div className="flex items-center justify-center space-x-4" onClick={(e) => e.stopPropagation()}>
@@ -94,7 +94,7 @@ const DishCard = ({ dish, setShowModal, cartItemMap }) => {
             ) : (
                 <button
                     onClick={handleAdd}
-                    className="w-full py-2 font-extrabold bg-[#76ABAE] text-white rounded-lg"
+                    className="w-full pt-[2%] py-2 font-extrabold bg-[#76ABAE] text-white rounded-lg"
                 >
                     ADD
                 </button>
