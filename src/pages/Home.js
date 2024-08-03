@@ -20,8 +20,8 @@ const CustomPrevArrow = (props) => {
   const { onClick } = props;
   return (
     <div
-      className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 cursor-pointer text-[#76ABAE]"
-      style={{ fontSize: "2em", left: "-35px" }}
+      className="absolute left-[-25px] top-1/2 transform -translate-y-1/2 z-10 text-[#76ABAE]"
+      style={{ fontSize: "1.75em", left: "-32px" }}
       onClick={onClick}
     >
       <FaRegArrowAltCircleLeft />
@@ -33,8 +33,8 @@ const CustomNextArrow = (props) => {
   const { onClick } = props;
   return (
     <div
-      className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 cursor-pointer text-[#76ABAE]"
-      style={{ fontSize: "2em", right: "-35px" }}
+      className="absolute right-[-25px] top-1/2 transform -translate-y-1/2 z-10 text-[#76ABAE]"
+      style={{ fontSize: "1.75em", right: "-32px" }}
       onClick={onClick}
     >
       <FaRegArrowAltCircleRight />
@@ -191,47 +191,56 @@ const Home = () => {
           className="hidden sm:flex relative sm:w-[45%] md:w-[50%] lg:w-[45%] sm:ml-[53%] md:ml-[47%] lg:ml-[47%] sm:-mt-[36%] md:-mt-[37%] lg:-mt-[27%]"
         />
       </div>
+
       {/* Section 2 */}
-      <div className="mt-[15%] sm:mt-[18%] md:mt-[15%] lg:mt-[12%] ml-[8%] sm:ml-[8%] md:ml-[2%] px-10">
-        <h1 className="text-2xl px-6 mb-5 sm:text-3xl lg:text-4xl">
+      <div className="mt-12 ml-4 sm:mt-18 sm:ml-8 md:mt-15 md:ml-2 px-4 sm:px-10">
+        <h1 className="text-xl sm:text-3xl lg:text-4xl mb-5 text-center sm:text-left">
           Popular Dishes
         </h1>
-        <Slider {...settings} className="mx-4">
-          {popularDishes.map((dish) => (
-            <div key={dish._id} className="px-2">
-              <div
-                className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between"
-                onClick={() => handleCardClick(dish.shopid)}
-              >
-                <div className="relative">
-                  <img
-                    src={dish.imageUrl}
-                    alt={dish.itemName}
-                    className="w-full h-36 object-cover rounded-lg mb-4"
-                  />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2 break-words">{dish.name}</h3>
-                  <p className="text-gray-400 mb-2">
-                    Available at: {dish.canteenName}
-                  </p>
-                  <p className="text-gray-400 mb-2">Price: ₹{dish.price}</p>
+        <div className="relative max-w-full mx-auto">
+          <Slider {...settings} className="mx-4">
+            {popularDishes.map((dish) => (
+              <div key={dish._id} className="px-2 w-full sm:w-auto">
+                <div
+                  className="bg-[#31363F] p-2 sm:p-4 rounded-lg shadow-lg cursor-pointer h-72 sm:h-80 flex flex-col justify-between"
+                  onClick={() => handleCardClick(dish.shopid)}
+                >
+                  <div className="relative">
+                    <img
+                      src={dish.imageUrl}
+                      alt={dish.itemName}
+                      className="w-full h-36 object-cover rounded-lg pb-2"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-semibold mb-2 break-words">
+                      {dish.name}
+                    </h3>
+                    <p className="text-gray-400 text-sm sm:text-base mb-2">
+                      Available at: {dish.canteenName}
+                    </p>
+                    <p className="text-gray-400 text-sm sm:text-base mb-2">
+                      Price: ₹{dish.price}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </Slider>
+            ))}
+          </Slider>
+        </div>
       </div>
+
       {/* Popular Canteens Section */}
-      <div className="mt-[10%] sm:mt-[15%] md:mt-[10%] lg:mt-[8%] ml-[8%] sm:ml-[8%] md:ml-[2%] px-10">
-        <h1 className="text-2xl px-6 mb-5 sm:text-3xl lg:text-4xl">
+      <div className="mt-12 ml-4 sm:mt-18 sm:ml-8 md:mt-15 md:ml-2 px-4 sm:px-10">
+        <h1 className="text-xl sm:text-3xl lg:text-4xl mb-5 text-center sm:text-left">
           Popular Canteens
         </h1>
+        <div className="relative max-w-full mx-auto">
         <Slider {...settings2} className="mx-4">
           {popularCanteens.map((canteen) => (
-            <div key={canteen._id} className="px-2">
+            <div key={canteen._id} className="px-2 w-full sm:w-auto">
               <div
-                className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between"
+                className="bg-[#31363F] p-2 sm:p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between"
                 onClick={() => handleCardClick(canteen._id)}
               >
                 <div className="relative">
@@ -242,15 +251,24 @@ const Home = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold mb-2 break-words">{canteen.canteenName}</h3>
-                  <p className="text-gray-400 mb-2">Opening Time: {formatTime(canteen.openingTime)}</p>
-                  <p className="text-gray-400 mb-2">Closing Time: {formatTime(canteen.closingTime)}</p>
-                  <p className="text-gray-400 mb-2">Address: {canteen.address}</p>
+                  <h3 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2 break-words">
+                    {canteen.canteenName}
+                  </h3>
+                  <p className="text-gray-400 text-sm sm:text-base mb-2">
+                    Opening Time: {formatTime(canteen.openingTime)}
+                  </p>
+                  <p className="text-gray-400 text-sm sm:text-base mb-2">
+                    Closing Time: {formatTime(canteen.closingTime)}
+                  </p>
+                  <p className="text-gray-400 text-sm sm:text-base mb-2">
+                    Address: {canteen.address}
+                  </p>
                 </div>
               </div>
             </div>
           ))}
         </Slider>
+        </div>
       </div>
     </div>
   );
