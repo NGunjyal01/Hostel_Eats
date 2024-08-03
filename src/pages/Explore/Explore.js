@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { setCanteensData } from "../../slices/canteenPageSlice";
 import DishCard from "./DishCard";
 import Pagination from "../../components/common/Pagination";
+import { formatTime } from "../../utils/formatTime";
 
 const CustomPrevArrow = (props) => {
   const { onClick } = props;
@@ -308,10 +309,10 @@ const Explore = () => {
                       {canteen.canteenName}
                     </h3>
                     <p className="text-gray-400 text-xl font-semibold mb-2 lg:mb-4">
-                      Opening Time: {canteen.openingTime}
+                      Opening Time: {formatTime(canteen.openingTime)}
                     </p>
                     <p className="text-gray-400 text-xl font-semibold mb-2 lg:mb-4">
-                      Closing Time: {canteen.closingTime}
+                      Closing Time: {formatTime(canteen.closingTime)}
                     </p>
                     <p className="text-gray-400 text-xl font-semibold">
                       {canteen.status}

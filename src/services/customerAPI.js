@@ -25,6 +25,7 @@ export const getPopularDishes = async (dispatch) => {
     try {
         const response = await axios.get(GET_POPULAR_DISHES_API, config);
         console.log("pop dishes=>",response.data.data);
+        localStorage.setItem('popularDishes',JSON.stringify(response.data.data));
         dispatch(setPopularDishes(response.data.data)); 
         return response.data.data;
     } catch (error) {

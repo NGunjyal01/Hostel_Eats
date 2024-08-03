@@ -71,7 +71,7 @@ const DishCard = ({ dish, setShowModal, cartItemMap }) => {
                 </div>
             </div>
             <div>
-                <h3 className="text-xl font-semibold mb-2">{itemName}</h3>
+                <h3 className="text-xl font-semibold mb-2 break-words">{itemName}</h3>
                 <p className="text-gray-400 mb-2">Available at: {canteenName}</p>
                 <p className="text-gray-400 mb-2">Price: ₹{price}</p>
             </div>
