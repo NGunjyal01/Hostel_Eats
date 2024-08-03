@@ -211,7 +211,7 @@ const Home = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">{dish.name}</h3>
+                  <h3 className="text-xl font-semibold mb-2 break-words">{dish.name}</h3>
                   <p className="text-gray-400 mb-2">
                     Available at: {dish.canteenName}
                   </p>
@@ -242,7 +242,7 @@ const Home = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">{canteen.canteenName}</h3>
+                  <h3 className="text-xl font-semibold mb-2 break-words">{canteen.canteenName}</h3>
                   <p className="text-gray-400 mb-2">Opening Time: {formatTime(canteen.openingTime)}</p>
                   <p className="text-gray-400 mb-2">Closing Time: {formatTime(canteen.closingTime)}</p>
                   <p className="text-gray-400 mb-2">Address: {canteen.address}</p>

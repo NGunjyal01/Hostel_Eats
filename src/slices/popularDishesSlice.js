@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const popularDishesSlice = createSlice({
     name: 'popularDishes',
-    initialState: [],
+    initialState: localStorage.getItem('popularDishes') ? JSON.parse(localStorage.getItem('popularDishes')) : [],
     reducers: {
         setPopularDishes: (state, action) => {
             return action.payload;
