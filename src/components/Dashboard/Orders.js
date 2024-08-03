@@ -32,7 +32,10 @@ const Orders = () => {
             {loading ? <div className="mt-[35%] sm:mt-[12%] sm:-ml-[15%]"><Spinner/></div>
             :<div className="w-[95%] xl:w-[90%] flex flex-col items-center -mt-5 sm:mt-0" id="orderHistory">
                 <h1 className="-ml-[52%] sm:-ml-[64%] md:-ml-[72%] lg:-ml-[65%] xl:-ml-[77%] text-xl md:text-2xl lg:text-3xl font-semibold">Order History</h1>
-                {!orderHistory.length ? <div className="mt-[30%] sm:mt-[15%]">No Orders Found</div>
+                {!orderHistory.length 
+                ? <div className="mt-[30%] sm:mt-[15%] text-xl sm:text-3xl font-bold uppercase tracking-wider">
+                    No Orders Found
+                </div>
                 :<> 
                     <div className="grid grid-cols-2 w-full mt-5">
                         {currentItems?.map( (order) =>{

@@ -54,7 +54,7 @@ const Explore = () => {
   const cart = useSelector((store) => store.cart);
   const cartItemMap = !cart
     ? new Map()
-    : new Map(cart.items.map((item) => [item.item._id, item.quantity]));
+    : new Map(cart.items?.map((item) => [item.item._id, item.quantity]));
 
   const [searchInput, setSearchInput] = useState("");
   const [showSearchOptions, setShowSearchOptions] = useState(false);

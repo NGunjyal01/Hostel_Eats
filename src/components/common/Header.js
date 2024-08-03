@@ -104,15 +104,20 @@ const Header = () => {
             sm:right-[15%] md:right-[14%] lg:right-[13%] xl:right-[12%]`} 
             onClick={handleUserIconClick}
             onMouseEnter={()=>{setShowDropDownMenu(true)}} onMouseLeave={()=>{setShowDropDownMenu(false)}}>
-                <img src={user.imageUrl} className="sm:size-8 lg:size-10 rounded-md"/>  
+                <img src={user.imageUrl} className="border-2 sm:size-8 lg:size-10 rounded-md"/>  
                 <AnimatePresence>
                     {showDropDownMenu && <>
                     <div className="absolute top-10 bg-transparent h-7 w-[10rem] z-10"></div>
                         <motion.div initial={{opacity:0,y:15}} animate={{opacity:1,y:0}} exit={{opacity:0,y:15}}
-                        className="absolute z-10 top-16 bg-[#EEEEEE]  text-black w-[10rem] flex flex-col items-center space-y-2 px-2 rounded-md" onClick={(e)=>{e.stopPropagation()}}>
-                            <div className="bg-[#EEEEEE] w-4 h-4 rotate-45 absolute -top-2"></div>
-                            {sideTabs.map((tab,index) => <NavLink key={tab.to} to={tab.to} onClick={()=>{handleSideTabClick(index)}}>{tab.name}</NavLink>)}
-                            <button onClick={handleLogOut} className="pb-2">log out</button>
+                        className="absolute z-10 top-16 bg-gray-100  text-black w-[10rem] flex flex-col items-center rounded-md" onClick={(e)=>{e.stopPropagation()}}>
+                            <div className="bg-gray-100 w-4 h-4 rotate-45 absolute -top-2"></div>
+                            <div className="flex flex-col z-10 w-full">
+                                {sideTabs.map((tab,index) => 
+                                <NavLink key={tab.to} to={tab.to} onClick={()=>{handleSideTabClick(index)}} className={`py-1 hover:bg-gray-300 ${index===0 ?'hover:rounded-t-lg' :''}`}>
+                                    <h1 className="px-12">{tab.name}</h1>
+                                </NavLink>)}
+                                <h1 onClick={handleLogOut} className="py-1 px-12 hover:bg-gray-300 hover:rounded-b-lg">Logout</h1>
+                            </div>
                         </motion.div>
                     </>}
                 </AnimatePresence> 
@@ -120,22 +125,22 @@ const Header = () => {
             </div></>}
             {user?.accountType==="Customer" && <span className="absolute sm:-mt-1 right-5 sm:right-[7%] cursor-pointer" onClick={()=>{navigate('/dashboard/cart')}}>
                 <FaCartShopping className="cartLogo"/>
-                <span className="absolute text-black top-0.5 md:top-1 lg:top-0 left-[0.8rem] sm:left-3.5 md:left-4 lg:left-[1.1rem] font-semibold text-xs lg:text-base">{!cart ? 0 : cart.totalQuantity}</span>
+                <span className="absolute text-black top-0.5 md:top-1 lg:top-0 left-[0.8rem] sm:left-3.5 md:left-4 lg:left-[1.1rem] font-semibold text-xs lg:text-base">{!Object.keys(cart).length ? 0 : cart.totalQuantity}</span>
             </span>}
             {user?.accountType==="Owner" && <div className="absolute sm:-mt-1 right-5 sm:right-[7%] cursor-pointer" onClick={handleToggleNotification}>
                 {liveOrders.length 
                 ? <span>
                     <MdNotificationsActive className={`cartLogo ${showNotification?'':'animate-shake'}`}/>
-                    <span className="text-black absolute top-2 left-2 sm:left-3 text-[0.65rem] sm:text-sm font-bold">{liveOrders.length}</span>
+                    <span className="text-black absolute top-2 left-[0.6rem] sm:left-2 md:left-2.5 lg:left-3 text-[0.65rem] sm:text-xs lg:text-sm font-semibold lg:font-bold">{liveOrders.length}</span>
                 </span> 
                 :<MdNotifications className="cartLogo"/>}
                 <AnimatePresence>
                     {showNotification && <div className="fixed z-20 inset-0">
                         <motion.div initial={{opacity:0,y:15}} animate={{opacity:1,y:0}} exit={{opacity:0,y:15}}>
-                            <div className="bg-gray-100 w-4 h-4 rotate-45 absolute top-[5.5rem] right-8 sm:right-[7.5rem]"></div>
+                            <div className="bg-gray-100 w-4 h-4 rotate-45 absolute top-[5.5rem] right-7 md:right-20 lg:right-[5.5rem] xl:right-[7.5rem]"></div>
                         </motion.div>
                         <motion.div initial={{opacity:0,y:15}} animate={{opacity:1,y:0}} exit={{opacity:0,y:15}}
-                        className="absolute z-10 right-3 sm:right-20 top-24 bg-gray-100  text-black w-[90%] sm:w-[24rem] py-2 rounded-md h-96 overflow-y-visible overflow-scroll scrollbar-hide" onClick={(e)=>{e.stopPropagation()}}> 
+                        className="absolute z-10 right-3 md:right-10 lg:right-14 xl:right-20 top-24 bg-gray-100  text-black w-[85%] sm:w-[24rem] py-2 rounded-md h-96 overflow-y-visible overflow-scroll scrollbar-hide" onClick={(e)=>{e.stopPropagation()}}> 
                             <h1 className="text-lg font-bold mx-4">Notification</h1>
                             <div className="w-full h-[0.05rem] bg-black mt-2"/>
                             <div>
@@ -144,15 +149,15 @@ const Header = () => {
                                     const time = order.createdAt ? formatTime(order.createdAt?.split('T')[1].split(':')[0]+":"+order.createdAt.split('T')[1].split(':')[1]) : '';
 
                                     return(
-                                    <div key={order._id} className="py-5 px-4 flex justify-between hover:bg-gray-300" onClick={()=>{setShowNotification(false); navigate('/dashboard/canteen/'+order.shopid);}}>
-                                        <div>
-                                            <p className="text-xs">{"ORDER#"+order._id}</p>
-                                            <h1 className="text-lg">{order.canteenName}</h1>
+                                    <div key={order._id} className="py-5 px-4 grid grid-cols-3 hover:bg-gray-300" onClick={()=>{setShowNotification(false); navigate('/dashboard/canteen/'+order.shopid);}}>
+                                        <div className="col-span-2">
+                                            <p className="text-[.65rem] sm:text-xs break-words">{"ORDER#"+order._id}</p>
+                                            <h1 className="sm:text-lg">{order.canteenName}</h1>
                                             <p className="text-xs">{date + ", "  + time}</p>
-                                            <p className="text-sm">{"status: " + order.status}</p>
+                                            <p className="text-xs sm:text-sm">{"status: " + order.status}</p>
                                             <h1></h1>
                                         </div>
-                                        <img src={order.imageUrl} alt="image" className="w-32 rounded-lg"/>
+                                        <img src={order.imageUrl} alt="image" className="col-span-1 w-full rounded-lg"/>
                                     </div>);
                                 })}
                             </div>

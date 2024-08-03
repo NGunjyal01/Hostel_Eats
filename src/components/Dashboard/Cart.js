@@ -4,7 +4,7 @@ import { addCartItem, removeCartItem } from "../../services/customerAPI";
 import { useState } from "react";
 import { cashOrder, placeOrder } from "../../services/paymentAPI";
 import { useNavigate } from "react-router-dom";
-
+import emptyCartIcon from '../../empty-cart.png';
 
 const Cart = () => {
 
@@ -36,7 +36,12 @@ const Cart = () => {
 
     return (
         <div className="flex flex-col items-center relative">
-            {!cart ? <h1 className="text-3xl font-bold uppercase tracking-wider  mt-[10%] -ml-[12%]"> Your cart is empty</h1> 
+            {!Object.keys(cart).length
+            ? <div className="sm:-ml-[12%] flex flex-col items-center">
+                <img src={emptyCartIcon} alt="image" className="w-56 sm:w-96"/>
+                <h1 className="text-xl sm:text-3xl font-bold uppercase tracking-wider"> Your cart is empty</h1>
+                <button className="bg-[#76ABAE] px-5 py-1 mt-5 rounded-lg" onClick={()=>navigate('/explore')}>Continue Your Search</button>
+            </div>  
             : <div className="bg-[#222831] w-[85%] lg:w-[80%] xl:w-[70%] h-fit px-4 md:px-5 lg:px-10 py-4 pb-10 sm:py-5 md:py-7 lg:py-10 sm:mt-10 rounded-md sm:rounded-lg md:rounded-xl relative">
                 <h1 className="text-2xl font-semibold">{cart.canteenName}</h1>
                 <div className="sm:mt-10">

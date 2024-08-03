@@ -184,7 +184,7 @@ export async function getOrderHistory(dispatch){
     try{
         const response = await axios.get(GET_ORDER_HISTROY_API,config);
         console.log("GET ORDER HISTORY API RESPONSE.......................",response);
-        dispatch(setOrderHistory(response.data.data));
+        dispatch(setOrderHistory(response.data.data?response.data.data:[]));
         localStorage.setItem('orderHistory',JSON.stringify(response.data.data?response.data.data:[]));
     }
     catch(error){
