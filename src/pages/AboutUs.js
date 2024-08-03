@@ -3,7 +3,7 @@ import React from 'react';
 const AboutUs = () => {
     return (
         <div className="bg-gradient-to-r from-black to-[#222831] min-h-screen text-white p-4">
-            <div className="flex flex-col items-center text-center mt-[12%] sm:mt-0">
+            <div className="flex flex-col px-[8%] items-center text-center mt-[15%] sm:mt-0">
                 <h1 className="pt-[10%] text-2xl md:text-2xl lg:text-4xl font-bold underline ">About Us</h1>
                 <p className="pt-[2%] text-xl md:text-2xl lg:text-3xl">
                     Welcome to <span className="text-red-500 font-bold">Hostel Eats</span>!

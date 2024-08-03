@@ -29,7 +29,7 @@ const CustomPrevArrow = (props) => {
   return (
     <div
       className="absolute -left-10 top-1/2 transform -translate-y-1/2 z-10 cursor-pointer text-[#76ABAE]"
-      style={{ fontSize: "2em" }}
+      style={{ fontSize: "1.75em"}}
       onClick={onClick}
     >
       <FaRegArrowAltCircleLeft />
@@ -42,7 +42,7 @@ const CustomNextArrow = (props) => {
   return (
     <div
       className="absolute -right-10 top-1/2 transform -translate-y-1/2 z-10 cursor-pointer text-[#76ABAE]"
-      style={{ fontSize: "2em" }}
+      style={{ fontSize: "1.75em" }}
       onClick={onClick}
     >
       <FaRegArrowAltCircleRight />
@@ -175,6 +175,11 @@ const Explore = () => {
         style={{
           position: "relative",
           top: "30px",
+          width: "100%", // Ensure container width is 100%
+          overflow: "hidden", // Hide overflow to avoid extra lines
+          whiteSpace: "nowrap", // Ensure the dots stay in one line
+          display: "flex",
+          justifyContent: "center", // Center dots
         }}
       >
         <ul style={{ margin: "0px", padding: "0" }}> {dots} </ul>
@@ -223,7 +228,7 @@ const Explore = () => {
         onSubmit={handleSearchSubmit}
         className="mb-6 relative z-10 mt-12 pt-10 flex justify-center"
       >
-        <div className="relative w-6/12">
+        <div className="relative w-full sm:w-8/12 md:w-6/12 lg:w-6/12">
           <input
             type="text"
             value={searchInput}
@@ -246,7 +251,7 @@ const Explore = () => {
         </div>
       </form>
       {showSearchOptions && searchInput && (
-        <div className="mb-6 ml-96 pl-5">
+        <div className="mb-6 w-full sm:w-8/12 md:w-6/12 lg:w-6/12 mx-auto">
           <div className="space-x-4">
             <button
               className={`py-2 px-4 rounded-lg ${
@@ -269,7 +274,7 @@ const Explore = () => {
       )}
 
       {showSearchOptions && searchInput && (
-        <div className="w-6/12 mx-auto mb-10">
+        <div className="w-full sm:w-6/12 mx-auto mb-10">
           <h2 className="text-2xl font-bold mb-4">
             {searchType === "dishes"
               ? "Search Results for Dishes"
@@ -277,7 +282,7 @@ const Explore = () => {
           </h2>
           {searchType === "dishes" ? (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {currentItems.map((dish) => (
                   <DishCard
                     key={dish.itemid}
@@ -301,20 +306,20 @@ const Explore = () => {
               {filteredCanteens.map((canteen) => (
                 <div
                   key={canteen.shopid}
-                  className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer flex flex-col lg:flex-row justify-between items-center lg:items-start"
+                  className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer flex flex-col md:flex-row justify-between items-center md:items-start"
                   onClick={() => handleCardClick(canteen.shopid)}
                 >
                   <div className="text-center lg:text-left lg:flex-grow">
                     <h3 className="text-2xl font-semibold mb-2 lg:mb-4">
                       {canteen.canteenName}
                     </h3>
-                    <p className="text-gray-400 text-xl font-semibold mb-2 lg:mb-4">
+                    <p className="sm:text-lg text-md text-gray-400 font-semibold mb-2 lg:mb-4">
                       Opening Time: {formatTime(canteen.openingTime)}
                     </p>
-                    <p className="text-gray-400 text-xl font-semibold mb-2 lg:mb-4">
+                    <p className="sm:text-lg text-md text-gray-400 font-semibold mb-2 lg:mb-4">
                       Closing Time: {formatTime(canteen.closingTime)}
                     </p>
-                    <p className="text-gray-400 text-xl font-semibold">
+                    <p className="sm:text-lg text-md text-gray-400 font-semibold">
                       {canteen.status}
                     </p>
                   </div>
@@ -331,35 +336,37 @@ const Explore = () => {
       )}
 
       {!searchInput && (
-        <div className="mb-10 px-8 slider-container">
-          <h2 className="text-2xl font-bold ml-6 mb-20 mt-16">
+        <div className="mt-[15%] sm:mt-0 sm:mb-10 sm:mt-18 sm:ml-8 md:mt-15 md:ml-2 px-4 sm:px-10">
+          <h2 className="text-xl sm:text-3xl lg:text-4xl sm:ml-5 mb-10 text-center sm:text-left">
             Popular Dishes
           </h2>
+          <div className="relative max-w-full mx-auto">
           <Slider {...settings} className="mx-4">
             {popularDishes.map((dish) => (
-              <div key={dish._id} className="px-2 h-fit">
+              <div key={dish._id} className="px-2 w-full sm:w-auto">
                 <div
-                  className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer h-65 flex flex-col justify-between"
+                  className="bg-[#31363F] p-2 sm:p-4 rounded-lg shadow-lg cursor-pointer h-72 sm:h-80 flex flex-col justify-between"
                   onClick={() => handleCardClick(dish.shopid)}
                 >
                   <div className="relative">
                     <img
                       src={dish.imageUrl}
                       alt={dish.name}
-                      className="w-full h-36 object-cover rounded-lg mb-4"
+                      className="w-full h-36 object-cover rounded-lg pb-2"
                     />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">{dish.name}</h3>
-                    <p className="text-gray-400 mb-2">
+                    <h3 className="text-lg sm:text-xl font-semibold mb-2 break-words">{dish.name}</h3>
+                    <p className="text-gray-400 text-sm sm:text-base mb-2">
                       Available at: {dish.canteenName}
                     </p>
-                    <p className="text-gray-400 mb-2">Price: ₹{dish.price}</p>
+                    <p className="text-gray-400 text-sm sm:text-base mb-2">Price: ₹{dish.price}</p>
                   </div>
                 </div>
               </div>
             ))}
           </Slider>
+          </div>
         </div>
       )}
 
