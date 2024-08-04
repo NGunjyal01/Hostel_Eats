@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { userSignup } = require("../controllers/signup"); //For both customer and owner
-const {userLogin, getPopularDishes, forgotPassword, verifyOtp,passwordReset,popularCanteens}=require("../controllers/login");
+const {userLogin, getPopularDishes, forgotPassword, verifyOtp,passwordReset,popularCanteens,logout}=require("../controllers/login");
 const {auth,isCustomer,isOwner}=require("../middlewares/auth");
 
 const {updateDisplayPicture, updateProfile,updateEmail,updatePassword}=require("../controllers/profileSettings");
@@ -22,7 +22,8 @@ router.post("/verifyOtp",verifyOtp);
 router.post("/passwordReset", passwordReset);
 //Popular Dishes
 router.get("/getPopularCanteens", popularCanteens);
-
+//Logout 
+router.post("/logout",logout);
 
 //Protected Route
 router.get("/customer",auth,isCustomer,(req,res)=>{
