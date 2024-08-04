@@ -17,6 +17,7 @@ import { getLiveOrders } from "../../services/ownerAPI";
 import { formatDate } from "../../utils/formatDate";
 import { formatTime } from "../../utils/formatTime";
 import { addLiveOrder } from "../../slices/notificationSlice";
+import { setPagination } from "../../slices/paginationSlice";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL_LOCAL;
 const socket = io.connect(BASE_URL);
@@ -25,6 +26,7 @@ const Header = () => {
 
     const user = useSelector(store => store.user);
     const cart = useSelector(store => store.cart);
+    const orderHistory = useSelector(store => store.orderHistory);
     const liveOrders = useSelector(store => store.liveOrders);
     const [confirmationalModal,setConfirmationalModal] = useState(null);
     const {currTab} = useSelector(store => store.tabInfo);
@@ -45,8 +47,13 @@ const Header = () => {
                 //for owner
                 dispatch(addOrder(order));
                 dispatch(addLiveOrder(order));
+                const paginationData = {allItems:[order,...orderHistory], currentItems:[order,...orderHistory].slice(0,10), 
+                itemsPerPage: 10, currentPageNo: 1, scrollTo: 'orderHistory'};
+                dispatch(setPagination(paginationData));
+                localStorage.setItem('pagination',JSON.stringify(paginationData));
             }
             const handleOrderStatusUpdate = (orderStatus)=>{
+                //for user
                 dispatch(setOrderStatus(orderStatus));
             }
             socket.on("newOrder", handleNewOrder);
@@ -114,7 +121,7 @@ const Header = () => {
                             <div className="flex flex-col z-10 w-full">
                                 {sideTabs.map((tab,index) => 
                                 <NavLink key={tab.to} to={tab.to} onClick={()=>{handleSideTabClick(index)}} className={`py-1 hover:bg-gray-300 ${index===0 ?'hover:rounded-t-lg' :''}`}>
-                                    <h1 className="px-12">{tab.name}</h1>
+                                    <h1 className="px-12 whitespace-nowrap">{tab.name}</h1>
                                 </NavLink>)}
                                 <h1 onClick={handleLogOut} className="py-1 px-12 hover:bg-gray-300 hover:rounded-b-lg">Logout</h1>
                             </div>

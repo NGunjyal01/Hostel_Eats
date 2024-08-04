@@ -9,6 +9,7 @@ import orderHistoryReducer from "../slices/orderHistorySlice";
 import emailReducer from '../slices/emailSlice'
 import popularDishesReducer from "../slices/popularDishesSlice";
 import notificationReducer from "../slices/notificationSlice"
+import paginationReducer from "../slices/paginationSlice";
 
 const appStore = configureStore({
     reducer:{
@@ -22,6 +23,7 @@ const appStore = configureStore({
         email: emailReducer,
         liveOrders: notificationReducer,
         popularDishes: popularDishesReducer,
+        pagination: paginationReducer,
     }
 });
 

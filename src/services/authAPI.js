@@ -3,7 +3,8 @@ import toast from "react-hot-toast"
 import { endpoints } from "./apis";
 import { addUser, removeUser } from "../slices/userSlice";
 
-const { SIGNUP_API,LOGIN_API,FORGOT_PASSWORD_API, VERIFY_OTP_API, RESET_PASSWORD_API } = endpoints;
+const { SIGNUP_API,LOGIN_API,FORGOT_PASSWORD_API, VERIFY_OTP_API, RESET_PASSWORD_API,LOGOUT_API } = endpoints;
+const config = { headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true };
 
 export async function signup (signUpData,navigate,dispatch){
     const toastId = toast.loading("Loading...");
@@ -125,14 +126,23 @@ export async function resetPassword(resetData, navigate) {
     }
 }
 
-export function logout(navigate,dispatch){
-    dispatch(removeUser());
-    localStorage.removeItem("user");
-    localStorage.removeItem("canteen");
-    localStorage.removeItem("currTab");
-    localStorage.removeItem("prevTab");
-    localStorage.removeItem('cart');
-    localStorage.removeItem('orderHistory');
-    toast.success("Logged Out");
-    navigate('/');
+export async function logout(navigate,dispatch){
+    const toastId = toast.loading("Loading...");
+    try{
+        const response = await axios.post(LOGOUT_API,config);
+        console.log("LOGOUT  API RESPONSE.............",response);
+        dispatch(removeUser());
+        localStorage.removeItem("user");
+        localStorage.removeItem("canteen");
+        localStorage.removeItem("currTab");
+        localStorage.removeItem("prevTab");
+        localStorage.removeItem('cart');
+        localStorage.removeItem('orderHistory');
+        toast.success("Logged Out");
+        navigate('/');
+    }
+    catch(error){
+        console.log("LOGOUT API ERROR.........",error);
+    }
+    toast.dismiss(toastId);
 }

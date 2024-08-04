@@ -209,7 +209,7 @@ const Home = () => {
         </h1>
         <div className="relative max-w-full mx-auto">
           <Slider {...settings} className="mx-4">
-            {popularDishes.map((dish) => (
+            {popularDishes?.map((dish) => (
               <div key={dish._id} className="px-2 w-full sm:w-auto">
                 <div
                   className="bg-[#31363F] p-2 sm:p-4 rounded-lg shadow-lg cursor-pointer h-72 sm:h-80 flex flex-col justify-between"
@@ -247,7 +247,7 @@ const Home = () => {
         </h1>
         <div className="relative max-w-full mx-auto">
         <Slider {...settings2} className="mx-4">
-          {popularCanteens.map((canteen) => (
+          {popularCanteens?.map((canteen) => (
             <div key={canteen._id} className="px-2 w-full sm:w-auto">
               <div
                 className="bg-[#31363F] p-2 sm:p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between"

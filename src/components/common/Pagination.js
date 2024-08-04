@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { CiCircleChevLeft,CiCircleChevRight } from "react-icons/ci";
+import { useDispatch, useSelector } from "react-redux";
+import { setPagination } from "../../slices/paginationSlice";
 
-const Pagination = ({allItems,itemsPerPage,setCurrentItems,scrollTo})=>{
+const Pagination = ()=>{
 
-    useEffect(()=>{
-        setCurrentItems(allItems.slice(0,itemsPerPage));
-    },[allItems]);
+    const paginationData = useSelector(store => store.pagination);
+    const {allItems,itemsPerPage,currentPageNo,scrollTo} = paginationData;
+    const dispatch = useDispatch();
 
     const totalItems = allItems.length;
     const totalPages = Math.ceil(totalItems/itemsPerPage);
     const numbers = Array.from({ length: totalPages }, (_, index) => index + 1);
-
-    const [currentPageNo,setCurrentPageNo] = useState(1);
 
     const handleArrowClick = (side)=>{
         let newPageNo;
@@ -21,10 +21,17 @@ const Pagination = ({allItems,itemsPerPage,setCurrentItems,scrollTo})=>{
         else{
             newPageNo = currentPageNo + 1;
         }
-        setCurrentPageNo(newPageNo);
         const start = newPageNo*itemsPerPage - itemsPerPage;
         const end = newPageNo===totalPages ? totalItems : newPageNo*itemsPerPage;
-        setCurrentItems(allItems.slice(start,end));
+        const updatedPaginationData = {
+            allItems:allItems,
+            currentItems:allItems.slice(start,end),
+            currentPageNo: newPageNo,
+            itemsPerPage:itemsPerPage,
+            scrollTo:scrollTo,
+        }; 
+        dispatch(setPagination(updatedPaginationData));
+        localStorage.setItem('pagination',JSON.stringify(updatedPaginationData));
         const to = document.getElementById(scrollTo);
         if(to){
             to.scrollIntoView({behavior:"smooth"});
@@ -33,10 +40,17 @@ const Pagination = ({allItems,itemsPerPage,setCurrentItems,scrollTo})=>{
 
     const handleNumberClick = (no)=>{
         const newPageNo = no;
-        setCurrentPageNo(newPageNo);
         const start = newPageNo*itemsPerPage - itemsPerPage;
         const end = newPageNo===totalPages ? totalItems : newPageNo*itemsPerPage;
-        setCurrentItems(allItems.slice(start,end));
+        const updatedPaginationData = {
+            allItems:allItems,
+            currentItems:allItems.slice(start,end),
+            currentPageNo: newPageNo,
+            itemsPerPage:itemsPerPage,
+            scrollTo:scrollTo,
+        }; 
+        dispatch(setPagination(updatedPaginationData));
+        localStorage.setItem('pagination',JSON.stringify(updatedPaginationData));
         const to = document.getElementById(scrollTo);
         if(to){
             to.scrollIntoView({behavior:"smooth"});

@@ -10,6 +10,7 @@ import { formatDate } from "../../utils/formatDate";
 import { setOrderHistory } from "../../slices/orderHistorySlice";
 import Pagination from "../common/Pagination";
 import ViewDetailsModal from "../common/ViewDetailsModal";
+import { resetPagination, setAllItems, setPagination } from "../../slices/paginationSlice";
 
 const CanteenDashboard = () => {
 
@@ -17,20 +18,30 @@ const CanteenDashboard = () => {
     const dispatch = useDispatch();
     const canteenDetails = useSelector(store => store.canteen.canteenDetails);
     const orderHistory = useSelector(store => store.orderHistory);
-    const [currentItems,setCurrentItems] = useState(null);
+    const paginationData = useSelector(store => store.pagination);
+    const { allItems,currentItems,itemsPerPage,currentPageNo } = paginationData;
     const [isOpen,setIsOpen] = useState(false);
     const [showOrder,setShowOrder] = useState(null);
     
     useEffect(()=>{
-        getOrderHistory({shopid:id},dispatch);
-        getCanteenDetails(id,dispatch);
-        
+        getOrderHistory({shopid:id},dispatch)
+        .then(()=>getCanteenDetails(id,dispatch))
+
         return ()=>{
+            console.log('dismount')
             dispatch(setCanteenDetails(null));
             dispatch(setOrderHistory([]));
-            // socket.disconnect();
+            dispatch(resetPagination());
+            localStorage.removeItem('pagination');
         }
     },[id]);
+
+    useEffect(()=>{
+        const paginationData = {allItems:orderHistory, currentItems: currentItems.length ? currentItems :orderHistory.slice(0,10), 
+        itemsPerPage: 10, currentPageNo: currentPageNo ? currentPageNo : 1, scrollTo: 'orderHistory'};
+        dispatch(setPagination(paginationData));
+        localStorage.setItem('pagination',JSON.stringify(paginationData));
+    },[orderHistory])
 
     const inputStyle = "bg-[#31363F] w-[90%] lg:w-[80%] px-2 py-2 rounded-md mt-2";
     const data = [
@@ -43,34 +54,20 @@ const CanteenDashboard = () => {
         setIsOpen(!isOpen);
     }
 
-    const handleAccept = (e,id)=>{
-        e.stopPropagation();
+    const handleUpdateOrderStatus = (id,status)=>{
         const formData = new FormData();
         formData.append("orderid",id);
-        formData.append("status","preparing");
+        formData.append("status",status);
         updateOrderStatus(formData).then(()=>{
-            const updatedOrderHistory = orderHistory.map((order)=> order._id===id ? {...order,status:"preparing"}: order);
+            const updatedOrderHistory = orderHistory.map((order)=> order._id===id ? {...order,status:status}: order);
             dispatch(setOrderHistory(updatedOrderHistory));
-        });
-    }
-
-    const handlePrepared = (id)=>{
-        const formData = new FormData();
-        formData.append("orderid",id);
-        formData.append("status","prepared");
-        updateOrderStatus(formData).then(()=>{
-            const updatedOrderHistory = orderHistory.map((order)=> order._id===id ? {...order,status:"prepared"}: order);
-            dispatch(setOrderHistory(updatedOrderHistory));
-        });
-    }
-
-    const handlePickedUp = (id)=>{
-        const formData = new FormData();
-        formData.append("orderid",id);
-        formData.append("status","completed");
-        updateOrderStatus(formData).then(()=>{
-            const updatedOrderHistory = orderHistory.map((order)=> order._id===id ? {...order,status:"completed"}: order);
-            dispatch(setOrderHistory(updatedOrderHistory));
+            const totalItems = allItems.length;
+            const totalPages = Math.ceil(totalItems/itemsPerPage);
+            const start = currentPageNo*itemsPerPage - itemsPerPage;
+            const end = currentPageNo===totalPages ? totalItems : currentPageNo*itemsPerPage;
+            const paginationData = {allItems:updatedOrderHistory, currentItems:updatedOrderHistory.slice(start,end), 
+            itemsPerPage: itemsPerPage, currentPageNo: currentPageNo, scrollTo: 'orderHistory'};
+            dispatch(setPagination(paginationData));
         });
     }
 
@@ -142,17 +139,20 @@ const CanteenDashboard = () => {
                                 <div className="mt-4 flex flex-row gap-4 sm:gap-7 items-center">
                                     <h1 className="whitespace-nowrap text-xs sm:text-base">{"Total Bill: ₹" + order.totalAmount}</h1>
                                     {order.status==='pending' && <>
-                                        <button className="bg-[#76ABAE] w-16 sm:w-24 py-1 rounded-md sm:rounded-lg sm:ml-12 text-xs sm:text-base" onClick={(e)=>handleAccept(e,order._id)}>Accept</button>
+                                        <button className="bg-[#76ABAE] w-16 sm:w-24 py-1 rounded-md sm:rounded-lg sm:ml-12 text-xs sm:text-base" 
+                                        onClick={()=>handleUpdateOrderStatus(order._id,"preparing")}>Accept</button>
                                         <button className="bg-red-600 w-16 sm:w-24 py-1 rounded-md sm:rounded-lg text-xs sm:text-base">Reject</button>
                                     </>}
-                                    {order.status==='preparing' && <button className="bg-[#76ABAE] w-16 sm:w-24 py-1 rounded-md sm:rounded-lg sm:ml-12 text-xs sm:text-base" onClick={()=>handlePrepared(order._id)}>Prepared</button>}
-                                    {order.status==='prepared' && <button className="bg-[#76ABAE] w-16 sm:w-24 py-1 rounded-md sm:rounded-lg sm:ml-12 text-xs sm:text-base" onClick={()=>handlePickedUp(order._id)}>Picked Up</button>}
+                                    {order.status==='preparing' && <button className="bg-[#76ABAE] w-16 sm:w-24 py-1 rounded-md sm:rounded-lg sm:ml-12 text-xs sm:text-base" 
+                                    onClick={()=>handleUpdateOrderStatus(order._id,"prepared")}>Prepared</button>}
+                                    {order.status==='prepared' && <button className="bg-[#76ABAE] w-16 sm:w-24 py-1 rounded-md sm:rounded-lg sm:ml-12 text-xs sm:text-base" 
+                                    onClick={()=>handleUpdateOrderStatus(order._id,"completed")}>Picked Up</button>}
                                 </div>
                             </div>);
                         })}
                     </div>
                     {isOpen && <ViewDetailsModal close={handleToggleViewDetails} order={showOrder}/>}
-                    {orderHistory && <span className="-ml-20"><Pagination allItems={orderHistory} itemsPerPage={10} setCurrentItems={setCurrentItems} scrollTo={'orderHistory'}/></span>}
+                    {orderHistory && <span className="-ml-20"><Pagination/></span>}
                 </>}
             </div>
         </div>}

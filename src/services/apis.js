@@ -13,7 +13,8 @@ export const endpoints = {
     LOGIN_API: BASE_URL + "/login",
     FORGOT_PASSWORD_API: BASE_URL + "/forgetPassword",
     VERIFY_OTP_API: BASE_URL + "/verifyotp",
-    RESET_PASSWORD_API: BASE_URL + "/passwordReset"
+    RESET_PASSWORD_API: BASE_URL + "/passwordReset",
+    LOGOUT_API: BASE_URL +'/logout',
 }
 
 // Customer Emdpoints
