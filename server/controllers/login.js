@@ -326,3 +326,19 @@ exports.popularCanteens=async(req,res)=>{
     })
   }
 }
+
+
+//Logout function
+
+exports.logout=async(req,res)=>{
+res.clearCookie('token',{
+  httpOnly:true,
+  sameSite:'Lax',
+  secure:true,
+});
+res.status(200).json({
+  success:true,
+  message:"Logged Out Successfully",
+})
+
+}

@@ -9,7 +9,7 @@ require("dotenv").config();
 
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
-const { faListNumeric } = require("@fortawesome/free-solid-svg-icons");
+
 
 exports.orderPayment = async (req, res) => {
   try {
@@ -118,7 +118,7 @@ exports.orderVerify = async (req, res) => {
     const customerId = newOrder.userid;
     // console.log("SHop ki id",ownerId);
     // console.log("Ab yaha se owner ke page mai jayega");
-    console.log(canteenName);
+   // console.log(canteenName);
     io.to(ownerId.toString()).emit("newOrder", orderObject);
 
     res.status(200).json({
@@ -194,7 +194,7 @@ exports.cashPayment = async (req, res) => {
       canteen.totalRevenue += amount;
       await canteen.save();
     }
-    console.log(newOrder);
+  //  console.log(newOrder);
 
     // Clearing the user's cart
     await Cart.deleteOne({ userid: payload.id });
