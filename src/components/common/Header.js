@@ -30,6 +30,8 @@ const Header = () => {
     const liveOrders = useSelector(store => store.liveOrders);
     const [confirmationalModal,setConfirmationalModal] = useState(null);
     const {currTab} = useSelector(store => store.tabInfo);
+    const paginationData = useSelector(store => store.pagination);
+    const { allItems,itemsPerPage,currentPageNo } = paginationData;
     const [showDropDownMenu,setShowDropDownMenu] = useState(false);
     const [showNotification,setShowNotification] = useState(false);
     const navigate = useNavigate();
@@ -47,6 +49,7 @@ const Header = () => {
                 //for owner
                 dispatch(addOrder(order));
                 dispatch(addLiveOrder(order));
+                // console.log([order,...orderHistory]);
                 const paginationData = {allItems:[order,...orderHistory], currentItems:[order,...orderHistory].slice(0,10), 
                 itemsPerPage: 10, currentPageNo: 1, scrollTo: 'orderHistory'};
                 dispatch(setPagination(paginationData));
@@ -55,6 +58,16 @@ const Header = () => {
             const handleOrderStatusUpdate = (orderStatus)=>{
                 //for user
                 dispatch(setOrderStatus(orderStatus));
+                const updatedOrderHistory = orderHistory.map((order) => order._id===orderStatus.orderid ? {...order,status:orderStatus.status}: order);
+                console.log(updatedOrderHistory);
+                console.log("status update page no",currentPageNo)
+                const totalItems = allItems.length;
+                const totalPages = Math.ceil(totalItems/itemsPerPage);
+                const start = currentPageNo*itemsPerPage - itemsPerPage;
+                const end = currentPageNo===totalPages ? totalItems : currentPageNo*itemsPerPage;
+                const paginationData = {allItems:updatedOrderHistory, currentItems:updatedOrderHistory.slice(start,end), 
+                itemsPerPage: 10, currentPageNo: currentPageNo, scrollTo: 'orderHistory'};
+                dispatch(setPagination(paginationData));
             }
             socket.on("newOrder", handleNewOrder);
             socket.on("orderStatusUpdate", handleOrderStatusUpdate);
@@ -63,7 +76,7 @@ const Header = () => {
                 socket.off("orderStatusUpdate", handleOrderStatusUpdate);
             }
         }
-    },[user]);
+    },[user,orderHistory]);
     
     const handleUserIconClick = ()=>{
         navigate('/dashboard/my-profile');

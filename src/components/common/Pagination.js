@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { CiCircleChevLeft,CiCircleChevRight } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
 import { setPagination } from "../../slices/paginationSlice";

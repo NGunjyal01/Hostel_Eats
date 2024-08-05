@@ -23,7 +23,7 @@ import { setCanteensData } from "../../slices/canteenPageSlice";
 import DishCard from "./DishCard";
 import Pagination from "../../components/common/Pagination";
 import { formatTime } from "../../utils/formatTime";
-import { setPagination } from "../../slices/paginationSlice";
+import { resetPagination, setPagination } from "../../slices/paginationSlice";
 
 const CustomPrevArrow = (props) => {
   const { onClick } = props;
@@ -86,8 +86,8 @@ const Explore = () => {
       console.log("dishes====>",dishes)
       dispatch(setPagination({
         allItems: dishes,
-        currentItems: currentItems.length ? currentItems : dishes.slice(0, 9),
-        currentPageNo: currentPageNo ? currentPageNo : 1,
+        currentItems: dishes.slice(0, 9),
+        currentPageNo: 1,
         itemsPerPage: 9,
         scrollTo: "search-input"
       }));
@@ -96,6 +96,11 @@ const Explore = () => {
       setFilteredCanteens(JSON.parse(savedFilteredCanteens));
     if (savedShowSearchOptions)
       setShowSearchOptions(JSON.parse(savedShowSearchOptions));
+
+    return ()=>{
+      dispatch(resetPagination());
+      localStorage.removeItem('pagination');
+    }
   }, []);
 
   const filterResults = async (input) => {
