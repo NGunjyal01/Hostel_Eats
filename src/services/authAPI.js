@@ -129,7 +129,7 @@ export async function resetPassword(resetData, navigate) {
 export async function logout(navigate,dispatch){
     const toastId = toast.loading("Loading...");
     try{
-        const response = await axios.post(LOGOUT_API,config);
+        const response = await axios.post(LOGOUT_API,{},config);
         console.log("LOGOUT  API RESPONSE.............",response);
         dispatch(removeUser());
         localStorage.removeItem("user");

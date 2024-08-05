@@ -58,9 +58,13 @@ export async function addCartItem(item, dispatch) {
     try {
         const response = await axios.post(ADD_CART_ITEM_API, item, config);
         console.log("ADD CART ITEM API RESPONSE:", response);
+        if(response.data.success){
         localStorage.setItem('cart',JSON.stringify(response.data.data));
         dispatch(setCartItem(response.data.data));
         toast.success("Successfully Added Item");
+        }else{
+            toast.error("Kindly login first.");
+        }
     } catch (error) {
         console.log("ERROR DURING ADD CART ITEM API................",error);
         toast.error("Error Adding Item");
@@ -73,7 +77,8 @@ export async function removeCartItem(item, dispatch) {
     try {
         const response = await axios.post(REMOVE_CART_ITEM_API, item, config);
         console.log("REMOVE CART ITEM API RESPONSE...................", response);
-        if(response.data.success && response.data.message==="Cart is now empty and has been deleted"){
+        if(response.data.success){
+        if(response.data.message==="Cart is now empty and has been deleted"){
             dispatch(resetCartItems());
             localStorage.removeItem('cart');
         }
@@ -82,6 +87,9 @@ export async function removeCartItem(item, dispatch) {
             localStorage.setItem('cart',JSON.stringify(response.data.data));
         }
         toast.success("Successfully Removed Item");
+        }else{
+            toast.error("Error Removing Item without logging in.");
+        }
     } catch (error) {
         console.log("ERROR DURING REMOVE CART ITEM API....................", error);
         toast.error("Error During Remove Cart Item");
@@ -134,9 +142,13 @@ export const addFavouriteItem = async (item, dispatch) => {
     try {
         const response = await axios.post(customerEndpoints.ADD_FAVOURITE_ITEM_API, item, config);
         console.log("ADD FAVOURITE ITEM API RESPONSE:", response);
+        if(response.data.success){
         localStorage.setItem('favourites',JSON.stringify(response.data.data))
         dispatch(setFavouriteItems(response.data.data))
         toast.success("Successfully Added to Favourites");
+        }else{
+            toast.error("Kindly login first.");
+        }
     } catch (error) {
         console.log("ERROR DURING ADD FAVOURITE ITEM API................", error);
         toast.error("Error Adding to Favourites");
@@ -147,7 +159,8 @@ export const removeFavouriteItem = async (item, dispatch) => {
     try {
         const response = await axios.post(customerEndpoints.REMOVE_FAVOURITE_ITEM_API, item, config);
         console.log("REMOVE FAVOURITE ITEM API RESPONSE...................", response);
-        if(response.data.success && response.data.message==="Favourite List is now empty and has been deleted"){
+        if(response.data.success){
+        if(response.data.message==="Favourite List is now empty and has been deleted"){
             dispatch(resetFavouriteItems());
             localStorage.removeItem('favourites');
         } else {
@@ -155,6 +168,9 @@ export const removeFavouriteItem = async (item, dispatch) => {
             localStorage.setItem('favourites', JSON.stringify(response.data.data));
         } 
         toast.success("Successfully Removed from Favourites");
+        }else{
+            toast.error("Error removing favourites without logging in.")
+        }
     } catch (error) {
         console.log("ERROR DURING REMOVE FAVOURITE ITEM API....................", error);
         toast.error("Error Removing from Favourites");
