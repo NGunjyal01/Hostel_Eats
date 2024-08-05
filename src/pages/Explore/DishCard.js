@@ -33,6 +33,7 @@ const DishCard = ({ dish, setShowModal, cartItemMap }) => {
     const handleAdd = async (e) => {
         e.stopPropagation();
         const cartCanteenId = !Object.keys(cart).length ? null : cart.items[0].item.shopid._id;
+        console.log("cart canteen id=====>",cartCanteenId);
         if (cartCanteenId && cartCanteenId !== shopid) {
             setShowModal({
                 text1: "Ordering from multiple canteens is not supported",
