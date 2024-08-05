@@ -120,7 +120,7 @@ exports.orderVerify = async (req, res) => {
     // console.log("Ab yaha se owner ke page mai jayega");
    // console.log(canteenName);
     io.to(ownerId.toString()).emit("newOrder", orderObject);
-
+  io.to(customerId.toString()).emit("orderUpdate",orderObject);
     res.status(200).json({
       success: true,
       orderId: razorpay_order_id,
@@ -203,7 +203,7 @@ exports.cashPayment = async (req, res) => {
     const ownerId = newOrder.merchantid;
     const customerId = newOrder.userid;
     io.to(ownerId.toString()).emit("newOrder", orderObject);
-
+ io.to(customerId.toString()).emit("orderUpdate", orderObject);
     res.status(200).json({
       success: true,
       data: newOrder,
