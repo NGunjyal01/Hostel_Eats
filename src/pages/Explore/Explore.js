@@ -23,6 +23,7 @@ import { setCanteensData } from "../../slices/canteenPageSlice";
 import DishCard from "./DishCard";
 import Pagination from "../../components/common/Pagination";
 import { formatTime } from "../../utils/formatTime";
+import { setPagination } from "../../slices/paginationSlice";
 
 const CustomPrevArrow = (props) => {
   const { onClick } = props;
@@ -62,11 +63,14 @@ const Explore = () => {
   const [filteredCanteens, setFilteredCanteens] = useState([]);
   const [searchType, setSearchType] = useState("dishes");
   const [showModal, setShowModal] = useState(null);
-  const [currentItems, setCurrentItems] = useState([]);
+  // const [currentItems, setCurrentItems] = useState([]);
+  
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const popularDishes = useSelector((state) => state.popularDishes);
+  const paginationData = useSelector(store => store.pagination);
+  const { allItems,currentItems,itemsPerPage,currentPageNo } = paginationData;
 
   useEffect(() => {
     const savedSearchInput = localStorage.getItem("searchInput");
@@ -78,7 +82,15 @@ const Explore = () => {
     if (savedFilteredDishes) {
       const dishes = JSON.parse(savedFilteredDishes);
       setFilteredDishes(dishes);
-      setCurrentItems(dishes.slice(0, 9)); // Initialize currentItems with first page items
+      // setCurrentItems(dishes.slice(0, 9)); // Initialize currentItems with first page items
+      console.log("dishes====>",dishes)
+      dispatch(setPagination({
+        allItems: dishes,
+        currentItems: currentItems.length ? currentItems : dishes.slice(0, 9),
+        currentPageNo: currentPageNo ? currentPageNo : 1,
+        itemsPerPage: 9,
+        scrollTo: "search-input"
+      }));
     }
     if (savedFilteredCanteens)
       setFilteredCanteens(JSON.parse(savedFilteredCanteens));
@@ -94,19 +106,18 @@ const Explore = () => {
     let dishResult;
     try {
       dishResult = await searchItem(formData);
-      const exactMatch = dishResult.items.filter(
-        (dish) => dish.itemName.toLowerCase() === lowerCaseInput
-      );
-      const partialMatch = dishResult.items.filter(
-        (dish) =>
-          dish.itemName.toLowerCase().includes(lowerCaseInput) &&
-          dish.itemName.toLowerCase() !== lowerCaseInput
-      );
-      setFilteredDishes([...exactMatch, ...partialMatch]);
-      localStorage.setItem(
-        "filteredDishes",
-        JSON.stringify([...exactMatch, ...partialMatch])
-      );
+      const allMatches = dishResult.items;
+      console.log("All matches====>",allMatches)
+      setFilteredDishes(allMatches);
+      // setCurrentItems(allMatches.slice(0, 9)); // Update currentItems for initial display
+      dispatch(setPagination({
+        allItems: allMatches,
+        currentItems: allMatches.slice(0, 9),
+        currentPageNo: 1,
+        itemsPerPage: 9,
+        scrollTo: "search-input"
+      }));
+      localStorage.setItem("filteredDishes", JSON.stringify(allMatches));
     } catch (error) {
       console.error("Error searching for items:", error);
       setFilteredDishes([]);
@@ -119,7 +130,7 @@ const Explore = () => {
       localStorage.setItem(
         "filteredCanteens",
         JSON.stringify(
-          Array.isArray(dishResult.canteens) ? dishResult.canteens : []
+          dishResult.canteens
         )
       );
     } catch (error) {
@@ -283,7 +294,7 @@ const Explore = () => {
           {searchType === "dishes" ? (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {currentItems.map((dish) => (
+                {paginationData.currentItems.map((dish) => (
                   <DishCard
                     key={dish.itemid}
                     dish={dish}
@@ -293,12 +304,13 @@ const Explore = () => {
                 ))}
               </div>
               <div className="flex justify-center mt-6">
-                <Pagination
+                {/* <Pagination
                   allItems={filteredDishes}
                   itemsPerPage={9}
                   setCurrentItems={setCurrentItems}
                   scrollTo="search-input"
-                />
+                /> */}
+                <Pagination/>
               </div>
             </>
           ) : (
