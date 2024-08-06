@@ -8,7 +8,7 @@ const cartSlice = createSlice({
             return action.payload;
         },
         resetCartItems: () => {
-            return [];
+            return {};
         }
     }
 });

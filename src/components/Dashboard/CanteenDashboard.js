@@ -27,25 +27,9 @@ const CanteenDashboard = () => {
     const [loading,setLoading] = useState(true);
     
     useEffect(()=>{
-
-        const fetchData = async()=>{
-            try {
-                // Fetch both data concurrently
-                const [orderHistoryResult, canteenDetailsResult] = await Promise.all([
-                    getOrderHistory({ shopid: id }, dispatch),
-                    getCanteenDetails(id, dispatch),
-                ]);
-    
-                if (orderHistoryResult && canteenDetailsResult) {
-                    console.log('orderHistory fetched...................', orderHistory);
-                    console.log('fetched canteen details...............', canteenDetailsResult);
-                    setLoading(false);
-                }
-            } catch (error) {
-                console.error("Failed to fetch data", error);
-            }
-        };
-        fetchData();
+        getOrderHistory({ shopid: id }, dispatch)
+        .then(()=>getCanteenDetails(id, dispatch))
+        .then(()=> setLoading(false));
 
         return ()=>{
             console.log('dismount')
@@ -58,7 +42,11 @@ const CanteenDashboard = () => {
     },[id]);
 
     useEffect(()=>{
-        const paginationData = {allItems:orderHistory, currentItems: currentItems.length ? currentItems :orderHistory.slice(0,10), 
+        const totalItems = orderHistory.length;
+        const totalPages = Math.ceil(totalItems/itemsPerPage);
+        const start = currentPageNo*itemsPerPage - itemsPerPage;
+        const end = currentPageNo===totalPages ? totalItems : currentPageNo*itemsPerPage;
+        const paginationData = {allItems:orderHistory, currentItems:orderHistory.slice(start,end), 
         itemsPerPage: 10, currentPageNo: currentPageNo ? currentPageNo : 1, scrollTo: 'orderHistory'};
         dispatch(setPagination(paginationData));
         localStorage.setItem('pagination',JSON.stringify(paginationData));

@@ -59,8 +59,6 @@ const Header = () => {
                 //for user
                 dispatch(setOrderStatus(orderStatus));
                 const updatedOrderHistory = orderHistory.map((order) => order._id===orderStatus.orderid ? {...order,status:orderStatus.status}: order);
-                console.log(updatedOrderHistory);
-                console.log("status update page no",currentPageNo)
                 const totalItems = allItems.length;
                 const totalPages = Math.ceil(totalItems/itemsPerPage);
                 const start = currentPageNo*itemsPerPage - itemsPerPage;
@@ -143,11 +141,11 @@ const Header = () => {
                 </AnimatePresence> 
                 <div className="absolute sm:-right-4 lg:-right-6"><IoMdArrowDropdown className="arrowLogo group-hover:rotate-180 transition-transform ease-out duration-200"/></div>
             </div></>}
-            {user?.accountType==="Customer" && <span className="absolute sm:-mt-1 right-5 sm:right-[7%] cursor-pointer" onClick={()=>{navigate('/dashboard/cart')}}>
+            {user && user?.accountType==="Customer" && <span className="absolute sm:-mt-1 right-5 sm:right-[7%] cursor-pointer" onClick={()=>{navigate('/dashboard/cart')}}>
                 <FaCartShopping className="cartLogo"/>
                 <span className="absolute text-black top-0.5 md:top-1 lg:top-0 left-[0.8rem] sm:left-3.5 md:left-4 lg:left-[1.1rem] font-semibold text-xs lg:text-base">{!Object.keys(cart).length ? 0 : cart.totalQuantity}</span>
             </span>}
-            {user?.accountType==="Owner" && <div className="absolute sm:-mt-1 right-5 sm:right-[7%] cursor-pointer" onClick={handleToggleNotification}>
+            {user && user?.accountType==="Owner" && <div className="absolute sm:-mt-1 right-5 sm:right-[7%] cursor-pointer" onClick={handleToggleNotification}>
                 {liveOrders.length 
                 ? <span>
                     <MdNotificationsActive className={`cartLogo ${showNotification?'':'animate-shake'}`}/>
