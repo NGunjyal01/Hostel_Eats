@@ -7,19 +7,38 @@ import Pagination from "../common/Pagination";
 import Spinner from "../common/Spinner";
 import { SiTicktick } from "react-icons/si";
 import ViewDetailsModal from "../common/ViewDetailsModal";
+import { resetPagination, setPagination } from "../../slices/paginationSlice";
+import { setOrderHistory } from "../../slices/orderHistorySlice";
 
 const Orders = () => {
     
     const orderHistory = useSelector(store => store.orderHistory);
-    const [currentItems,setCurrentItems] = useState(null);
     const [loading,setLoading] = useState(false);
     const [isOpen,setIsOpen] = useState(false);
     const [showOrder,setShowOrder] = useState(null);
     const dispatch = useDispatch();
+    const paginationData = useSelector(store => store.pagination);
+    const { currentItems,currentPageNo } = paginationData;
 
     useEffect(()=>{
+        console.log("orderhistory page.............................");
         setLoading(true);
-        getOrderHistory(dispatch).then(()=> setLoading(false));
+        const fetchData = async()=>{
+            const result = await getOrderHistory(dispatch);
+            setLoading(false);
+            console.log("orderhistory===============",result);
+            if(result){
+                const paginationData = {allItems:result, currentItems:result.slice(0,10), 
+                itemsPerPage: 10, currentPageNo: 1, scrollTo: 'orderHistory'};
+                dispatch(setPagination(paginationData));
+                localStorage.setItem('pagination',JSON.stringify(paginationData));
+            }
+        }
+        fetchData();
+        return ()=>{
+            dispatch(resetPagination());
+            localStorage.removeItem('pagination');
+        }
     },[]);
 
     const handleToggleViewDetails = (order)=>{
@@ -86,7 +105,7 @@ const Orders = () => {
                         })}
                     </div>
                     {isOpen && <ViewDetailsModal close={handleToggleViewDetails} order={showOrder}/>}
-                    <Pagination allItems={orderHistory} itemsPerPage={10} setCurrentItems={setCurrentItems} scrollTo={"orderHistory"}/>
+                    <Pagination/>
                 </>}
             </div>}
         </div>

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import MenuItems from "./MenuItems";
 import Spinner from "../../common/Spinner";
 import { setCanteenDetails } from "../../../slices/canteenSlice";
+import { resetPagination } from "../../../slices/paginationSlice";
 
 const Edit_Canteen = () => {
 
@@ -15,10 +16,14 @@ const Edit_Canteen = () => {
   const {canteenDetails} = useSelector(store => store.canteen);
   //This is it know which btn is working currently meaning if editItem is true then currently we are editing menu item and no other btn will work
   const [btnState,setBtnState] = useState({editCanteen:false,editItem:false,addItem:false});
+
   useEffect(()=>{
     getCanteenDetails(id,dispatch);
+
     return ()=>{
       dispatch(setCanteenDetails(null));
+      dispatch(resetPagination());
+      localStorage.removeItem('pagination');
     }
   },[id]);
 

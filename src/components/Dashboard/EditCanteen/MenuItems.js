@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ItemCardOwner from "./ItemCardOwner";
 import EditForm from "./EditForm";
 import AddForm from "./AddForm";
 
 import Pagination from "../../common/Pagination";
+import { resetPagination, setPagination } from "../../../slices/paginationSlice";
 
 const MenuItems = ({btnState,setBtnState}) => {
 
     const {canteenDetails} = useSelector(store => store.canteen);
-    const menuItems = canteenDetails?.menuitems;
+    const menuItems = canteenDetails.menuitems;
     const totalItems = menuItems.length;
-    const [currentItems,setCurrentItems] = useState(null);
     const [showEditForm,setShowEditForm] = useState(false);
     const [editItemDetails,setEditItemDetails] = useState(null);
+    const paginationData = useSelector(store => store.pagination);
+    const { currentItems,currentPageNo } = paginationData;
+    const dispatch = useDispatch();
 
     useEffect(()=>{
         if(totalItems===0){
@@ -21,11 +24,12 @@ const MenuItems = ({btnState,setBtnState}) => {
         }
     },[totalItems]);
 
-    // useEffect(()=>{
-    //     const start = currentPageNo*10 - 10;
-    //     const end = currentPageNo===totalItemsGroup ? totalItems : currentPageNo*10;
-    //     setCurrentItems(menuItems?.slice(start,end));
-    // },[menuItems]);
+    useEffect(()=>{
+        const paginationData = {allItems:menuItems, currentItems: currentItems.length ? currentItems :menuItems.slice(0,10), 
+        itemsPerPage: 10, currentPageNo: currentPageNo ? currentPageNo : 1, scrollTo: "menu-item"};
+        dispatch(setPagination(paginationData));
+        localStorage.setItem('pagination',JSON.stringify(paginationData));
+    },[menuItems]);
 
     const handleEdit = () =>{
         setBtnState({...btnState,editItem:true});
@@ -54,7 +58,7 @@ const MenuItems = ({btnState,setBtnState}) => {
                                 <ItemCardOwner item={item} editBtnState={btnState.editItem} setShowEditForm={setShowEditForm} setEditItemDetails={setEditItemDetails}/>
                             </span>)}
                         </div>
-                        <Pagination allItems={menuItems} itemsPerPage={10} setCurrentItems={setCurrentItems} scrollTo={"menu-item"}/>
+                        <Pagination/>
                     </div>) 
                 : <AddForm btnState={btnState} setBtnState={setBtnState} shopid={canteenDetails._id}/>}
             </div>

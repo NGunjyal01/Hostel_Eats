@@ -3,7 +3,7 @@ import React from 'react';
 const Footer = () => {
   return (
     <footer className="bg-gray-800 text-white py-8">
-      <div className="container mx-auto flex flex-wrap justify-between items-start gap-8 px-4">
+      <div className="container mx-auto flex flex-wrap justify-between items-start gap-8 px-4 lg:px-8">
         
         {/* About Section */}
         <div className='w-full sm:w-auto lg:flex-1'>

@@ -2,6 +2,10 @@ import axios from "axios";
 import toast from "react-hot-toast"
 import { endpoints } from "./apis";
 import { addUser, removeUser } from "../slices/userSlice";
+import { resetCartItems } from "../slices/cartSlice";
+import { resetFavouriteItems } from "../slices/favouritesSlice";
+import { setFavouriteItems } from "../slices/favouritesSlice";
+import { loadFavouriteItems } from "./customerAPI";
 
 const { SIGNUP_API,LOGIN_API,FORGOT_PASSWORD_API, VERIFY_OTP_API, RESET_PASSWORD_API,LOGOUT_API } = endpoints;
 const config = { headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true };
@@ -38,6 +42,7 @@ export async function login(formData,navigate,dispatch){
     const toastId = toast.loading("Loading...");
     try{
         const response = await axios.post(LOGIN_API,formData,{headers:{'Content-Type':'application/json'},withCredentials:true});
+        const favouriteItems = await loadFavouriteItems(dispatch);
         console.log("LOGIN API RESPONSE..............",response);
         if(!response.data.success){
             const error = new Error(response.data.message);
@@ -47,7 +52,8 @@ export async function login(formData,navigate,dispatch){
         else{
             toast.success("Login Successful");
             const user = response.data.existingUser;
-            const dob = response.data.existingUser.dob;
+            const dob = response.data.existingUser.dob;                       
+            dispatch(setFavouriteItems(favouriteItems));
             dispatch(addUser({...user,dob:dob?.split('T')[0]}));
             localStorage.setItem("user",JSON.stringify({...user,dob:dob?.split('T')[0]}));
             navigate('/');
@@ -132,12 +138,20 @@ export async function logout(navigate,dispatch){
         const response = await axios.post(LOGOUT_API,{},config);
         console.log("LOGOUT  API RESPONSE.............",response);
         dispatch(removeUser());
+        dispatch(resetCartItems());
+        dispatch(resetFavouriteItems());
         localStorage.removeItem("user");
         localStorage.removeItem("canteen");
         localStorage.removeItem("currTab");
         localStorage.removeItem("prevTab");
         localStorage.removeItem('cart');
         localStorage.removeItem('orderHistory');
+        localStorage.removeItem('searchInput');
+        localStorage.removeItem('orderHistory');
+        localStorage.removeItem('filteredDishes');
+        localStorage.removeItem('filteredCanteens');
+        localStorage.removeItem('favourites');
+        localStorage.removeItem('showSearchOptions');
         toast.success("Logged Out");
         navigate('/');
     }
