@@ -195,7 +195,7 @@ exports.addItemToCart = async (req, res) => {
     //calculating price:
   await cart.populate({
       path: 'items.item',
-      populate: { path: 'shopid', select: 'canteenName' }
+    //populate: { path: 'shopid', select: 'canteenName' }
     });
 
     cart.totalPrice = cart.items.reduce((total, cartItem) => {
@@ -208,9 +208,9 @@ exports.addItemToCart = async (req, res) => {
 
     
 
-    const canteenName = cart.items.length > 0 ? cart.items[0].item.shopid.canteenName : '';
-
-      cart.canteenName = canteenName;
+    const canteen = await Merchant.findById({_id:cart.items[0].item.shopid})
+     cart.toObject();
+      cart.canteenName = canteen.canteenName;
 await cart.save();
     res.status(200).json({
       data: cart,
