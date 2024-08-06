@@ -82,7 +82,7 @@ const UpdatePassword = () => {
                     <button className="bg-[#76ABAE] w-14 sm:w-20 md:w-24 lg:w-32 rounded-md md:rounded-lg py-0.5 sm:py-1 md:py-2" type="submit">Save</button>
                 </div>
             </form>
-            {showConfirmationalModal && <div className="-ml-[57.3%]"><ConfirmationalModal modalData={showConfirmationalModal}/></div>}
+            {showConfirmationalModal && <ConfirmationalModal modalData={showConfirmationalModal}/>}
         </div>
     )
 }

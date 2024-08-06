@@ -309,12 +309,6 @@ const Explore = () => {
                 ))}
               </div>
               <div className="flex justify-center mt-6">
-                {/* <Pagination
-                  allItems={filteredDishes}
-                  itemsPerPage={9}
-                  setCurrentItems={setCurrentItems}
-                  scrollTo="search-input"
-                /> */}
                 <Pagination/>
               </div>
             </>

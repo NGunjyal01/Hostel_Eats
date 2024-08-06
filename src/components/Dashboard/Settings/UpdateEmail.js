@@ -54,7 +54,7 @@ const UpdateEmail = () => {
                 {newEmail && <button className="bg-white text-black w-14 sm:w-20 md:w-24 lg:w-32 rounded-md sm:rounded-lg py-1 md:py-2 text-xs sm:text-base" onClick={handleCancelBtn}>Cancel</button>}
                 <button className="bg-[#76ABAE] w-14 sm:w-20 md:w-24 lg:w-32 rounded-md md:rounded-lg py-1 md:py-2 text-xs sm:text-base" onClick={handleSaveBtn}>Save</button>
             </div>
-            {showConfirmationalModal && <div className="-ml-[50%]"><ConfirmationalModal modalData={showConfirmationalModal}/></div>}
+            {showConfirmationalModal && <ConfirmationalModal modalData={showConfirmationalModal}/>}
         </div>
     )
 }

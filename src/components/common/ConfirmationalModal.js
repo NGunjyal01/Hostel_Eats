@@ -14,8 +14,8 @@ const ConfirmationalModal = ({modalData}) => {
     }, []);
 
     return (
-        <div className="fixed h-screen w-full top-0 z-50 bg-black backdrop-blur-sm bg-opacity-10 flex justify-center items-center">
-            <div className="bg-[#222831] w-[85%] sm:w-[55%] md:w-[45%] lg:w-[35%] lg:h-[35%] rounded-lg flex flex-col justify-center items-center p-10">
+        <div className="fixed h-full w-full inset-0 z-50 bg-black backdrop-blur-sm bg-opacity-10 flex justify-center items-center">
+            <div className="bg-[#222831] w-[90%] sm:w-[55%] md:w-[45%] lg:w-[35%] lg:h-[35%] -mt-[20%] sm:-mt-0 rounded-lg flex flex-col justify-center items-center p-10">
                 <h1 className="text-xl">{text1}</h1>
                 <h1 className="mt-2">{text2}</h1>
                 <div className="relative flex space-x-10 mt-7">

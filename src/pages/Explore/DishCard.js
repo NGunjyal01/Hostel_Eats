@@ -38,7 +38,7 @@ const DishCard = ({ dish, setShowModal, cartItemMap }) => {
             toast.error("This canteen is closed. Please try again later.");
             return;
         }
-        const cartCanteenId = !Object.keys(cart).length ? null : cart.items[0].item.shopid._id;
+        const cartCanteenId = !Object.keys(cart).length ? null : cart.items[0].item.shopid;
         console.log("cart canteen id=====>",cartCanteenId);
         if (cartCanteenId && cartCanteenId !== shopid) {
             setShowModal({

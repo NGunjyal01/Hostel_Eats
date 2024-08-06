@@ -8,24 +8,21 @@ import Spinner from "../common/Spinner";
 import { SiTicktick } from "react-icons/si";
 import ViewDetailsModal from "../common/ViewDetailsModal";
 import { resetPagination, setPagination } from "../../slices/paginationSlice";
-import { setOrderHistory } from "../../slices/orderHistorySlice";
 
 const Orders = () => {
     
     const orderHistory = useSelector(store => store.orderHistory);
-    const [loading,setLoading] = useState(false);
+    const [loading,setLoading] = useState(true);
     const [isOpen,setIsOpen] = useState(false);
     const [showOrder,setShowOrder] = useState(null);
     const dispatch = useDispatch();
     const paginationData = useSelector(store => store.pagination);
-    const { currentItems,currentPageNo } = paginationData;
+    const { currentItems } = paginationData;
 
     useEffect(()=>{
         console.log("orderhistory page.............................");
-        setLoading(true);
         const fetchData = async()=>{
             const result = await getOrderHistory(dispatch);
-            setLoading(false);
             console.log("orderhistory===============",result);
             if(result){
                 const paginationData = {allItems:result, currentItems:result.slice(0,10), 
@@ -33,6 +30,7 @@ const Orders = () => {
                 dispatch(setPagination(paginationData));
                 localStorage.setItem('pagination',JSON.stringify(paginationData));
             }
+            setLoading(false);
         }
         fetchData();
         return ()=>{
@@ -57,7 +55,7 @@ const Orders = () => {
                 </div>
                 :<> 
                     <div className="grid grid-cols-2 w-full mt-5">
-                        {currentItems?.map( (order) =>{
+                        {currentItems.length===0 ? <div></div> : currentItems?.map( (order) =>{
                             const date = formatDate(order.createdAt.split('T')[0]);
                             const time = formatTime(order.createdAt.split('T')[1].split(':')[0]+":"+order.createdAt.split('T')[1].split(':')[1]);
                             // const items = order.items.map(item => item.item.name + " x " + item.quantity).join(', ');

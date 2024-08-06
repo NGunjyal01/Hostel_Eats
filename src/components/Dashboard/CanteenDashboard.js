@@ -24,10 +24,28 @@ const CanteenDashboard = () => {
     const { allItems,currentItems,itemsPerPage,currentPageNo } = paginationData;
     const [isOpen,setIsOpen] = useState(false);
     const [showOrder,setShowOrder] = useState(null);
+    const [loading,setLoading] = useState(true);
     
     useEffect(()=>{
-        getOrderHistory({shopid:id},dispatch)
-        .then(()=>getCanteenDetails(id,dispatch))
+
+        const fetchData = async()=>{
+            try {
+                // Fetch both data concurrently
+                const [orderHistoryResult, canteenDetailsResult] = await Promise.all([
+                    getOrderHistory({ shopid: id }, dispatch),
+                    getCanteenDetails(id, dispatch),
+                ]);
+    
+                if (orderHistoryResult && canteenDetailsResult) {
+                    console.log('orderHistory fetched...................', orderHistory);
+                    console.log('fetched canteen details...............', canteenDetailsResult);
+                    setLoading(false);
+                }
+            } catch (error) {
+                console.error("Failed to fetch data", error);
+            }
+        };
+        fetchData();
 
         return ()=>{
             console.log('dismount')
@@ -87,7 +105,7 @@ const CanteenDashboard = () => {
 
     return (
     <div className="flex flex-col justify-center items-center">
-        {!canteenDetails? <div className="mt-[10%] -ml-[15%]"><Spinner/></div> 
+        {(loading || !orderHistory|| canteenDetails===null)? <div className="mt-[10%] -ml-[15%]"><Spinner/></div> 
         : <div className="w-[85%] h-fit pb-12 mt-14 relative">
             <h1 className="relative -mt-[22%] sm:-mt-[17%] md:-mt-[15%] lg:-mt-[17%] xl:-mt-[7%] sm:-ml-3 md:-ml-4 text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold">Canteen Dashboard</h1>
             <div className="grid grid-cols-12 w-full">
@@ -166,7 +184,7 @@ const CanteenDashboard = () => {
                         })}
                     </div>
                     {isOpen && <ViewDetailsModal close={handleToggleViewDetails} order={showOrder}/>}
-                    {orderHistory && <span className="-ml-20"><Pagination/></span>}
+                    {orderHistory && <span className="sm:-ml-20"><Pagination/></span>}
                 </>}
             </div>
         </div>}

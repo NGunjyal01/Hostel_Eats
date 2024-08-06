@@ -57,10 +57,12 @@ export async function getCanteenDetails(id,dispatch){
         const canteen = localStorage.getItem('canteen') ? JSON.parse(localStorage.getItem('canteen')) : {};
         localStorage.setItem('canteen',JSON.stringify({...canteen,canteenDetails:response.data.data}));
         dispatch(setCanteenDetails(response.data.data));
+        return true;
     }
     catch(error){
         console.log("ERROR DURING GET CANTEEN DETAILS..........",error);
         toast.error("Can't Fetch Canteen Details");
+        return false;
     }
 }
 
@@ -209,9 +211,11 @@ export async function getOrderHistory(shopid,dispatch){
         console.log("ORDER HISTORY API RESPONSE...................",response);
         dispatch(setOrderHistory(response.data.data));
         localStorage.setItem('orderHistory',JSON.stringify(response.data.data));
+        return true;
     }
     catch(error){
         console.log("ERROR DURING ORDER HISTORY API RESPONSE................",error);
+        return false;
     }
 }
 
