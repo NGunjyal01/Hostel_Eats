@@ -387,7 +387,7 @@ const Explore = () => {
         </div>
       )}
 
-      {showModal && <ConfirmationalModal modalData={showModal} />}
+      {showModal && <ConfirmationalModal modalData={showModal}/>}
     </div>
   );
 };
