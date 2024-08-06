@@ -25,7 +25,7 @@ const Favourite = () => {
     };
 
     return (
-        <div className="flex flex-col items-center relative min-h-screen p-6 text-white pt-24">
+        <div className="flex flex-col items-center relative min-h-screen p-6 text-white pt-12">
             {favourites.length === 0 ? (
                 <h1 className="text-3xl font-bold uppercase tracking-wider mt-[4%] ml-[2%]">No Favourite dishes to show</h1>
             ) : (
@@ -35,8 +35,8 @@ const Favourite = () => {
                     {favouriteItems.map(dish => (
                         dish.item && (
                             <div key={dish.item.itemid} className="bg-[#31363F] p-4 rounded-lg shadow-lg w-full flex justify-between items-center relative cursor-pointer" onClick={() => handleCardClick(dish.item.shopid)}>
-                                <div>
-                                    <h3 className="text-xl font-semibold mb-2 truncate text-ellipsis overflow-hidden max-w-xs">{dish.item.name}</h3>
+                                <div className="w-1/2">
+                                    <h3 className="text-xl font-semibold mb-2 break-words">{dish.item.name}</h3>
                                     <p className="text-gray-400 mb-2 truncate text-ellipsis overflow-hidden max-w-xs">{dish.canteenName}</p>
                                     <p className="text-gray-400 mb-2">Price: ₹{dish.item.price}</p>
                                 </div>
