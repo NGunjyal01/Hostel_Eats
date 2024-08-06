@@ -12,7 +12,7 @@ const MyProfile = () => {
 
     useEffect(()=>{
         if(user?.accountType==="Customer"){
-            !cart && getCartItems(dispatch);
+            getCartItems(dispatch);
         }
     },[])
 

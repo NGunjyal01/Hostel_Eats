@@ -2,6 +2,7 @@ import axios from "axios";
 import toast from "react-hot-toast"
 import { endpoints } from "./apis";
 import { addUser, removeUser } from "../slices/userSlice";
+import { resetCartItems } from "../slices/cartSlice";
 
 const { SIGNUP_API,LOGIN_API,FORGOT_PASSWORD_API, VERIFY_OTP_API, RESET_PASSWORD_API,LOGOUT_API } = endpoints;
 const config = { headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true };
@@ -132,6 +133,7 @@ export async function logout(navigate,dispatch){
         const response = await axios.post(LOGOUT_API,{},config);
         console.log("LOGOUT  API RESPONSE.............",response);
         dispatch(removeUser());
+        dispatch(resetCartItems());
         localStorage.removeItem("user");
         localStorage.removeItem("canteen");
         localStorage.removeItem("currTab");
