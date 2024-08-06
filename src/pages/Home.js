@@ -208,7 +208,8 @@ const Home = () => {
           <p className="mt-5 md:mt-10 text-xs sm:text-xs md:text-sm lg:text-base">
             Made for MNNIT Students to order food
           </p>
-          <button className="bg-[#76ABAE] text-black text-sm md:text-base px-4 py-2 rounded-lg mt-10 md:mt-20 transition-all duration-300 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:rounded-md hover:shadow-[4px_4px_0px_white] active:translate-x-[0px] active:translate-y-[0px] active:rounded-2xl active:shadow-none">
+          <button onClick={()=>navigate('/explore')}
+          className="bg-[#76ABAE] text-black text-sm md:text-base px-4 py-2 rounded-lg mt-10 md:mt-20 transition-all duration-300 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:rounded-md hover:shadow-[4px_4px_0px_white] active:translate-x-[0px] active:translate-y-[0px] active:rounded-2xl active:shadow-none">
             Order Now →
           </button>
         </div>
