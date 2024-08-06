@@ -26,7 +26,7 @@ const Footer = () => {
         {/* Contact Section */}
         <div className="w-[90%] col-span-full sm:col-span-3 lg:col-span-2 mt-10 lg:mt-0">
           <h4 className="font-bold mb-2">Contact Us</h4>
-          <p className="text-sm my-2">Email: <a href="mailto:hosteleatstrio@gmail.com" className="text-white hover:text-[#76ABAE]">hosteleatstrio@gmail.com</a></p>
+          <p className="text-sm my-2">Email: <a href="mailto:hosteleats.team@gmail.com" className="text-white hover:text-[#76ABAE]">hosteleats.team@gmail.com</a></p>
           <p className="text-sm my-2">Phone: <a href="tel:+1234567890" className="text-white hover:text-[#76ABAE] uppercase tracking-widest">xxxxxxxxxx</a></p>
           <p className="text-sm my-2">Address: Hostel Eats, MNNIT, Allahabad, Prayagraj, Uttar Pradesh</p>
         </div>
