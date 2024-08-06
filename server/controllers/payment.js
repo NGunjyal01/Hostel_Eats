@@ -174,7 +174,7 @@ exports.cashPayment = async (req, res) => {
       merchantid: merchant._id,
       shopid: cart.items[0].item.shopid,
       items: cart.items,
-      totalAmount: amount,
+      totalAmount: parseInt(amount),
       razorpayOrderId: null,
       paymentstatus: "cash",
     });
