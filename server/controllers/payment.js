@@ -174,7 +174,7 @@ exports.cashPayment = async (req, res) => {
       merchantid: merchant._id,
       shopid: cart.items[0].item.shopid,
       items: cart.items,
-      totalAmount: amount,
+      totalAmount: parseInt(amount),
       razorpayOrderId: null,
       paymentstatus: "cash",
     });
@@ -197,9 +197,9 @@ exports.cashPayment = async (req, res) => {
     orderObject.imageUrl=cart.items[0].item.imageUrl;
 
     if (canteen) {
-      canteen.totalRevenue += amount;
+      canteen.totalRevenue += parseInt(amount);
       canteen.monthlyRevenue+=canteen.totalRevenue/10;
-      canteen.cashMoney+=amount;
+      canteen.cashMoney+=parseInt(amount);
       await canteen.save();
     }
   //  console.log(newOrder);
