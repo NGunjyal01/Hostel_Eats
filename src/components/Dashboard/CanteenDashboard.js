@@ -10,7 +10,8 @@ import { formatDate } from "../../utils/formatDate";
 import { setOrderHistory } from "../../slices/orderHistorySlice";
 import Pagination from "../common/Pagination";
 import ViewDetailsModal from "../common/ViewDetailsModal";
-import { resetPagination, setAllItems, setPagination } from "../../slices/paginationSlice";
+import { resetPagination, setPagination } from "../../slices/paginationSlice";
+import { setLiveOrders } from "../../slices/notificationSlice";
 
 const CanteenDashboard = () => {
 
@@ -18,6 +19,7 @@ const CanteenDashboard = () => {
     const dispatch = useDispatch();
     const canteenDetails = useSelector(store => store.canteen.canteenDetails);
     const orderHistory = useSelector(store => store.orderHistory);
+    const liveOrders = useSelector(store => store.liveOrders);
     const paginationData = useSelector(store => store.pagination);
     const { allItems,currentItems,itemsPerPage,currentPageNo } = paginationData;
     const [isOpen,setIsOpen] = useState(false);
@@ -31,6 +33,7 @@ const CanteenDashboard = () => {
             console.log('dismount')
             dispatch(setCanteenDetails(null));
             dispatch(setOrderHistory([]));
+            localStorage.removeItem('orderHistory');
             dispatch(resetPagination());
             localStorage.removeItem('pagination');
         }
@@ -59,8 +62,19 @@ const CanteenDashboard = () => {
         formData.append("orderid",id);
         formData.append("status",status);
         updateOrderStatus(formData).then(()=>{
+            //updating orderhistory
             const updatedOrderHistory = orderHistory.map((order)=> order._id===id ? {...order,status:status}: order);
             dispatch(setOrderHistory(updatedOrderHistory));
+            //removing completed orders from live notification
+            if(status==='completed'){
+                const updatedLiveOrders = liveOrders.filter((order) => {
+                    if(order._id!==id){
+                        return order;
+                    }
+                });
+                dispatch(setLiveOrders(updatedLiveOrders));
+            }
+            //changes for pagination
             const totalItems = allItems.length;
             const totalPages = Math.ceil(totalItems/itemsPerPage);
             const start = currentPageNo*itemsPerPage - itemsPerPage;
