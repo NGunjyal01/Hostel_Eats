@@ -107,8 +107,14 @@ exports.orderVerify = async (req, res) => {
             orderObject.imageUrl = cart.items[0].item.imageUrl;
     if (canteen) {
       canteen.totalRevenue = canteen.totalRevenue + cart.totalPrice;
+      canteen.monthlyRevenue+=canteen.totalRevenue/10;
+      canteen.onlineMoney = canteen.onlineMoney + cart.totalPrice;
       await canteen.save();
+      
     }
+
+
+    
     //clearing cart
     await Cart.deleteOne({ userid: payload.id });
 
@@ -192,6 +198,8 @@ exports.cashPayment = async (req, res) => {
 
     if (canteen) {
       canteen.totalRevenue += amount;
+      canteen.monthlyRevenue+=canteen.totalRevenue/10;
+      canteen.cashMoney+=amount;
       await canteen.save();
     }
   //  console.log(newOrder);

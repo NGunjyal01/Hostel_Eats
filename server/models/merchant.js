@@ -55,6 +55,14 @@ const merchantSchema = new mongoose.Schema({
     type:Number,
     default:0,
   },
+  onlineMoney:{
+    type:Number,
+    default:0,
+  },
+  cashMoney:{
+    type:Number,
+    default:0,
+  },
   menuitems: [
     {
       type: mongoose.Schema.Types.ObjectId,

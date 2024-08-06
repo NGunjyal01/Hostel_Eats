@@ -208,6 +208,8 @@ const responseData = canteens.map((canteen) => ({
   closingTime:canteen.closingTime,
   monthlyRevenue:canteen.monthlyRevenue,
   totalRevenue:canteen.totalRevenue,
+  onlineMoney:canteen.onlineMoney,
+  cashMoney:canteen.cashMoney,
 }));
 
 
