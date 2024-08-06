@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { addCartItem, removeCartItem, resetCartItem } from "../../services/customerAPI";
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { toggleFavouriteItem } from '../../services/favouriteAPI';
+import toast from 'react-hot-toast';
 
 const DishCard = ({ dish, setShowModal, cartItemMap }) => {
 
@@ -32,6 +33,11 @@ const DishCard = ({ dish, setShowModal, cartItemMap }) => {
 
     const handleAdd = async (e) => {
         e.stopPropagation();
+        console.log("canteen status",dish.status);
+        if (dish.status.toLowerCase() === "closed") {
+            toast.error("This canteen is closed. Please try again later.");
+            return;
+        }
         const cartCanteenId = !Object.keys(cart).length ? null : cart.items[0].item.shopid._id;
         console.log("cart canteen id=====>",cartCanteenId);
         if (cartCanteenId && cartCanteenId !== shopid) {
