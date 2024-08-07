@@ -273,7 +273,7 @@ const Home = () => {
         ) : (
         <Slider {...settings2} className="mx-4">
           {popularCanteens?.map((canteen) => (
-            <div key={canteen._id} className="px-2 w-full sm:w-auto">
+            <div key={canteen._id} className="px-2 w-full sm:w-auto mb-20">
               <div
                 className="bg-[#31363F] p-2 sm:p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between"
                 onClick={() => handleCardClick(canteen._id)}

@@ -15,7 +15,7 @@ const AboutUs = () => {
                 <p className="pt-[2%] text-lg md:text-xl lg:text-2xl max-w-3xl text-gray-300">
                     Our mission is simple: to provide a seamless and convenient platform for students to order food from their preferred hostel canteens. We aim to enhance the dining experience by offering:
                 </p>
-                <ul className="pt-[2%] text-lg md:text-xl lg:text-2xl max-w-3xl list-disc list-inside text-gray-300 mb-5">
+                <ul className="pt-[2%] text-lg md:text-xl lg:text-2xl max-w-3xl list-disc list-inside text-gray-300 mb-20">
                     <li><strong>Easy Access</strong>: Connecting students with their hostel canteens through a user-friendly app.</li>
                     <li><strong>Variety</strong>: Offering a wide range of menu options to cater to diverse tastes and dietary needs.</li>
                     <li><strong>Convenience</strong>: Simplifying the ordering process with quick and reliable delivery.</li>

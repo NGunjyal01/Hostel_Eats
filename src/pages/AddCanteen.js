@@ -24,12 +24,12 @@ const AddCanteen = () => {
                     <h2 className='text-2xl'>Get started with online ordering</h2>
                     <h5 className='text-l text-gray-300 mb-4'>Please keep the documents ready for a smooth signup</h5>
                     <div className='flex justify-between'>
-                        <ul className='list-disc list-inside space-y-4 mr-8 text-left'>
+                        <ul className='list-disc list-inside text-sm sm:text-base space-y-4 mr-8 text-left'>
                             <li>FSSAI license copy</li>
                             <li>Regular GSTIN</li>
                             <li>Your restaurant menu</li>
                         </ul>
-                        <ul className='list-disc list-inside space-y-4 text-left'>
+                        <ul className='list-disc list-inside text-sm sm:text-base space-y-4 text-left'>
                             <li>PAN card copy</li>
                             <li>Bank account details</li>
                             <li>Dish images for top 5 items</li>
@@ -40,7 +40,7 @@ const AddCanteen = () => {
                 {/* How it works section */}
                 <div className="mt-16 w-full max-w-4xl text-center pb-5">
                     <h2 className="text-3xl font-bold mb-8">How it works?</h2>
-                    <div className="flex flex-col lg:flex-row justify-around lg:space-x-4 space-y-4 lg:space-y-0">
+                    <div className="flex flex-col lg:flex-row justify-around lg:space-x-4 space-y-4 lg:space-y-0 mb-20 px-3">
                         <div className="bg-[#30353e] rounded-lg p-6 shadow-lg w-full lg:w-64">
                             <FontAwesomeIcon icon={faFileAlt} size="3x" className="text-yellow-500 mb-4" />
                             <h3 className="text-xl font-semibold">Step 1</h3>
