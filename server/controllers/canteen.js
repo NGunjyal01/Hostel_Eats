@@ -497,7 +497,18 @@ exports.acceptRejectOrder = async (req, res) => {
       }
 
       await canten.save();
+    }
+    order.status = status;
+    await order.save();
+    // Emit status update to customer
+    const io = req.app.get("io");
+    io.to(order.userid._id.toString()).emit("orderStatusUpdate", {
+      orderid,
+      status,
+    });
 
+ //email Send
+    if (status == "rejected") {
       const templatePath = path.join(
         __dirname,
         "../templates/refundTemplate.html"
@@ -536,15 +547,6 @@ exports.acceptRejectOrder = async (req, res) => {
       // Send email
       transporter.sendMail(mailOptions);
     }
-    order.status = status;
-    await order.save();
-    // Emit status update to customer
-    const io = req.app.get("io");
-    io.to(order.userid.toString()).emit("orderStatusUpdate", {
-      orderid,
-      status,
-    });
-
     res.status(200).json({
       success: true,
       message: `Order ${status} successfully`,
