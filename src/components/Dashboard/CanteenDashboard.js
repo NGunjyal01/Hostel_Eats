@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import { updateOrderStatus, getCanteenDetails, getOrderHistory } from "../../services/ownerAPI";
+import { updateOrderStatus, getCanteenDetails, getOrderHistory, rejectOrder } from "../../services/ownerAPI";
 import { formatTime } from "../../utils/formatTime";
 import { PieChart } from "react-minimal-pie-chart";
 import Spinner from "../common/Spinner";
@@ -25,11 +25,12 @@ const CanteenDashboard = () => {
     const [isOpen,setIsOpen] = useState(false);
     const [showOrder,setShowOrder] = useState(null);
     const [loading,setLoading] = useState(true);
+    const [pieChartData,setPieCharData] = useState({});
     
     useEffect(()=>{
         getOrderHistory({ shopid: id }, dispatch)
         .then(()=>getCanteenDetails(id, dispatch))
-        .then(()=> setLoading(false));
+        .then(()=>setLoading(false));
 
         return ()=>{
             console.log('dismount')
@@ -42,6 +43,23 @@ const CanteenDashboard = () => {
     },[id]);
 
     useEffect(()=>{
+        if(canteenDetails){
+            const {cashMoney,onlineMoney,totalRevenue,monthlyRevenue} = canteenDetails;
+            const updatedDataSet = {
+                data1:[
+                    { title: 'Online', value:  (onlineMoney / totalRevenue) * 100, color: '#E38627' },
+                    { title: 'Cash', value: (cashMoney / totalRevenue) * 100, color: '#C13C37' },
+                ],
+                data2:[
+                    { title: 'Online', value:  ((onlineMoney/10) / monthlyRevenue) * 100, color: '#E38627' },
+                    { title: 'Cash', value: ((cashMoney/10) / monthlyRevenue) * 100, color: '#C13C37' },
+                ],
+            }
+            setPieCharData(updatedDataSet);
+        }
+    },[canteenDetails]);
+
+    useEffect(()=>{
         const totalItems = orderHistory.length;
         const totalPages = Math.ceil(totalItems/itemsPerPage);
         const start = currentPageNo*itemsPerPage - itemsPerPage;
@@ -50,12 +68,12 @@ const CanteenDashboard = () => {
         itemsPerPage: 10, currentPageNo: currentPageNo ? currentPageNo : 1, scrollTo: 'orderHistory'};
         dispatch(setPagination(paginationData));
         localStorage.setItem('pagination',JSON.stringify(paginationData));
-    },[orderHistory])
+    },[orderHistory]);
 
     const inputStyle = "bg-[#31363F] w-[90%] lg:w-[80%] px-2 py-2 rounded-md mt-2";
     const data = [
-        { title: 'Online', value: 10, color: '#E38627' },
-        { title: 'Cash', value: 15, color: '#C13C37' },
+        { title: 'Online', value: 40, color: '#E38627' },
+        { title: 'Cash', value: 600, color: '#C13C37' },
     ];
 
     const handleToggleViewDetails = (order)=>{
@@ -72,7 +90,7 @@ const CanteenDashboard = () => {
             const updatedOrderHistory = orderHistory.map((order)=> order._id===id ? {...order,status:status}: order);
             dispatch(setOrderHistory(updatedOrderHistory));
             //removing completed orders from live notification
-            if(status==='completed'){
+            if(status==='completed' || status==='rejected'){
                 const updatedLiveOrders = liveOrders.filter((order) => {
                     if(order._id!==id){
                         return order;
@@ -90,6 +108,7 @@ const CanteenDashboard = () => {
             dispatch(setPagination(paginationData));
         });
     }
+
 
     return (
     <div className="flex flex-col justify-center items-center">
@@ -122,11 +141,11 @@ const CanteenDashboard = () => {
                 <div className="col-span-12 sm:col-span-5 flex flex-col items-center space-y-10 mt-5 sm:mt-0">
                     <div className="grid grid-cols-2">
                         <h1 className="col-span-1 flex items-center">Total Revenue</h1>
-                        <PieChart data={data} className="ml-5 size-28 col-span-1"/>
+                        <PieChart data={pieChartData.data1} className="ml-5 size-28 col-span-1"/>
                     </div>
                     <div className="grid grid-cols-2">
                         <h1 className="col-span-1 flex items-center">This Month Revenue</h1>
-                        <PieChart data={data} className="ml-7 size-28 col-span-1"/>
+                        <PieChart data={pieChartData.data2} className="ml-7 size-28 col-span-1"/>
                     </div>
                 </div>
             </div>
@@ -161,7 +180,7 @@ const CanteenDashboard = () => {
                                     {order.status==='pending' && <>
                                         <button className="bg-[#76ABAE] w-16 sm:w-24 py-1 rounded-md sm:rounded-lg sm:ml-12 text-xs sm:text-base" 
                                         onClick={()=>handleUpdateOrderStatus(order._id,"preparing")}>Accept</button>
-                                        <button className="bg-red-600 w-16 sm:w-24 py-1 rounded-md sm:rounded-lg text-xs sm:text-base">Reject</button>
+                                        <button className="bg-red-600 w-16 sm:w-24 py-1 rounded-md sm:rounded-lg text-xs sm:text-base" onClick={()=>handleUpdateOrderStatus(order._id,"rejected")}>Reject</button>
                                     </>}
                                     {order.status==='preparing' && <button className="bg-[#76ABAE] w-16 sm:w-24 py-1 rounded-md sm:rounded-lg sm:ml-12 text-xs sm:text-base" 
                                     onClick={()=>handleUpdateOrderStatus(order._id,"prepared")}>Prepared</button>}

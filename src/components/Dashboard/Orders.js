@@ -61,7 +61,7 @@ const Orders = () => {
                             // const items = order.items.map(item => item.item.name + " x " + item.quantity).join(', ');
                             return (
                             <div key={order._id} className="col-span-full md:col-span-1 bg-[#31363F] py-4 px-4 w-[90%] mx-4 md:mx-0 lg:mx-10 mt-12 rounded-lg">
-                                {order.status!=='completed' && <div className="absolute -mt-12 -ml-3 flex items-center gap-2">
+                                {(order.status!=='completed' && order.status!=='rejected') && <div className="absolute -mt-12 -ml-3 flex items-center gap-2">
                                     <div className="size-5 border-2 border-orange-700 rounded-full flex items-center justify-center animate-pulse">
                                         <div className="size-3 bg-orange-700 rounded-full"/>    
                                     </div>
@@ -76,7 +76,7 @@ const Orders = () => {
                                         <button onClick={()=>{ handleToggleViewDetails(order)}}>View Details</button>
                                     </div>
                                 </div>
-                                <div className="relative flex flex-row gap-4 lg:gap-5 xl:gap-10 mt-4 md:-left-1 lg:left-2 xl:left-4 whitespace-nowrap text-xs sm:text-base md:text-xs  lg:text-sm xl:text-base">
+                                <div className={`relative flex flex-row gap-4 lg:gap-5 xl:gap-10 mt-4 md:-left-1 lg:left-2 xl:left-4 whitespace-nowrap text-xs sm:text-base md:text-xs  lg:text-sm xl:text-base ${order.status==='rejected' ? 'hidden' : 'block'}`}>
                                     <div className="flex flex-col items-center space-y-2">
                                         <h1>Order Received</h1>
                                         <SiTicktick className='text-green-600'/>
@@ -94,6 +94,10 @@ const Orders = () => {
                                         <SiTicktick className={`${(order.status==='completed')?'text-green-600':''}`}/>
                                     </div>
                                 </div>
+                                {order.status==='rejected' &&
+                                <div className="mt-5 text-center">
+                                    <h1 className="text-red-600">Your Order is Rejected. Please Check Your Mail</h1>    
+                                </div>}
                                 <div className="mt-6 flex flex-row gap-6 lg:gap-10 whitespace-nowrap text-sm lg:text-base">
                                     <h1>{"Total Bill: ₹" + order.totalAmount}</h1>
                                     <h1>{"Payment Method: " + order.paymentstatus}</h1>

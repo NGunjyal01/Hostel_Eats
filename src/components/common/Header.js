@@ -57,8 +57,10 @@ const Header = () => {
             }
             const handleOrderStatusUpdate = (orderStatus)=>{
                 //for user
+                console.log('sokect customer status==============================',orderStatus)
                 dispatch(setOrderStatus(orderStatus));
                 const updatedOrderHistory = orderHistory.map((order) => order._id===orderStatus.orderid ? {...order,status:orderStatus.status}: order);
+                console.log(updatedOrderHistory);
                 const totalItems = allItems.length;
                 const totalPages = Math.ceil(totalItems/itemsPerPage);
                 const start = currentPageNo*itemsPerPage - itemsPerPage;

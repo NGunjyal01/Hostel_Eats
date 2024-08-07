@@ -6,7 +6,8 @@ import { setOrderHistory } from "../slices/orderHistorySlice";
 import { setLiveOrders } from "../slices/notificationSlice";
 
 const { CREATE_CANTEEN_API,GET_ALL_CANTEEN_API,GET_CANTEEN_DETAILS_API,CREATE_ITEM_API,EDIT_CANTEEN_API,
-EDIT_ITEM_API,DELETE_CANTEEN_API,DELETE_ITEM_API,GET_ORDER_HISTROY_API,UPDATE_ORDER_STATUS,GET_LIVE_ORDERS_API } = ownerEndpoints;
+EDIT_ITEM_API,DELETE_CANTEEN_API,DELETE_ITEM_API,GET_ORDER_HISTROY_API,UPDATE_ORDER_STATUS,GET_LIVE_ORDERS_API,
+REJECT_ORDER_API } = ownerEndpoints;
 const config = {headers:{'Content-Type':'multipart/form-data'},withCredentials:true};
 
 export async function createCanteen(formData,navigate){
@@ -237,5 +238,15 @@ export async function getLiveOrders(dispatch){
     }
     catch(error){
         console.log("LIVE ORDER API ERROR",error);
+    }
+}
+
+export async function rejectOrder(formData){
+    try{
+        const resposne = await axios.post(REJECT_ORDER_API,formData,config);
+        console.log("REJECT ORDER API RESPONSE..................",resposne);
+    }
+    catch(error){
+        console.log("REJCET ORDER API ERROR...................",error);
     }
 }

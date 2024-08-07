@@ -72,7 +72,7 @@ const AnimatedHamburgerButton = () => {
               <div className="mt-14 ml-[20%]">
                 <h1>Contact Us</h1>
                 <p className="text-sm my-2">Email: 
-                  <a href="mailto:hosteleatstrio@gmail.com" className="ml-2 text-white hover:text-[#76ABAE]">hosteleatstrio@gmail.com</a>
+                  <a href="mailto:hosteleatstrio@gmail.com" className="ml-2 text-white hover:text-[#76ABAE]">hosteleats.team@gmail.com</a>
                 </p>
                 <p className="text-sm my-2">Phone: 
                   <a href="tel:+1234567890" className="ml-2 text-white hover:text-[#76ABAE] uppercase tracking-widest">xxxxxxxxxx</a>
