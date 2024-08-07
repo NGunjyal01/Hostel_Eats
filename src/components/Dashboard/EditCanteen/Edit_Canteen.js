@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { getCanteenDetails } from "../../../services/ownerAPI";
 import CanteenDetails from "./CanteenDetails";
 import { useDispatch, useSelector } from "react-redux";
-import MenuItems from "./MenuItems";
 import Spinner from "../../common/Spinner";
 import { setCanteenDetails } from "../../../slices/canteenSlice";
 import { resetPagination } from "../../../slices/paginationSlice";
+
+const MenuItems = lazy(()=> import("./MenuItems"));
 
 const Edit_Canteen = () => {
 
@@ -42,9 +43,11 @@ const Edit_Canteen = () => {
       {!canteenDetails ? <div className="mt-[10%] -ml-[15%]"><Spinner/></div> 
       : <>
           <CanteenDetails btnState={btnState} setBtnState={setBtnState}/>
-          <div id="menu-items-section" className="w-full">
-            <MenuItems btnState={btnState} setBtnState={setBtnState}/>
-          </div>
+          <Suspense fallback={<Spinner/>}>
+            <div id="menu-items-section" className="w-full">
+              <MenuItems btnState={btnState} setBtnState={setBtnState}/>
+            </div>
+          </Suspense>
       </>}
     </div>
   )

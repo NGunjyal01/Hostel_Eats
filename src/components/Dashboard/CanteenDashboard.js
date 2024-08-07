@@ -17,7 +17,8 @@ const CanteenDashboard = () => {
 
     const {id} = useParams();
     const dispatch = useDispatch();
-    const canteenDetails = useSelector(store => store.canteen.canteenDetails);
+    const canteen = useSelector(store => store.canteen);
+    const {canteenDetails} = canteen;
     const orderHistory = useSelector(store => store.orderHistory);
     const liveOrders = useSelector(store => store.liveOrders);
     const paginationData = useSelector(store => store.pagination);
@@ -34,7 +35,8 @@ const CanteenDashboard = () => {
 
         return ()=>{
             console.log('dismount')
-            dispatch(setCanteenDetails(null));
+            dispatch(setCanteenDetails({}));
+            localStorage.setItem('canteen',JSON.stringify({...canteen,canteenDetails:{}}));
             dispatch(setOrderHistory([]));
             localStorage.removeItem('orderHistory');
             dispatch(resetPagination());
@@ -112,9 +114,9 @@ const CanteenDashboard = () => {
 
     return (
     <div className="flex flex-col justify-center items-center">
-        {(loading || !orderHistory|| canteenDetails===null)? <div className="mt-[10%] -ml-[15%]"><Spinner/></div> 
+        {(loading || !Object.keys(canteenDetails).length) ? <div className="mt-[10%] -ml-[15%]"><Spinner/></div> 
         : <div className="w-[85%] h-fit pb-12 mt-14 relative">
-            <h1 className="relative -mt-[22%] sm:-mt-[17%] md:-mt-[15%] lg:-mt-[17%] xl:-mt-[7%] sm:-ml-3 md:-ml-4 text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold">Canteen Dashboard</h1>
+            <h1 className="relative -mt-[22%] sm:-mt-[17%] md:-mt-[15%] lg:-mt-[17%] xl:-mt-[7%] sm:-ml-3 md:-ml-2 text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold">Canteen Dashboard</h1>
             <div className="grid grid-cols-12 w-full">
                 <div className="col-span-12 sm:col-span-7 grid grid-cols-2">
                     <div className="col-span-1 mt-5 sm:mt-8 text-sm lg:text-base flex flex-col">
@@ -138,7 +140,7 @@ const CanteenDashboard = () => {
                         disabled={true}/>
                     </div>
                 </div>
-                <div className="col-span-12 sm:col-span-5 flex flex-col items-center space-y-10 mt-5 sm:mt-0">
+                {canteenDetails.totalRevenue!==0 && <div className="col-span-12 sm:col-span-5 flex flex-col items-center space-y-10 mt-5 sm:mt-0">
                     <div className="grid grid-cols-2">
                         <h1 className="col-span-1 flex items-center">Total Revenue</h1>
                         <PieChart data={pieChartData.data1} className="ml-5 size-28 col-span-1"/>
@@ -147,11 +149,13 @@ const CanteenDashboard = () => {
                         <h1 className="col-span-1 flex items-center">This Month Revenue</h1>
                         <PieChart data={pieChartData.data2} className="ml-7 size-28 col-span-1"/>
                     </div>
-                </div>
+                </div>}
             </div>
             <div className="flex flex-col items-center mt-10" id="orderHistory">
-                <h1 className="-ml-2 sm:-ml-3 md:-ml-5 lg:-ml-[87%] text-2xl">Order History</h1>
-                {!orderHistory.length ? <div>No Order Found</div>
+                <h1 className="mt-5 -ml-2 sm:-ml-3 md:-ml-5 lg:-ml-[87%] text-2xl">Order History</h1>
+                {!orderHistory.length ? <div>
+                    <h1 className="text-xl font-semibold uppercase tracking-wider mt-[30%]">No Order Found</h1>
+                </div>
                 :<>  
                     <div className="grid grid-cols-2 w-full mt-5 ml-7 sm:ml-0">
                         {currentItems?.map( (order) =>{
