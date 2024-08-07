@@ -16,7 +16,7 @@ const ForgotPassword = () => {
     }
 
     return (
-        <div className="bg-gradient-to-r from-black to-[#222831] h-screen text-white pt-[15%] w-full">
+        <div className="bg-gradient-to-r from-black to-[#222831] h-screen text-white pt-[50%] sm:pt-[15%] w-full">
             <form onSubmit={handleSubmit(handleNext)} className="w-full pl-[10%] sm:pl-[15%] md:pl-[20%] lg:pl-[30%] xl:pl-[35%] text-sm md:text-base">
                 <h1 className="text-2xl md:text-4xl">Forgot Password</h1>
                 <div className="w-[80%] sm:w-[60%] md:w-[55%] xl:w-[45%] relative pb-6 flex flex-col mt-10">
