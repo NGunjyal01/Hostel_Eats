@@ -19,7 +19,7 @@ const menuItemSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ["Chinese", "Main Course", "Dessert", "Beverage"],
+    enum: ["Chinese", "Main Course", "Shake", "Beverage","South Indian","Roll" ,"Snacks","Juice","Breads"],
     required: true,
   },
   imageUrl:{
