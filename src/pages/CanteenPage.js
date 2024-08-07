@@ -125,10 +125,10 @@ const CanteenPage = () => {
                 </form>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:gap-6 justify-items-center">
+            <div className="grid grid-cols-1 gap-4 mb-24 sm:gap-6 justify-items-center">
                 {itemsToDisplay.map(item => (
                     <div key={item._id} className="bg-[#31363F] sm:mt-0 sm:mb-0 mb-5 mt-5  rounded-lg shadow-lg w-full sm:w-7/12 flex flex-col sm:flex-row justify-between items-center relative sm:p-4 p-4 pb-8">
-                        <div className="flex-grow mb-4 sm:mb-0">
+                        <div className="flex-grow mb-4 sm:mb-0 sm:mr-4">
                             <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
                             <p className="text-gray-400 mb-2 break-words">{item.description}</p>
                             <p className="text-gray-400 mb-2">Price: ₹{item.price}</p>

@@ -116,35 +116,38 @@ const Explore = () => {
       dishResult = await searchItem(formData);
       const allMatches = dishResult.items;
       console.log("All matches====>",allMatches)
-      setFilteredDishes(allMatches);
-      // setCurrentItems(allMatches.slice(0, 9)); // Update currentItems for initial display
-      dispatch(setPagination({
-        allItems: allMatches,
-        currentItems: allMatches.slice(0, 9),
-        currentPageNo: 1,
-        itemsPerPage: 9,
-        scrollTo: "search-input"
-      }));
-      localStorage.setItem("filteredDishes", JSON.stringify(allMatches));
+      if (allMatches.length > 0) {
+        setFilteredDishes(allMatches);
+        dispatch(setPagination({
+          allItems: allMatches,
+          currentItems: allMatches.slice(0, 9),
+          currentPageNo: 1,
+          itemsPerPage: 9,
+          scrollTo: "search-input"
+        }));
+        localStorage.setItem("filteredDishes", JSON.stringify(allMatches));
+      } else {
+        setFilteredDishes([]);
+        dispatch(resetPagination());
+        localStorage.setItem("filteredDishes", JSON.stringify([]));
+      }
+  
+      if (dishResult.canteens && dishResult.canteens.length > 0) {
+        setFilteredCanteens(dishResult.canteens);
+        localStorage.setItem("filteredCanteens", JSON.stringify(dishResult.canteens));
+      } else {
+        setFilteredCanteens([]);
+        localStorage.setItem("filteredCanteens", JSON.stringify([]));
+      }
+  
+      dispatch(setCanteensData(dishResult.canteens));
     } catch (error) {
       console.error("Error searching for items:", error);
-      setFilteredDishes([]);
-      localStorage.setItem("filteredDishes", JSON.stringify([]));
-    }
-
-    try {
-      dispatch(setCanteensData(dishResult.canteens));
-      setFilteredCanteens(dishResult.canteens ? dishResult.canteens : []);
-      localStorage.setItem(
-        "filteredCanteens",
-        JSON.stringify(
-          dishResult.canteens
-        )
-      );
-    } catch (error) {
-      console.error("Error searching for canteens:", error);
-      setFilteredCanteens([]);
-      localStorage.setItem("filteredCanteens", JSON.stringify([]));
+    setFilteredDishes([]);
+    setFilteredCanteens([]);
+    dispatch(resetPagination());
+    localStorage.setItem("filteredDishes", JSON.stringify([]));
+    localStorage.setItem("filteredCanteens", JSON.stringify([]));
     }
     setLoadingResults(false);
   };
@@ -174,6 +177,7 @@ const Explore = () => {
     localStorage.removeItem("filteredDishes");
     localStorage.removeItem("filteredCanteens");
     localStorage.removeItem("showSearchOptions");
+    dispatch(resetPagination());
   };
 
   const handleCardClick = (canteenId) => {
@@ -305,20 +309,26 @@ const Explore = () => {
           ) : (
           searchType === "dishes" ? (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {paginationData.currentItems.map((dish) => (
-                  <DishCard
-                    key={dish.itemid}
-                    dish={dish}
-                    setShowModal={setShowModal}
-                    cartItemMap={cartItemMap}
-                  />
-                ))}
-              </div>
-              <div className="flex justify-center mt-6">
-                <Pagination/>
-              </div>
-            </>
+              {paginationData.currentItems.length > 0 ? (
+        <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {paginationData.currentItems.map((dish) => (
+              <DishCard
+                key={dish.itemid}
+                dish={dish}
+                setShowModal={setShowModal}
+                cartItemMap={cartItemMap}
+              />
+            ))}
+          </div>
+          <div className="flex justify-center mt-6">
+            <Pagination/>
+          </div>
+        </div>
+            ) : (
+              <div className="text-center sm:mt-32 sm:text-4xl font-bold text-white">No dishes found</div>
+            )}
+          </>
           ) : (
             <div className="space-y-6">
               {filteredCanteens.map((canteen) => (
