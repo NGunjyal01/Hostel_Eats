@@ -34,8 +34,13 @@ function App() {
       <Route path='/' element={<Body/>}>
         <Route index element={<Home/>}/>
         <Route path='about-us' element={<AboutUs/>}/>
-        <Route path='add-canteen' element={<AddCanteen/>}/>
-        <Route path='explore' element={<Explore/>}/>
+        {(user?.accountType==='Owner' || !user ) && <>
+          <Route path='add-canteen' element={<AddCanteen/>}/>
+        </>}
+        {(user?.accountType==='Customer' || !user ) && <>
+          <Route path='explore' element={<Explore/>}/>
+          <Route path='canteen/:canteenId' element={<CanteenPage/>}/> 
+        </>}
         <Route path='login' element={<OpenRoute><LogIn/></OpenRoute>}/>
         <Route path='forgot-password' element={<OpenRoute><ForgotPassword/></OpenRoute>}/>
         <Route path='otp-verification' element={<ProtectedRoute element={<OTPVerification />} />} />
@@ -57,7 +62,6 @@ function App() {
             <Route path='dashboard/edit_canteen/:id' element={<Edit_Canteen/>}/>
           </>}
         </Route>
-        <Route path='canteen/:canteenId' element={<CanteenPage/>}/> {/* Add route for CanteenPage */}
       </Route>
     </Routes>
   );

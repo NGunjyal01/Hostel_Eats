@@ -151,7 +151,7 @@ const Home = () => {
       <div
         style={{
           position: "relative",
-          top: "30px",
+          top: "-60px", // Adjust this value to move dots closer
           width: "100%", // Ensure container width is 100%
           overflow: "hidden", // Hide overflow to avoid extra lines
           whiteSpace: "nowrap", // Ensure the dots stay in one line
@@ -221,8 +221,8 @@ const Home = () => {
       </div>
 
       {/* Section 2 */}
-      <div className="mt-12 ml-4 sm:mt-18 sm:ml-8 md:mt-15 md:ml-2 px-4 sm:px-10">
-        <h1 className="text-xl sm:text-3xl lg:text-4xl mb-5 text-center sm:text-left">
+      <div className="mt-16 ml-4 sm:mt-18 sm:ml-8 md:mt-28 md:ml-2 px-4 sm:px-10">
+        <h1 className="text-xl sm:ml-6 sm:text-3xl lg:text-4xl mb-5 text-center sm:text-left">
           Popular Dishes
         </h1>
         <div className="relative max-w-full mx-auto">
@@ -231,7 +231,7 @@ const Home = () => {
           ) : (
           <Slider {...settings} className="mx-4">
             {popularDishes?.map((dish) => (
-              <div key={dish._id} className="px-2 w-full sm:w-auto">
+              <div key={dish._id} className="mt-2 sm:mt-7 px-2 w-full sm:w-auto">
                 <div
                   className="bg-[#31363F] p-2 sm:p-4 rounded-lg shadow-lg cursor-pointer h-72 sm:h-80 flex flex-col justify-between"
                   onClick={() => handleCardClick(dish.shopid)}
@@ -263,8 +263,8 @@ const Home = () => {
       </div>
 
       {/* Popular Canteens Section */}
-      <div className="mt-12 ml-4 sm:mt-18 sm:ml-8 md:mt-15 md:ml-2 px-4 sm:px-10">
-        <h1 className="text-xl sm:text-3xl lg:text-4xl mb-5 text-center sm:text-left">
+      <div className="mt-24 ml-4 sm:mt-18 sm:ml-8 md:mt-28 md:ml-2 px-4 sm:px-10">
+        <h1 className="text-xl sm:text-3xl lg:text-4xl sm:ml-6 mb-5 text-center sm:text-left">
           Popular Canteens
         </h1>
         <div className="relative max-w-full mx-auto">
@@ -273,16 +273,16 @@ const Home = () => {
         ) : (
         <Slider {...settings2} className="mx-4">
           {popularCanteens?.map((canteen) => (
-            <div key={canteen._id} className="px-2 w-full sm:w-auto mb-20">
+            <div key={canteen._id} className="mt-2 sm:mt-7 px-2 w-full sm:w-auto mb-20">
               <div
-                className="bg-[#31363F] p-2 sm:p-4 rounded-lg shadow-lg cursor-pointer h-80 flex flex-col justify-between"
+                className="bg-[#31363F] p-2 sm:p-4 rounded-lg shadow-lg cursor-pointer h-fit flex flex-col justify-between"
                 onClick={() => handleCardClick(canteen._id)}
               >
                 <div className="relative">
                   <img
                     src={canteen.imageUrl}
                     alt={canteen.canteenName}
-                    className="w-full h-36 object-cover rounded-lg mb-4"
+                    className="w-full h-56 object-cover rounded-lg mb-4"
                   />
                 </div>
                 <div>
