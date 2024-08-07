@@ -11,11 +11,16 @@ export async function updateProfilePicture(formData,dispatch){
     try{
         const response = await axios.post(UPDATE_DISPLAY_PICTURE_API,formData,config);
         console.log("UPDATE PROFILE PICTURE API RESPONSE.................",response);
-        const user = JSON.parse(localStorage.getItem('user'));
-        const updatedUser = {...user,imageUrl:response.data.data};
-        dispatch(addUser(updatedUser));
-        localStorage.setItem('user',JSON.stringify(updatedUser));
-        toast.success("Successfully Updated Profile Picture");
+        if(!response.data.success){
+            toast.error(response.data.message);
+        }
+        else{
+            const user = JSON.parse(localStorage.getItem('user'));
+            const updatedUser = {...user,imageUrl:response.data.data};
+            dispatch(addUser(updatedUser));
+            localStorage.setItem('user',JSON.stringify(updatedUser));
+            toast.success("Successfully Updated Profile Picture");
+        }
         return true;
     }catch(error){
         console.log("ERROR DURING UPDATE PROFILE PICTURE...............",error);

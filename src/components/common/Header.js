@@ -164,7 +164,7 @@ const Header = () => {
                             <h1 className="text-lg font-bold mx-4">Notification</h1>
                             <div className="w-full h-[0.05rem] bg-black mt-2"/>
                             <div>
-                                {liveOrders.map((order) => {
+                                {liveOrders.length ? liveOrders.map((order) => {
                                     const date = order.createdAt ? formatDate(order.createdAt.split('T')[0]) : '';
                                     const time = order.createdAt ? formatTime(order.createdAt?.split('T')[1].split(':')[0]+":"+order.createdAt.split('T')[1].split(':')[1]) : '';
 
@@ -179,7 +179,10 @@ const Header = () => {
                                         </div>
                                         <img src={order.imageUrl} alt="image" className="col-span-1 w-full rounded-lg"/>
                                     </div>);
-                                })}
+                                })
+                                :<div>
+                                    <h1 className="text-lg sm:text-xl font-semibold uppercase tracking-wider text-center mt-[40%] sm:mt-[30%]">No Live Orders</h1>    
+                                </div>}
                             </div>
                         </motion.div>
                     </div>}

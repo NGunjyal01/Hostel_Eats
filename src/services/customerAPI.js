@@ -59,9 +59,9 @@ export async function addCartItem(item, dispatch) {
         const response = await axios.post(ADD_CART_ITEM_API, item, config);
         console.log("ADD CART ITEM API RESPONSE:", response);
         if(response.data.success){
-        localStorage.setItem('cart',JSON.stringify(response.data.data));
-        dispatch(setCartItem(response.data.data));
-        toast.success("Successfully Added Item");
+            localStorage.setItem('cart',JSON.stringify(response.data.data));
+            dispatch(setCartItem(response.data.data));
+            toast.success("Successfully Added Item");
         }else{
             toast.error("Kindly login first.");
         }
@@ -102,7 +102,7 @@ export async function getCartItems(dispatch) {
         const response = await axios.get(GET_CART_ITEMS_API, config);
         console.log("GET CART ITEMS API RESPONSE................", response);
         if (!response.data.success) {
-            localStorage.setItem('cart', JSON.stringify(null));
+            localStorage.setItem('cart', JSON.stringify({}));
             dispatch(resetCartItems());
         } 
         else {

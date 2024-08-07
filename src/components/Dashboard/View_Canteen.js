@@ -15,9 +15,11 @@ const View_Canteen = () => {
   const { allCanteen } = canteen;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading,setLoading] = useState(true);
 
   useEffect(()=>{
-    getAllCanteen(dispatch);
+    getAllCanteen(dispatch)
+    .then(()=> setLoading(false));
   },[]);
 
   const handleEditClick = (id)=>{
@@ -37,7 +39,7 @@ const View_Canteen = () => {
 
   return (
     <div className="flex flex-col justify-center items-center relative lg:max-xl:mt-10">
-      {!allCanteen ? <div className="mt-[12%] -ml-[15%]"><Spinner/></div>
+      {loading? <div className="mt-[12%] -ml-[15%]"><Spinner/></div>
       :<>
           <table className='lg:w-[85%] xl:w-[70%] mt-10 hidden lg:block'>
           <h1 className="absolute lg:-mt-[7%] xl:-mt-[5%] lg:text-3xl font-semibold">My Canteens</h1>
@@ -51,7 +53,7 @@ const View_Canteen = () => {
             </tr>
           </thead>
           <tbody className="relative">
-            {allCanteen ? allCanteen.map(({id,canteenName,openingTime,closingTime,totalRevenue},index) => <tr key={id} className={`${index%2?"bg-[#222831]":"bg-[#31363F]"}`}>
+            {allCanteen.length ? allCanteen.map(({id,canteenName,openingTime,closingTime,totalRevenue},index) => <tr key={id} className={`${index%2?"bg-[#222831]":"bg-[#31363F]"}`}>
               <td className="px-3 py-5 pl-5 w-[20%]">{canteenName}</td>
               <td className="px-3 py-5 pl-[4%] w-[20%]">{formatTime(openingTime)}</td>
               <td className="px-3 py-5 pl-[4%] w-[20%]">{formatTime(closingTime)}</td>
@@ -70,7 +72,7 @@ const View_Canteen = () => {
         {showComfirmationalModal && <ConfirmationalModal modalData={showComfirmationalModal}/>}
         <div className="lg:hidden w-[80%] sm:w-[70%] mt-5 sm:mt-10">
           <h1 className="absolute -mt-[12%] sm:-mt-[8%] md:-mt-[7%] text-lg sm:text-xl md:text-2xl font-semibold">My Canteens</h1>
-          {allCanteen ? allCanteen.map(({id,canteenName,openingTime,closingTime,totalRevenue},index) => 
+          {allCanteen.length ? allCanteen.map(({id,canteenName,openingTime,closingTime,totalRevenue},index) => 
             <div key={id} className={`bg-[#222831] h-fit px-3 sm:px-5 py-4 sm:py-5 relative border-b-2 border-x-2 text-sm md:text-base ${index%2?"bg-[#222831]":"bg-[#31363F]"} ${index===0?'border-t-2':''}`}>
               <div className="grid grid-cols-2 gap-4 sm:gap-0">
                 <h1 className="col-span-1">Canteen Name</h1>
@@ -97,7 +99,7 @@ const View_Canteen = () => {
                 </div>
               </div>
           </div>)
-          :<div className="mt-10 sm:text-lg md:text-xl uppercase font-bold tracking-widest">
+          :<div className="mt-[30%] ml-[17%] sm:ml-0 sm:mt-10 sm:text-lg md:text-xl uppercase font-bold tracking-widest">
               <h1>No canteen Found</h1>
           </div>}
         </div>
