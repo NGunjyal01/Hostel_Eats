@@ -569,7 +569,7 @@ exports.liveOrders = async (req, res) => {
 
     const orders = await Order.find({
       merchantid: payload.id,
-      status: { $ne: "completed" },
+      status: { $nin: ["completed", "rejected"] },
     })
       .populate({ path: "items.item", select: "name imageUrl shopid" })
       .sort({ createdAt: -1 })
