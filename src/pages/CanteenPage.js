@@ -6,6 +6,7 @@ import ConfirmationalModal from '../components/common/ConfirmationalModal';
 import { setCanteenDetails } from '../slices/canteenPageSlice';
 import { toggleFavouriteItem } from '../services/favouriteAPI'; 
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { formatTime } from '../utils/formatTime';
 
 const CanteenPage = () => {
     const { canteenId } = useParams();
@@ -103,8 +104,8 @@ const CanteenPage = () => {
             <div className="bg-[#31363F] w-full sm:w-7/12 mx-auto p-4 sm:p-6 rounded-lg shadow-2xl mb-6 flex flex-col items-center">
                 <h1 className="text-2xl sm:text-4xl font-bold mb-2 text-center">{canteenData?.canteenName}</h1>
                 <p className="text-gray-400 mb-1 text-center">Address: {canteenData?.address}</p>
-                <p className="text-gray-400 mb-1 text-center">Opening Time: {canteenData?.openingTime}</p>
-                <p className="text-gray-400 mb-1 text-center">Closing Time: {canteenData?.closingTime}</p>
+                <p className="text-gray-400 mb-1 text-center">Opening Time: {formatTime(canteenData?.openingTime)}</p>
+                <p className="text-gray-400 mb-1 text-center">Closing Time: {formatTime(canteenData?.closingTime)}</p>
                 <p className="text-gray-400 mb-1 text-center">Status: {canteenData?.status}</p>
             </div>
             <div className="text-center">
