@@ -17,9 +17,11 @@ const Edit_Canteen = () => {
   const {canteenDetails} = useSelector(store => store.canteen);
   //This is it know which btn is working currently meaning if editItem is true then currently we are editing menu item and no other btn will work
   const [btnState,setBtnState] = useState({editCanteen:false,editItem:false,addItem:false});
+  const [loading,setLoading] = useState(true);
 
   useEffect(()=>{
-    getCanteenDetails(id,dispatch);
+    getCanteenDetails(id,dispatch)
+    .then(()=>setLoading(false));
 
     return ()=>{
       dispatch(setCanteenDetails(null));
@@ -40,7 +42,7 @@ const Edit_Canteen = () => {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      {!canteenDetails ? <div className="mt-[35%] sm:mt-[10%] sm:-ml-[15%]"><Spinner/></div> 
+      {loading ? <div className="mt-[35%] sm:mt-[10%] sm:-ml-[15%]"><Spinner/></div> 
       : <>
           <CanteenDetails btnState={btnState} setBtnState={setBtnState}/>
           <Suspense fallback={<Spinner/>}>
