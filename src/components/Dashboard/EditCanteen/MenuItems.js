@@ -15,7 +15,7 @@ const MenuItems = ({btnState,setBtnState}) => {
     const [showEditForm,setShowEditForm] = useState(false);
     const [editItemDetails,setEditItemDetails] = useState(null);
     const paginationData = useSelector(store => store.pagination);
-    const { currentItems,currentPageNo } = paginationData;
+    const { allItems,currentItems,itemsPerPage,currentPageNo } = paginationData;
     const dispatch = useDispatch();
 
     useEffect(()=>{
@@ -25,7 +25,10 @@ const MenuItems = ({btnState,setBtnState}) => {
     },[totalItems]);
 
     useEffect(()=>{
-        const paginationData = {allItems:menuItems, currentItems: currentItems.length ? currentItems :menuItems.slice(0,10), 
+        const totalPages = Math.ceil(totalItems/itemsPerPage);
+        const start = currentPageNo*itemsPerPage - itemsPerPage;
+        const end = currentPageNo===totalPages ? totalItems : currentPageNo*itemsPerPage;
+        const paginationData = {allItems:menuItems, currentItems:menuItems.slice(start,end), 
         itemsPerPage: 10, currentPageNo: currentPageNo ? currentPageNo : 1, scrollTo: "menu-item"};
         dispatch(setPagination(paginationData));
         localStorage.setItem('pagination',JSON.stringify(paginationData));

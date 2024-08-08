@@ -73,6 +73,7 @@ export async function updateEmail(formData){
         }
         else{
             toast.success("Sucessfully Updated Email");
+            return true;
         }
     }
     catch(error){
@@ -83,6 +84,7 @@ export async function updateEmail(formData){
             console.log("ERROR DURING UPDATE EMAIL API................",error);
             toast.error("Error Duringg Update Email");
         }
+        return false;
     }
     finally{
         toast.dismiss(toastId);

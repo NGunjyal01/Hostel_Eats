@@ -151,7 +151,7 @@ const Header = () => {
                 {liveOrders.length 
                 ? <span>
                     <MdNotificationsActive className={`cartLogo ${showNotification?'':'animate-shake'}`}/>
-                    <span className="text-black absolute top-2 left-[0.6rem] sm:left-2 md:left-2.5 lg:left-3 text-[0.65rem] sm:text-xs lg:text-sm font-semibold lg:font-bold">{liveOrders.length}</span>
+                    <span className="text-black absolute top-2 left-[0.6rem] sm:left-2 md:left-2.5 lg:left-3.5 text-[0.65rem] sm:text-xs lg:text-sm font-semibold lg:font-bold">{liveOrders.length}</span>
                 </span> 
                 :<MdNotifications className="cartLogo"/>}
                 <AnimatePresence>

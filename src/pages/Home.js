@@ -16,6 +16,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { formatTime } from "../utils/formatTime";
 import Shimmer from '../components/common/Shimmer';
+import toast from "react-hot-toast";
 
 const CustomPrevArrow = (props) => {
   const { onClick } = props;
@@ -46,6 +47,7 @@ const CustomNextArrow = (props) => {
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector(store => store.user);
   const popularDishes = useSelector((state) => state.popularDishes);
   const [popularCanteens, setPopularCanteens] = useState([]);
   const [loadingDishes, setLoadingDishes] = useState(true);
@@ -77,6 +79,15 @@ const Home = () => {
   const handleCardClick = (canteenId) => {
     navigate(`/canteen/${canteenId}`);
   };
+
+  const handleOrderNow = ()=>{
+    if(user && user.accountType==='Owner'){
+      toast.error("Login As Customer");
+    }
+    else{
+      navigate('/explore');
+    }
+  }
 
   const settings = {
     dots: true,
@@ -200,7 +211,7 @@ const Home = () => {
   return (
     <div className="bg-gradient-to-r from-black to-[#222831] text-white py-14">
       {/* Section 1 */}
-      <div className="mt-[25%] sm:mt-[18%] md:mt-[15%] lg:mt-[12%] ml-[8%] sm:ml-[8%] md:ml-[10%]">
+      <div className="mt-[25%] sm:mt-[18%] md:mt-[15%] lg:mt-[12%] ml-[8%] sm:ml-[8%] md:ml-[10%] md:min-h-72 lg:min-h-80 xl:min-h-96">
         <div className="relative font-serif">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl">
             Welcome To Hostel Eats
@@ -208,7 +219,7 @@ const Home = () => {
           <p className="mt-5 md:mt-10 text-xs sm:text-xs md:text-sm lg:text-base">
             Made for MNNIT Students to order food
           </p>
-          <button onClick={()=>navigate('/explore')}
+          <button onClick={handleOrderNow}
           className="bg-[#76ABAE] text-black text-sm md:text-base px-4 py-2 rounded-lg mt-10 md:mt-20 transition-all duration-300 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:rounded-md hover:shadow-[4px_4px_0px_white] active:translate-x-[0px] active:translate-y-[0px] active:rounded-2xl active:shadow-none">
             Order Now →
           </button>

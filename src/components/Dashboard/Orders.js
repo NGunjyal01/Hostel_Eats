@@ -98,7 +98,7 @@ const Orders = () => {
                                 <div className="mt-5 text-center">
                                     <h1 className="text-red-600">Your Order is Rejected. Please Check Your Mail</h1>    
                                 </div>}
-                                <div className="mt-6 flex flex-row gap-6 lg:gap-10 whitespace-nowrap text-sm lg:text-base">
+                                <div className={`flex flex-row gap-6 lg:gap-10 whitespace-nowrap text-sm lg:text-base mt-10`}>
                                     <h1>{"Total Bill: ₹" + order.totalAmount}</h1>
                                     <h1>{"Payment Method: " + order.paymentstatus}</h1>
                                     {/* {order.status==='completed' && <button className="uppercase tracking-wider">Reorder</button>} */}

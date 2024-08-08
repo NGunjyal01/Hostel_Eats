@@ -39,7 +39,7 @@ const View_Canteen = () => {
 
   return (
     <div className="flex flex-col justify-center items-center relative lg:max-xl:mt-10">
-      {loading? <div className="mt-[12%] -ml-[15%]"><Spinner/></div>
+      {loading? <div className="mt-[35%] sm:mt-[12%] sm:-ml-[15%]"><Spinner/></div>
       :<>
           <table className='lg:w-[85%] xl:w-[70%] mt-10 hidden lg:block'>
           <h1 className="absolute lg:-mt-[7%] xl:-mt-[5%] lg:text-3xl font-semibold">My Canteens</h1>

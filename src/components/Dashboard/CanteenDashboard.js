@@ -73,10 +73,6 @@ const CanteenDashboard = () => {
     },[orderHistory]);
 
     const inputStyle = "bg-[#31363F] w-[90%] lg:w-[80%] px-2 py-2 rounded-md mt-2";
-    const data = [
-        { title: 'Online', value: 40, color: '#E38627' },
-        { title: 'Cash', value: 600, color: '#C13C37' },
-    ];
 
     const handleToggleViewDetails = (order)=>{
         setShowOrder(order);
@@ -114,7 +110,7 @@ const CanteenDashboard = () => {
 
     return (
     <div className="flex flex-col justify-center items-center">
-        {(loading || !Object.keys(canteenDetails).length) ? <div className="mt-[10%] -ml-[15%]"><Spinner/></div> 
+        {(loading || !Object.keys(canteenDetails).length) ? <div className="mt-[35%] sm:mt-[10%] sm:-ml-[15%]"><Spinner/></div> 
         : <div className="w-[85%] h-fit pb-12 mt-14 relative">
             <h1 className="relative -mt-[22%] sm:-mt-[17%] md:-mt-[15%] lg:-mt-[17%] xl:-mt-[7%] sm:-ml-3 md:-ml-2 text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold">Canteen Dashboard</h1>
             <div className="grid grid-cols-12 w-full">
@@ -164,7 +160,7 @@ const CanteenDashboard = () => {
                             // const items = order.items.map(item => item.item.name + " x " + item.quantity).join(', ');
                             return (
                             <div key={order._id} className="col-span-full sm:col-span-1 bg-[#31363F] py-4 px-4 w-[90%] xl:w-[85%] mt-11 rounded-lg">
-                                {order.status!=='completed' && <div className="absolute -mt-12 -ml-3 flex items-center gap-2">
+                                {(order.status!=='completed' && order.status!=='rejected') && <div className="absolute -mt-12 -ml-3 flex items-center gap-2">
                                     <div className="size-4 sm:size-5 border-2 border-orange-700 rounded-full flex items-center justify-center animate-pulse">
                                         <div className="size-2 sm:size-3 bg-orange-700 rounded-full"/>    
                                     </div>

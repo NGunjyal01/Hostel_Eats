@@ -40,7 +40,7 @@ const Edit_Canteen = () => {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      {!canteenDetails ? <div className="mt-[10%] -ml-[15%]"><Spinner/></div> 
+      {!canteenDetails ? <div className="mt-[35%] sm:mt-[10%] sm:-ml-[15%]"><Spinner/></div> 
       : <>
           <CanteenDetails btnState={btnState} setBtnState={setBtnState}/>
           <Suspense fallback={<Spinner/>}>

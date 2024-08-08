@@ -26,7 +26,16 @@ const UpdateEmail = () => {
         else{
             const formData = {currEmail:user.email,newEmail:newEmail};
             setShowConfirmationalModal({text1:"Are You Sure?",text2:"Your Email Will Changed & You Have To Again Login",btn1Text:"Change",btn2Text:"Cancel",
-                btn1Handler: ()=>{updateEmail(formData);setShowConfirmationalModal(null); logout(navigate,dispatch);},
+                btn1Handler: async()=>{
+                    const result = await updateEmail(formData);
+                    if(result){ 
+                        setShowConfirmationalModal(null);
+                        logout(navigate,dispatch);
+                    }
+                    else{
+                        setShowConfirmationalModal(null);
+                    }
+                },
                 btn2Handler: ()=>{setShowConfirmationalModal(null);}
             })
         }
