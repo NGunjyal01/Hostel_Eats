@@ -27,7 +27,7 @@ const ItemCard = ({item,editBtnState,setShowEditForm,setEditItemDetails}) => {
                 <h1 className="text-base lg:text-lg font-medium">Name - {name}</h1>
                 <h1 className="text-sm lg:text-base mt-2">Category - {category}</h1>
                 <p className="text-xs lg:text-sm mt-2">Description -  {description}</p>
-                <p className="text-xs lg:text-sm mt-2">Price - {price}</p>
+                <p className="text-xs lg:text-sm mt-2">Price - ₹ {price}</p>
             </div>
             {editBtnState && <button className="text-red-600 absolute top-[65%] lg:top-[62%] right-3 md:right-5"><MdDelete className="deleteBtn" onClick={handleDeleteBtn}/></button>}
         </div>

@@ -77,7 +77,12 @@ const Home = () => {
   };
 
   const handleCardClick = (canteenId) => {
-    navigate(`/canteen/${canteenId}`);
+    if(user && user.accountType==='Owner'){
+      toast.error("Login As Customer");
+    }
+    else{
+      navigate(`/canteen/${canteenId}`);
+    }
   };
 
   const handleOrderNow = ()=>{

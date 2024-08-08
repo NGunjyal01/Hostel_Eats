@@ -27,7 +27,7 @@ const Favourite = () => {
     return (
         <div className="flex flex-col items-center relative min-h-screen p-6 text-white pt-0 sm:pt-2">
             {favourites.length === 0 ? (
-                <h1 className="text-xl sm:text-3xl font-bold uppercase tracking-wider mt-[4%] ml-[2%]">No Favourite dishes to show</h1>
+                <h1 className="text-xl sm:text-3xl font-bold uppercase tracking-wider mt-[4%] ml-[2%]">No Favourite dishes</h1>
             ) : (
             <div className="bg-[#222831] w-full lg:w-[85%] h-fit px-4 md:px-5 lg:px-10 py-4 sm:py-5 md:py-7 lg:py-10 mt-0 sm:mt-10 rounded-md sm:rounded-lg md:rounded-xl relative">
                 <h1 className="text-2xl mb-10 font-semibold">Favourites</h1>
