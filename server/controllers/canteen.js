@@ -476,13 +476,14 @@ exports.acceptRejectOrder=async(req,res) =>{
       });
     }
     // Find and update order
-    const order = await Order.findById({_id:orderid});
+    const order = await Order.findById({_id:orderid}).populate({path:"userid",select:"email firstName lastName"})
     if (!order) {
       return res.status(200).json({
         success: false,
         message: "Order not found",
       });
     }
+       const canten = await Merchant.findById({ _id: order.shopid });
     if (status == "rejected") {
       if (order.status == "rejected") {
         return res.status(200).json({
@@ -490,7 +491,7 @@ exports.acceptRejectOrder=async(req,res) =>{
           message: "Status is already Rejected",
         });
       }
-      const canten = await Merchant.findById({ _id: order.shopid });
+   
       if (order.paymentstatus == "paid") {
         canten.totalRevenue = canten.totalRevenue - order.totalAmount;
         canten.onlineMoney = canten.onlineMoney - order.totalAmount;
