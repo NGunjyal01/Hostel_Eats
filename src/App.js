@@ -25,6 +25,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import OTPVerification from './pages/OTPVerification.js';
 import ResetPassword from './pages/ResetPassword.js';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
+import Error from './components/common/Error.js';
 
 function App() {
   const user = useSelector(store => store.user);
@@ -63,6 +64,7 @@ function App() {
           </>}
         </Route>
       </Route>
+      <Route path="*" element={<Error/>}/>
     </Routes>
   );
 }
