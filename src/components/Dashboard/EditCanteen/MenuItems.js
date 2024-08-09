@@ -26,8 +26,11 @@ const MenuItems = ({btnState,setBtnState}) => {
 
     useEffect(()=>{
         const totalPages = Math.ceil(totalItems/itemsPerPage);
-        const start = currentPageNo*itemsPerPage - itemsPerPage;
-        const end = currentPageNo===totalPages ? totalItems : currentPageNo*itemsPerPage;
+        const pageNo = currentPageNo ? currentPageNo : 1;
+        console.log('curr',currentPageNo);
+        console.log(pageNo);
+        const start = pageNo*itemsPerPage - itemsPerPage;
+        const end = pageNo===totalPages ? totalItems : pageNo*itemsPerPage;
         const paginationData = {allItems:menuItems, currentItems:menuItems.slice(start,end), 
         itemsPerPage: 10, currentPageNo: currentPageNo ? currentPageNo : 1, scrollTo: "menu-item"};
         dispatch(setPagination(paginationData));

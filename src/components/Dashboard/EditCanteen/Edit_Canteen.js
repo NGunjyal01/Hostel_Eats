@@ -24,7 +24,7 @@ const Edit_Canteen = () => {
     .then(()=>setLoading(false));
 
     return ()=>{
-      dispatch(setCanteenDetails(null));
+      dispatch(setCanteenDetails({}));
       dispatch(resetPagination());
       localStorage.removeItem('pagination');
     }
