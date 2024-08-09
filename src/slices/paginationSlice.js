@@ -23,7 +23,7 @@ const paginationSlice =  createSlice({
             state.allItems = [];
             state.currentItems = [];
             state.itemsPerPage = null;
-            state.currentPageNo = null;
+            state.currentPageNo = 1;
             state.scrollTo = null;
         }
     }
