@@ -326,38 +326,43 @@ const Explore = () => {
           </div>
         </div>
             ) : (
-              <div className="text-center sm:mt-32 sm:text-4xl font-bold text-white">No dishes found</div>
+              <div className="text-center text-2xl mt-32 sm:text-4xl font-bold text-white">No dishes found</div>
             )}
           </>
           ) : (
             <div className="space-y-6">
-              {filteredCanteens.map((canteen) => (
-                <div
-                  key={canteen.shopid}
-                  className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer flex flex-col md:flex-row justify-between items-center md:items-start"
-                  onClick={() => handleCardClick(canteen.shopid)}
-                >
-                  <div className="text-center lg:text-left lg:flex-grow">
-                    <h3 className="text-2xl font-semibold mb-2 lg:mb-4">
-                      {canteen.canteenName}
-                    </h3>
-                    <p className="sm:text-lg text-md text-gray-400 font-semibold mb-2 lg:mb-4">
-                      Opening Time: {formatTime(canteen.openingTime)}
-                    </p>
-                    <p className="sm:text-lg text-md text-gray-400 font-semibold mb-2 lg:mb-4">
-                      Closing Time: {formatTime(canteen.closingTime)}
-                    </p>
-                    <p className="sm:text-lg text-md text-gray-400 font-semibold">
-                      {canteen.status}
-                    </p>
-                  </div>
-                  <img
-                    src={canteen.imageUrl}
-                    alt={canteen.canteenName}
-                    className="w-full lg:w-80 h-48 object-cover rounded-lg mt-4 lg:mt-0 lg:ml-4"
-                  />
-                </div>
-              ))}
+              {filteredCanteens.length > 0 ? (
+  filteredCanteens.map((canteen) => (
+    <div
+      key={canteen.shopid}
+      className="bg-[#31363F] p-4 rounded-lg shadow-lg cursor-pointer flex flex-col md:flex-row justify-between items-center md:items-start"
+      onClick={() => handleCardClick(canteen.shopid)}
+    >
+      <div className="text-center lg:text-left lg:flex-grow">
+        <h3 className="text-2xl font-semibold mb-2 lg:mb-4">
+          {canteen.canteenName}
+        </h3>
+        <p className="sm:text-lg text-md text-gray-400 font-semibold mb-2 lg:mb-4">
+          Opening Time: {formatTime(canteen.openingTime)}
+        </p>
+        <p className="sm:text-lg text-md text-gray-400 font-semibold mb-2 lg:mb-4">
+          Closing Time: {formatTime(canteen.closingTime)}
+        </p>
+        <p className="sm:text-lg text-md text-gray-400 font-semibold">
+          {canteen.status}
+        </p>
+      </div>
+      <img
+        src={canteen.imageUrl}
+        alt={canteen.canteenName}
+        className="w-full lg:w-80 h-48 object-cover rounded-lg mt-4 lg:mt-0 lg:ml-4"
+      />
+    </div>
+  ))
+) : (
+  <div className="text-center text-2xl mt-32 sm:text-4xl font-bold text-white">No canteens found</div>
+)}
+
             </div>
             )
           )}
